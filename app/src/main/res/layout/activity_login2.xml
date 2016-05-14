@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/activity_temporary" android:id="@+id/login_frame_tmp"/>
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/login_back"
+            android:id="@+id/login_frame_login"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/app_name"
+                android:textColor="@color/appTitle"
+                android:textSize="25sp"
+                />
+
+            <com.tl.pro.travelkit.view.custom.PercentLinearLayout
+                android:id="@+id/percentLinear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                app:layout_widthPercent="60%"
+                >
+
+                <EditText
+                    android:id="@+id/login_name_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="right"
+                    android:hint="用户名/邮箱/手机号"
+                    android:singleLine="true"
+                    />
+
+                <EditText
+                    android:id="@+id/login_password_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/login_name_edit"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="right"
+                    android:hint="输入密码"
+                    android:inputType="textPassword"
+                    android:password="true"
+                    android:singleLine="true"
+                    />
+
+                <Button
+                    android:id="@+id/login_login_or_register_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@id/percentLinear"
+                    android:layout_below="@id/percentLinear"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/login_login_button_style"
+                    android:text="登录/注册"
+                    android:textSize="20sp"
+                    app:layout_widthPercent="100%"
+                    android:layout_alignLeft="@id/percentLinear" />
+            </com.tl.pro.travelkit.view.custom.PercentLinearLayout>
+
+            <TextView
+                android:id="@+id/login_forget_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/login_forgot_password_text"
+                android:ellipsize="end"
+                android:text="@string/forgotPassword"
+                android:textSize="18sp"
+                android:layout_alignParentRight="true" />
+        </android.support.percent.PercentRelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

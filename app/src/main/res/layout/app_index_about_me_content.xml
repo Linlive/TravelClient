@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/layoutBackColor"
+    >
+
+    <RelativeLayout
+        android:id="@+id/inner_relative_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/common_white"
+        >
+
+        <RelativeLayout
+            android:id="@+id/about_me_my_indent_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            >
+            <TextView
+                style="@style/appAboutTitleTextSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="@string/aboutMeMyIndent"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/aboutMeViewIndentAll"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/circle_right_enabled"
+                android:id="@+id/app_about_me_view_all_indent_img"
+                />
+            <TextView
+                style="@style/appAboutTitleTextSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/aboutMeViewIndentAll"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/app_about_me_view_all_indent_img"
+                android:layout_marginRight="8dp"
+                />
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/about_me_my_indent_title"
+            android:layout_marginTop="2dp"
+            android:background="@color/lineView"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/about_me_my_indent_title"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:paddingBottom="6dp"
+            >
+
+            <LinearLayout
+                android:id="@+id/app_about_me_wait_for_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/home_selected"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/aboutMeWaitMoney"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_about_me_wait_for_deliver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/aboutMeWaitDeliver"
+                    android:src="@drawable/home_selected"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/aboutMeWaitDeliver"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_about_me_wait_for_receive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/home_selected"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/aboutMeWaitReceive"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_about_me_wait_for_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/home_selected"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/aboutMeWaitComment"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="4dp"-->
+    <!--android:layout_below="@id/inner_relative_lay"-->
+    <!--android:background="@color/lineView"-->
+    <!--/>-->
+
+    <RelativeLayout
+        android:id="@+id/inner_relative_lay_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inner_relative_lay"
+        android:layout_marginTop="10dp"
+        android:background="@color/common_white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp">
+
+            <LinearLayout
+                android:id="@+id/app_about_me_my_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_launcher"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="我的评价"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:background="@color/lineView"
+                />
+
+            <LinearLayout
+                android:id="@+id/app_about_me_im_shopkeeper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_launcher"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="我是商家"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/inner_relative_lay_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inner_relative_lay_2"
+        android:layout_marginTop="16dp"
+        android:background="@color/common_white">
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="2dp"-->
+        <!--android:background="@color/colorLoginButtonDefault"-->
+        <!--/>-->
+
+        <TextView
+            style="@style/appAboutTitleTextSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="2dp"
+            android:background="@color/common_white"
+            android:gravity="center"
+            android:text="推荐商品"
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inner_relative_lay_3"
+        android:background="@color/common_white"
+        android:dividerHeight="2dp"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:smoothScrollbar="true"
+        ptr:ptrMode="both"
+        />
+</RelativeLayout>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tl.pro.travelkit.activity.RegisterActivity">
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_background"
+        android:id="@+id/login_frame_login"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/app_name"
+            android:textColor="@color/appTitle"
+            android:textSize="25sp"
+            />
+
+        <pro.tl.travelkit.view.custom.PercentLinearLayout
+            android:id="@+id/percentLinear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            app:layout_widthPercent="60%"
+            >
+
+            <EditText
+                android:id="@+id/register_name_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="right"
+                android:hint="用户名/邮箱/手机号"
+                android:singleLine="true"
+                />
+            <EditText
+                android:id="@+id/register_password_edit1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/login_name_edit"
+                android:layout_centerHorizontal="true"
+                android:gravity="right"
+                android:hint="输入密码"
+                android:inputType="textPassword"
+                android:password="true"
+                android:singleLine="true"
+                />
+            <EditText
+                android:id="@+id/register_password_edit2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/login_name_edit"
+                android:layout_centerHorizontal="true"
+                android:gravity="right"
+                android:hint="确认密码"
+                android:inputType="textPassword"
+                android:password="true"
+                android:singleLine="true"
+                />
+
+            <Button
+                android:id="@+id/register_register_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/percentLinear"
+                android:layout_below="@id/percentLinear"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/register_register_button_style"
+                android:text="立即加入"
+                android:textSize="20sp"
+                app:layout_widthPercent="100%"
+                />
+        </pro.tl.travelkit.view.custom.PercentLinearLayout>
+    </android.support.percent.PercentRelativeLayout>
+
+</RelativeLayout>

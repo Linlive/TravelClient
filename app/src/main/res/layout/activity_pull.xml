@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="com.tl.pro.travelkit.test.PullActivity">
+
+	<com.handmark.pulltorefresh.library.PullToRefreshListView
+		xmlns:ptr = "http://schemas.android.com/apk/res-auto"
+		android:id="@+id/pull_refresh_list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:dividerHeight="4dp"
+		android:fadingEdge="none"
+		android:fastScrollEnabled="false"
+		android:footerDividersEnabled="false"
+		android:headerDividersEnabled="false"
+		android:smoothScrollbar="true"
+		ptr:ptrMode="both"
+		/>
+
+	<!--<pro.tl.travelkit.view.custom.RefreshListView-->
+		<!--android:layout_width="match_parent"-->
+		<!--android:layout_height="match_parent"-->
+		<!--xmlns:ptr = "http://schemas.android.com/apk/res-auto"-->
+		<!--android:id="@+id/pull_refresh_list"-->
+		<!--android:dividerHeight="4dp"-->
+		<!--android:fadingEdge="none"-->
+		<!--android:fastScrollEnabled="false"-->
+		<!--android:footerDividersEnabled="false"-->
+		<!--android:headerDividersEnabled="false"-->
+		<!--android:smoothScrollbar="true"-->
+		<!--ptr:ptrMode="both"-->
+		<!--/>-->
+</RelativeLayout>

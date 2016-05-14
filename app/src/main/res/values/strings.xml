@@ -1,0 +1,48 @@
+<resources>
+    <!-- Activity titles -->
+    <string name="app_name">Travel kit</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="ac_name_image_list">Image List Example</string>
+    <string name="ac_name_image_grid">Image Grid Example</string>
+    <string name="ac_name_image_pager">Image Pager Example</string>
+    <string name="ac_name_image_gallery">Image Gallery Example</string>
+    <string name="ac_name_complex">Complex Example</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">用户名</string>
+    <string name="prompt_password">密码</string>
+    <string name="action_sign_in">登录/注册</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">邮箱地址非法</string>
+    <string name="error_invalid_password">密码(应包含大小写和数字)</string>
+    <string name="error_incorrect_password">账户和密码不匹配</string>
+    <string name="error_field_required">此项不能为空</string>
+    <string name="permission_rationale">"需要联系人权限"</string>
+
+    <!-- Labels -->
+    <string name="label_examples">Examples</string>
+    <string name="button_image_list">ListView</string>
+    <string name="button_image_grid">GridView</string>
+    <string name="button_image_pager">ViewPager</string>
+    <string name="button_image_gallery">Gallery</string>
+    <string name="button_list_and_grid">ViewPager (ListView + GridView)</string>
+
+    <string name="title_list">List</string>
+    <string name="title_grid">Grid</string>
+
+    <string name="menu_item_clear_memory_cache">Clear memory cache</string>
+    <string name="menu_item_clear_disc_cache">Clear disc cache</string>
+    <string name="menu_item_pause_on_scroll">Pause on scroll</string>
+    <string name="menu_item_pause_on_fling">Pause on fling</string>
+
+
+    <!--刷新界面-->
+    <string name="refreshing_text">正在刷新…</string>
+    <string name="pull_to_refresh_text">下拉刷新</string>
+    <string name="release_to_refresh_text">释放即可刷新</string>
+    <string name="last_update_time">上次:</string>
+    <string name="load_more_text">加载更多</string>
+    <string name="loading_more">正在加载</string>
+
+    <!-- Content descriptions -->
+    <string name="descr_image">Image</string>
+</resources>

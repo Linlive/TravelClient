@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/y1"
+    android:paddingBottom="@dimen/y1"
+    >
+
+    <ImageView
+        android:id="@+id/app_index_goods_image_main"
+        android:layout_width="@dimen/x198"
+        android:layout_height="@dimen/y104"
+        android:scaleType="fitXY"
+        />
+    <!--app:layout_widthPercent="60%"-->
+    <!--app:layout_heightPercent="40%"-->
+    <View
+        android:id="@+id/app_index_goods_middle_view"
+        android:layout_width="@dimen/x4"
+        android:layout_height="0dp"
+        android:layout_toEndOf="@id/app_index_goods_image_main"
+        android:layout_toRightOf="@id/app_index_goods_image_main" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y102"
+        android:layout_toEndOf="@id/app_index_goods_middle_view"
+        android:layout_toRightOf="@id/app_index_goods_middle_view"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/app_index_name_liner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/app_index_goods_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/appIndexGoodsName"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/app_index_goods_name_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/appIndexGoodsName"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/app_index_price_liner"
+            style="@style/appIndexGoodsNameInterval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/app_index_goods_price_text"
+                android:text="@string/appIndexGoodsPrice"
+                style="@style/goodsTextStyle" />
+
+            <TextView
+                android:id="@+id/app_index_goods_price_text2"
+                android:text="@string/appIndexGoodsPrice"
+                style="@style/goodsTextStyle"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/app_index_repertory_liner"
+            style="@style/appIndexGoodsNameInterval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/app_index_goods_repertory_text"
+                style="@style/goodsTextStyle"
+                android:text="@string/appIndexGoodsRepertory"
+                />
+
+            <TextView
+                android:id="@+id/app_index_goods_repertory_text2"
+                style="@style/goodsTextStyle"
+                android:text="@string/appIndexGoodsRepertory"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/app_index_delivery_liner"
+            style="@style/appIndexGoodsNameInterval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/app_index_goods_delivery_text"
+                style="@style/goodsTextStyle"
+                android:text="@string/appIndexGoodsDelivery"
+                />
+
+            <TextView
+                android:id="@+id/app_index_goods_delivery_text2"
+                style="@style/goodsTextStyle"
+                android:text="@string/appIndexGoodsDelivery"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/app_index_goods_describe_text"
+            style="@style/goodsTextStyle"
+            android:maxLines="1"
+            android:text="JJHHdajksf"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

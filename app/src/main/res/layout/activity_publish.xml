@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back_white"
+    tools:context="com.tl.pro.travelkit.activity.PublishActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/app_publish_actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="#000aaff0"
+        android:gravity="center"
+        android:minHeight="?attr/actionBarSize"
+        >
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_above="@+id/app_publish_img_frame"-->
+            <!--android:layout_alignTop="@id/activity_main_toolbar"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="@string/myShopTitleText"-->
+            <!--android:textSize="22sp"-->
+            <!--android:textColor="@color/textBlank"/>-->
+    </android.support.v7.widget.Toolbar>
+
+
+    <FrameLayout
+        android:id="@+id/app_publish_img_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/y50">
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/app_publish_view_pager">
+        </android.support.v4.view.ViewPager>
+
+        <ImageView
+            android:id="@+id/app_publish_delete_picture_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:src="@drawable/delete_normal"
+            android:visibility="visible"
+            android:background="@color/transparent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dip"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/app_publish_dot_liner_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+                <View
+                    android:id="@+id/dot_1"
+                    android:layout_width="@dimen/x11"
+                    android:layout_height="@dimen/y9"
+                    android:background="@drawable/publish_foot_dot_normal"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y1"
+        android:layout_alignBottom="@+id/app_publish_img_frame"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/textBlank"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/view"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <Button
+                android:id="@+id/app_publish_bottom_describe_btn"
+                android:layout_width="@dimen/x34"
+                android:layout_height="@dimen/y28"
+                android:background="@drawable/publish_foot_button_back"
+                android:text="@string/publishGoodsDescribeText"/>
+
+            <Button
+                android:id="@+id/app_publish_bottom_picture_btn"
+                android:layout_width="@dimen/x34"
+                android:layout_height="@dimen/y28"
+                android:background="@drawable/publish_foot_button_back"
+                android:text="@string/publishGoodsTakePhoto"
+                android:layout_marginLeft="@dimen/x10"/>
+
+            <Button
+                android:id="@+id/app_publish_bottom_confirm_btn"
+                android:layout_width="@dimen/x34"
+                android:layout_height="@dimen/y28"
+                android:background="@drawable/publish_foot_button_back"
+                android:text="@string/publishGoodsPublish"
+                android:layout_marginLeft="@dimen/x10"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

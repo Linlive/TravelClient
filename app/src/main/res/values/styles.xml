@@ -1,0 +1,27 @@
+<resources>
+
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:windowBackground">@android:color/white</item>
+	</style>
+
+	<style name="NoTitleFullscreen" parent="Theme.AppCompat">
+		<item name="android:windowNoTitle">true</item>
+		<item name="windowActionBar">false</item>
+		<item name="android:windowFullscreen">true</item>
+		<item name="android:windowContentOverlay">@null</item>
+	</style>
+
+	<style name="ProgressBarStyle" parent="@android:style/Widget.ProgressBar.Horizontal"/>
+
+	<style name="customProgressBar">
+		<item name="android:indeterminateDrawable">@drawable/custom_progress_bar</item>
+		<item name="android:layout_width">@dimen/x20</item>
+		<item name="android:layout_height">@dimen/y20</item>
+		<item name="android:layout_gravity">center</item>
+	</style>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appSwitch"
+    android:id="@+id/login_frame_tmp"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="登录中..."
+        android:textColor="@color/signingText"
+        android:textSize="20sp"
+        android:id="@+id/mText"
+        />
+    <ProgressBar
+        android:layout_below="@id/mText"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="16dp"
+        style="@style/customProgressBar"
+        />
+</RelativeLayout>

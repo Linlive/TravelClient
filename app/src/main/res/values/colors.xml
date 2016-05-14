@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!--app transparent-->
+	<color name="transparent">#FFFFFFFF</color>
+
+	<!--app title color-->
+	<color name="textBlank">#AF000000</color>
+	<color name="colorPrimary">#3F51B5</color>
+	<color name="colorPrimaryDark">#303F9F</color>
+	<color name="colorAccent">#FF4081</color>
+
+	<!--login button-->
+	<color name="colorLoginButtonDefault">#af1f2a09</color>
+	<color name="colorLoginButtonPress">#6a00efae</color>
+	<color name="colorLoginButtonFocus">#aa00ff00</color>
+
+	<!--register button-->
+	<color name="colorRegisterButtonDefault">#afbfaaa9</color>
+	<color name="colorRegisterButtonPress">#6a00efae</color>
+	<color name="colorRegisterButtonFocus">#aa00ff00</color>
+
+	<!--app title-->
+	<color name="appTitle">#8800ff00</color>
+	<!--app switch -->
+	<color name="appSwitch">#6ed5fffe</color>
+
+	<!--sign in text-->
+	<color name="signingText">#000000</color>
+	<!--test-->
+	<color name="common_white">#DFFFFFFF</color>
+	<color name="listview_gray">#cccccc</color>
+	<color name="view_backgroud">#f1f1f1</color>
+	<color name="back_darkgray">#f7f7f7</color>
+	<color name="divider_line">#d5d7dc</color>
+	<color name="back_white">#7FE8E8E8</color>
+
+	<!--view line-->
+	<color name="lineView">#4F000000</color>
+
+	<!--back ground dark-->
+	<color name="layoutBackColor">#38000000</color>
+</resources>

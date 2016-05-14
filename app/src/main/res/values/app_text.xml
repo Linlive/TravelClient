@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forgotPassword"><u>忘记密码?</u></string>
+    <string name="appIndexTitle">@string/app_name</string>
+    <string name="appIndexGoodsName">名称: </string>
+    <string name="appIndexGoodsPrice">价格:</string>
+    <string name="appIndexGoodsRepertory">库存:</string>
+    <string name="appIndexGoodsDelivery">配送:</string>
+    
+    <!--我的主页-->
+    <string name="aboutMeMyIndent">我的订单</string>
+    <string name="aboutMeViewIndentAll">查看所有订单</string>
+    <string name="aboutMeWaitMoney">待付款</string>
+    <string name="aboutMeWaitDeliver">待配送</string>
+    <string name="aboutMeWaitReceive">待收货</string>
+    <string name="aboutMeWaitComment">待评价</string>
+
+    <!--我的店铺-->
+    <string name="myShopTitleText">我的店铺</string>
+    <string name="myShopName">店铺名称</string>
+    <string name="myShopPublishGoods">上货</string>
+    <string name="myShopGoodsManager">商品管理</string>
+    <string name="myShopIndentManager">订单管理</string>
+
+    <!--发布商品-->
+    <string name="publishGoodsDescribeText">详情</string>
+    <string name="publishGoodsTakePhoto">配图</string>
+    <string name="publishGoodsPublish">确定</string>
+
+    <string name="atLeastOnePic">请至少要上传一张图片</string>
+
+
+</resources>
