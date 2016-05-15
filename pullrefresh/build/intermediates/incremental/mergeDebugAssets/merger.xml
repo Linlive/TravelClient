@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="E:\MyProgramFiles\Graduate\Client\Travelkit\pullrefresh\src\main\assets"/><source path="E:\MyProgramFiles\Graduate\Client\Travelkit\pullrefresh\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="E:\MyProgramFiles\Graduate\Client\Travelkit\pullrefresh\src\debug\assets"/></dataSet></merger>
