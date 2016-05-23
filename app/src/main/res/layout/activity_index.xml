@@ -9,9 +9,10 @@
         android:id="@+id/app_index_title_liner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/appTitle"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal"
         android:visibility="visible"
+        android:minHeight="?attr/actionBarSize"
         >
 
         <ImageView
@@ -19,9 +20,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:src="@drawable/go_back_enabled"
             />
-
         <TextView
             android:id="@+id/app_index_title_text"
             android:layout_width="wrap_content"
@@ -43,8 +45,10 @@
             android:id="@+id/app_index_search_or_setting_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/search_enabled"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/search_enabled"
             />
         <!--<SearchView-->
         <!--android:layout_width="wrap_content"-->

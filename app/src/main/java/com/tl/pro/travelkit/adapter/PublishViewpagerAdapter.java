@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tl.pro.travelkit.R;
+import com.tl.pro.travelkit.listener.ViewPagerClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +20,14 @@ import java.util.List;
 public class PublishViewpagerAdapter extends PagerAdapter {
 
 	private Context mContext;
+	private ViewPagerClickListener mListener;
 	private LayoutInflater mInflater;
 	private List<View> viewList = new ArrayList<View>();
 
-	public PublishViewpagerAdapter(Context context) {
+	public PublishViewpagerAdapter(Context context, ViewPagerClickListener listener) {
 		mContext = context;
+
+		mListener = listener;
 		mInflater = LayoutInflater.from(mContext);
 		viewList.add(mInflater.inflate(R.layout.app_publish_goods_imgs_item, null));
 	}
@@ -32,25 +36,28 @@ public class PublishViewpagerAdapter extends PagerAdapter {
 		return addView(view, viewList.size());
 	}
 
+	/**
+	 * 将制指定的View添加至viewPager中
+	 * @param view 要添加的View
+	 * @param position 具体索引
+	 * @return 具体索引
+	 */
 	public int addView(View view, int position) {
 		viewList.add(position, view);
 		notifyDataSetChanged();
 		return position;
 	}
 
-	public boolean removeAt(int index) {
-		if (index >= viewList.size()) {
-			return false;
-		}
-		viewList.remove(index);
-		notifyDataSetChanged();
-		return true;
-	}
-
 	public int removeView(ViewPager pager, View v) {
 		return removeView(pager, viewList.indexOf(v));
 	}
 
+	/**
+	 * 将指定的索引位置的View移除
+	 * @param pager 从viewPager中移除
+	 * @param position 索引
+	 * @return 删除的索引坐标
+	 */
 	public int removeView(ViewPager pager, int position) {
 		pager.setAdapter(null);
 		viewList.remove(position);
@@ -59,12 +66,13 @@ public class PublishViewpagerAdapter extends PagerAdapter {
 		return position;
 	}
 
+	public List<View> getViewList(){
+		return viewList;
+	}
 	public View getView(int position) {
 		return viewList.get(position);
 	}
-	public List<View> getViewList() {
-		return viewList;
-	}
+
 	@Override
 	public int getCount() {
 		return viewList.size();
@@ -93,6 +101,17 @@ public class PublishViewpagerAdapter extends PagerAdapter {
 	public Object instantiateItem(ViewGroup view, int position) {
 		View v = viewList.get(position % viewList.size());
 		view.addView(v);
+		v.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				boolean show = (mListener.getDeleteState().getVisibility() == View.INVISIBLE);
+				if(show) {
+					mListener.showDelete(true);
+				} else {
+					mListener.showDelete(false);
+				}
+			}
+		});
 		return v;
 	}
 
@@ -100,4 +119,6 @@ public class PublishViewpagerAdapter extends PagerAdapter {
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
 	}
+
+
 }

@@ -20,8 +20,8 @@
 
 	<style name="customProgressBar">
 		<item name="android:indeterminateDrawable">@drawable/custom_progress_bar</item>
-		<item name="android:layout_width">@dimen/x20</item>
-		<item name="android:layout_height">@dimen/y20</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_gravity">center</item>
 	</style>
 </resources>

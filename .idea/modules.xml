@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Travelkit.iml" filepath="$PROJECT_DIR$/Travelkit.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/mytestapp/mytestapp.iml" filepath="$PROJECT_DIR$/mytestapp/mytestapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/okhttp/okhttp.iml" filepath="$PROJECT_DIR$/okhttp/okhttp.iml" />
       <module fileurl="file://$PROJECT_DIR$/pullrefresh/pullrefresh.iml" filepath="$PROJECT_DIR$/pullrefresh/pullrefresh.iml" />
     </modules>
   </component>

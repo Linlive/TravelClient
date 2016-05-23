@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/back_white"
+              android:orientation="vertical"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/app_publish_select_actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:text="选择"
+            android:textColor="@color/textBlank"
+            android:textSize="22sp"
+            />
+    </android.support.v7.widget.Toolbar>
+
+    <ListView
+        android:id="@+id/app_publish_detail_select_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_white"
+        android:divider="@color/listview_gray"
+        android:dividerHeight="@dimen/y2"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"
+        android:background="@color/listview_gray"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y50"
+        android:background="@drawable/edit_border">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/app_publish_select_ok_img"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/handle_ok_enabled"
+            android:scaleType="fitCenter"
+            android:background="@color/transparent"
+            />
+        <EditText
+            android:id="@+id/app_publish_detail_select_list_edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:singleLine="true"
+            android:lines="1"
+            android:layout_toLeftOf="@id/app_publish_select_ok_img"
+            android:hint="其他..."
+            android:paddingLeft="16dp"
+            android:textColor="@color/black"
+            android:textCursorDrawable="@drawable/cursor_black"
+            android:textSize="18sp"
+            android:background="@drawable/edit_border"
+            />
+
+    </RelativeLayout>
+</LinearLayout>

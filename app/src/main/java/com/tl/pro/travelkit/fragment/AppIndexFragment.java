@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.activity.IndexActivity;
 import com.tl.pro.travelkit.adapter.ListViewAdapter;
 import com.tl.pro.travelkit.fragment.base.MyBaseFragment;
+import com.tl.pro.travelkit.util.log.L;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -30,6 +32,7 @@ import java.util.LinkedList;
  */
 public class AppIndexFragment extends MyBaseFragment implements View.OnTouchListener {
 
+	public static final String TAG = "AppIndexFragment";
 	private static LinkedList<HashMap<String, String>> mData = new LinkedList<>();
 
 	private Context mContext;
@@ -103,6 +106,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 				new DataLoadTask().execute();
 			}
 		});
+		listView.setOnItemClickListener(new MyPullViewOnItemClickListener());
 	}
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -256,6 +260,14 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 			listView.onLoadMoreComplete();
 
 			super.onPostExecute(result);
+		}
+	}
+
+	private class MyPullViewOnItemClickListener implements AdapterView.OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			L.e(TAG, view.getId() + id + " click --");
 		}
 	}
 }

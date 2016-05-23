@@ -3,6 +3,7 @@ package com.tl.pro.travelkit.activity;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -15,10 +16,11 @@ import android.widget.TextView;
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.fragment.AppIndexAbMeFrag;
 import com.tl.pro.travelkit.fragment.AppIndexFragment;
+import com.tl.pro.travelkit.util.CommonText;
 
 import java.util.ArrayList;
 
-public class IndexActivity extends Activity implements View.OnClickListener {
+public class IndexActivity extends Activity implements View.OnClickListener, AppIndexAbMeFrag.IndexDataListener {
 
 	public static int mTextColor = Color.parseColor("#f42f94df");
 
@@ -43,9 +45,21 @@ public class IndexActivity extends Activity implements View.OnClickListener {
 
 	// display
 	private Point point;
+
+	// userInfo
+	private Intent mIntent;
+	private String userId;
+
+	@Override
+	public String getUserId() {
+		return userId;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mIntent = getIntent();
+		userId = mIntent.getStringExtra(CommonText.userId);
 //		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_index);
 		point = getDeviceDisplay();
@@ -53,7 +67,6 @@ public class IndexActivity extends Activity implements View.OnClickListener {
 		initViews();
 		fragmentManager = getFragmentManager();
 		setTabSelection(0);
-
 	}
 
 	private Point getDeviceDisplay(){
@@ -143,12 +156,6 @@ public class IndexActivity extends Activity implements View.OnClickListener {
 		homeText.setTextColor(Color.parseColor("#82858b"));
 		aboutMeImage.setImageResource(R.drawable.user_unselected);
 		aboutMeText.setTextColor(Color.parseColor("#82858b"));
-//		contactsImage.setImageResource(R.drawable.contacts_unselected);
-//		contactsText.setTextColor(Color.parseColor("#82858b"));
-//		newsImage.setImageResource(R.drawable.news_unselected);
-//		newsText.setTextColor(Color.parseColor("#82858b"));
-//		settingImage.setImageResource(R.drawable.setting_unselected);
-//		settingText.setTextColor(Color.parseColor("#82858b"));
 	}
 
 	/**
@@ -163,15 +170,6 @@ public class IndexActivity extends Activity implements View.OnClickListener {
 		if (aboutFragment != null) {
 			transaction.hide(aboutFragment);
 		}
-//		if (contactsFragment != null) {
-//			transaction.hide(contactsFragment);
-//		}
-//		if (newsFragment != null) {
-//			transaction.hide(newsFragment);
-//		}
-//		if (settingFragment != null) {
-//			transaction.hide(settingFragment);
-//		}
 	}
 
 	@Override
@@ -194,6 +192,7 @@ public class IndexActivity extends Activity implements View.OnClickListener {
 				break;
 		}
 	}
+
 	private ArrayList<MyOnTouchListener> onTouchListeners = new ArrayList<MyOnTouchListener>();
 
 	@Override

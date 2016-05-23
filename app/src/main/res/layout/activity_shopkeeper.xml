@@ -57,6 +57,7 @@
             android:layout_centerVertical="true"
             android:text="@string/myShopName"
             android:textSize="20sp"
+            android:textColor="@color/textBlank"
             />
     </RelativeLayout>
 
@@ -85,12 +86,13 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/go_back_enabled"
+                    android:src="@drawable/publish_goods_enabled"
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textBlank"
                     android:text="@string/myShopPublishGoods"
                     />
             </LinearLayout>
@@ -115,11 +117,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/go_back_enabled"/>
+                    android:src="@drawable/goods_manager_enabled"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textBlank"
                     android:text="@string/myShopGoodsManager"
                     />
             </LinearLayout>
@@ -144,11 +147,12 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/go_back_enabled"/>
+                    android:src="@drawable/indent_enabled"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textBlank"
                     android:text="@string/myShopIndentManager"
                     />
             </LinearLayout>
@@ -172,6 +176,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textColor="@color/textBlank"
             android:hint="一个网格布局将在这里，\n\n这里是店铺描述,\n\n和最新发布的商品"
             />
     </ScrollView>

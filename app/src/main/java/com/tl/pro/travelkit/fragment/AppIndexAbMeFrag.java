@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.activity.ShopkeeperActivity;
+import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.log.L;
 
 
@@ -35,6 +36,14 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 	private ImageView mViewAllIndentImg;
 	private Point point;
 
+	//activity data
+	IndexDataListener dataListener;
+//	IndexActivity dataListener;
+
+	public interface IndexDataListener {
+		String getUserId();
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +51,8 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 
 		mContext = getActivity();
 		View view = inflater.inflate(R.layout.frag_index_about_me, container, false);
+		dataListener = (IndexDataListener) getActivity();
+		//dataListener.getUserId();
 		initView(view);
 		setListener();
 		return view;
@@ -75,6 +86,8 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 				L.i(TAG, "click Im app_about_me_im_shopkeeper");
 				//do something
 				Intent intent = new Intent(mContext, ShopkeeperActivity.class);
+				intent.putExtra(CommonText.userId, dataListener.getUserId());
+
 				startActivity(intent);
 
 				break;

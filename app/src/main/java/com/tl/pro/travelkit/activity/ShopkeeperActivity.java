@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.tl.pro.travelkit.R;
+import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.log.L;
 
 public class ShopkeeperActivity extends AppCompatActivity implements View.OnClickListener{
@@ -20,18 +21,20 @@ public class ShopkeeperActivity extends AppCompatActivity implements View.OnClic
 	private LinearLayout mGoodsManagerLiner;
 	private LinearLayout mIndentsManagerLiner;
 
+	private Intent mIntent;
+	//user info -- userId
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shopkeeper);
+		mIntent = getIntent();
 		initBar();
 		initView();
-
 	}
 
 	private void initBar(){
-		toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+		toolbar = (Toolbar) findViewById(R.id.app_shopkeeper_toolbar);
 		if(toolbar == null){
 			return;
 		}
@@ -68,6 +71,7 @@ public class ShopkeeperActivity extends AppCompatActivity implements View.OnClic
 			case R.id.app_shopkeeper_up_goods:
 				//do up load info
 				Intent intent = new Intent(ShopkeeperActivity.this, PublishActivity.class);
+				intent.putExtra(CommonText.userId, mIntent.getStringExtra(CommonText.userId));
 				startActivity(intent);
 				L.e(TAG, "OK");
 				break;

@@ -27,7 +27,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.tl.pro.travelkit.R;
-import com.tl.pro.travelkit.UILApplication;
+import com.tl.pro.travelkit.ApplicationInit;
 import static com.tl.pro.travelkit.Constants.IMAGES;
 
 /**
@@ -45,7 +45,7 @@ public class UILWidgetProvider extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		UILApplication.initImageLoader(context);
+		ApplicationInit.initImageLoader(context);
 
 		final int widgetCount = appWidgetIds.length;
 		for (int i = 0; i < widgetCount; i++) {

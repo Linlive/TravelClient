@@ -14,8 +14,9 @@ public class ServerConfigure {
 
 	//a li yun server
 	//public static final String SERVER_ADDRESS = "http://42.96.138.253";
-	public static final String SERVER_ADDRESS = "http://192.168.1.222:8080/";
+	public static final String SERVER_ADDRESS = "http://192.168.1.222:8080";
 
+	private static final String CHARSET = "utf-8"; //设置编码
 	public static final String DATA_IN_SERVER_FLAG = "map";
 	public enum Request {
 
@@ -36,7 +37,7 @@ public class ServerConfigure {
 	 * connect to server time out.
 	 * unit is milliseconds
 	 */
-	private static final int REQUEST_TIME_OUT = 2000;
+	private static final int REQUEST_TIME_OUT = 10000;
 
 	/**
 	 * read message from server time out.
@@ -91,6 +92,7 @@ public class ServerConfigure {
 			httpURLConnection.setUseCaches(true);
 			httpURLConnection.setDoInput(input);
 			httpURLConnection.setDoOutput(output);
+			httpURLConnection.setRequestProperty("Charset", CHARSET);  //设置编码
 			httpURLConnection.setRequestProperty("user-agent",
 					"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
 			httpURLConnection.setRequestProperty("accept", "*/*");
@@ -106,6 +108,32 @@ public class ServerConfigure {
 			httpURLConnection.setRequestProperty("Content-type",
 					"application/x-java-serialized-object");
 			//httpURLConnection.connect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			//nop
+		}
+		return httpURLConnection;
+	}
+
+	// 文件上传
+	private static final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+	public static HttpURLConnection getMultiPartConnection(String urlString, String boundary) throws MalformedURLException {
+		HttpURLConnection httpURLConnection = null;
+		URL url = new URL(SERVER_ADDRESS + urlString);
+
+		try {
+			httpURLConnection = (HttpURLConnection) url.openConnection();
+			httpURLConnection.setConnectTimeout(REQUEST_TIME_OUT);
+			httpURLConnection.setReadTimeout(READ_TIME_OUT);
+			httpURLConnection.setRequestMethod("POST");
+			httpURLConnection.setDoInput(true);
+			httpURLConnection.setDoOutput(true);
+			httpURLConnection.setUseCaches(false);
+			httpURLConnection.setRequestProperty("Charset", CHARSET);  //设置编码
+			httpURLConnection.setRequestProperty("connection", "Keep-Alive");
+			httpURLConnection.setRequestProperty("Content-type", CONTENT_TYPE + ";boundary=" + boundary);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

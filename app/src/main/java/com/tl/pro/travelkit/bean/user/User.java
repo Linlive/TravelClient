@@ -1,6 +1,7 @@
 package com.tl.pro.travelkit.bean.user;
 
 /**
+ * 用来描述本系统的用户，主要指客户端的买家和商家，管理员
  * Created by Administrator on 2016/4/23.
  */
 public class User {

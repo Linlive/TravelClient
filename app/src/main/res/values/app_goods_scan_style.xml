@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="appGoodsScanPriceRepertory">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:lines">1</item>
+    </style>
+    <string name="appGoodsScanPriceText">售价￥</string>
+    <string name="appGoodsScanRepertoryText">库存</string>
+
+</resources>

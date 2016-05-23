@@ -56,15 +56,13 @@ public class PublishPagerChangeListener implements ViewPager.OnPageChangeListene
 
 	@Override
 	public void onPageSelected(int position) {
-		int left = position - 1;
-		int right = position + 1;
-
-		mDotViews.get(position).setBackgroundResource(R.drawable.publish_foot_dot_focused);
-		if(left >= 0){
-			mDotViews.get(left).setBackgroundResource(R.drawable.publish_foot_dot_normal);
-		}
-		if(right < mDotViews.size()){
-			mDotViews.get(right).setBackgroundResource(R.drawable.publish_foot_dot_normal);
+		int len = mDotViews.size();
+		for (int i = 0; i < len; i++){
+			if(i == position){
+				mDotViews.get(i).setBackgroundResource(R.drawable.publish_foot_dot_focused);
+				continue;
+			}
+			mDotViews.get(i).setBackgroundResource(R.drawable.publish_foot_dot_normal);
 		}
 	}
 

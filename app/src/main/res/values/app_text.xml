@@ -23,11 +23,54 @@
     <string name="myShopIndentManager">订单管理</string>
 
     <!--发布商品-->
+    <string name="publishGoodsPublishTitle">商品发布</string>
     <string name="publishGoodsDescribeText">详情</string>
-    <string name="publishGoodsTakePhoto">配图</string>
+    <string name="publishGoodsTakePhoto">拍照</string>
+    <string name="publishGoodsTakePicture">选图</string>
     <string name="publishGoodsPublish">确定</string>
+
+    <string name="publishBrandText">品牌</string>
+    <string name="publishTypeText">类型</string>
+    <string name="publishSizeText">尺寸</string>
+    <string name="publishPlaceText">适用于</string>
+    <string name="publishColorText">颜色</string>
+    <string name="publishPriceText">价格</string>
+    <string name="publishRepertoryText">库存</string>
 
     <string name="atLeastOnePic">请至少要上传一张图片</string>
 
-
+    <string-array name="spinnerBrandArr">
+        <item>其他</item>
+        <item>骆驼</item>
+        <item>上海</item>
+        <item>广州</item>
+    </string-array>
+    <string-array name="spinnerTypeArr">
+        <item>衣服</item>
+        <item>裤子</item>
+    </string-array>
+    <string-array name="spinnerSizeArr">
+        <item>S</item>
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
+        <item>XXL</item>
+        <item>XXXL</item>
+    </string-array>
+    <string-array name="spinnerPlaceArr">
+        <item>丘陵</item>
+        <item>雪山</item>
+        <item>草原</item>
+        <item>沙滩</item>
+    </string-array>
+    <string-array name="spinnerColorArr">
+        <item>红</item>
+        <item>橙</item>
+        <item>黄</item>
+        <item>绿</item>
+        <item>蓝</item>
+        <item>青</item>
+        <item>紫</item>
+    </string-array>
+    <string name="goodsDetailsExtraInfo">商品的其他描述</string>
 </resources>

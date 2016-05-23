@@ -17,6 +17,7 @@
         <shape android:shape="rectangle">
             <solid android:color="@color/colorRegisterButtonDefault"/>
             <corners android:radius="16dp"/>
+            <gradient android:startColor="@color/appSwitch" android:endColor="@color/green"/>
         </shape>
     </item>
 </selector>
