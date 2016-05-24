@@ -3,10 +3,23 @@
     <style name="appGoodsScanPriceRepertory">
         <item name="android:gravity">center</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/textBlank</item>
         <item name="android:singleLine">true</item>
         <item name="android:lines">1</item>
     </style>
     <string name="appGoodsScanPriceText">售价￥</string>
     <string name="appGoodsScanRepertoryText">库存</string>
+    <string name="appGoodsScanRepertoryUnityText">/件</string>
+    <string name="appGoodsScanAllComment">所有评价</string>
+    <!--浏览商品-->
+    <string name="addToCart">加入购物车</string>
+    <string name="buyItNow">立即购买</string>
+
+    <string name="goodsIntroduce">商品介绍</string>
+    <string name="shopkeeperIntroduce">商家介绍</string>
+    <string name="shopkeeperNameIntroduce">商家名称</string>
+    <string name="shopkeeperNameValueIntroduce">商家名称(网络获取)</string>
+    <string name="goodsComments">商品评价</string>
+    <string name="goodsCommentsValue">老板很和蔼，对客户很热心，下次再来，满分好评！</string>
 
 </resources>

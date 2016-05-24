@@ -98,9 +98,9 @@ public class PublishViewpagerAdapter extends PagerAdapter {
 	}
 
 	@Override
-	public Object instantiateItem(ViewGroup view, int position) {
+	public Object instantiateItem(ViewGroup container, int position) {
 		View v = viewList.get(position % viewList.size());
-		view.addView(v);
+		container.addView(v);
 		v.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -119,6 +119,5 @@ public class PublishViewpagerAdapter extends PagerAdapter {
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
 	}
-
 
 }

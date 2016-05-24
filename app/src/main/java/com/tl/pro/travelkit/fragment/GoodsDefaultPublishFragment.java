@@ -165,7 +165,7 @@ public class GoodsDefaultPublishFragment extends Fragment implements ViewPagerCl
 		return imgView;
 	}
 	public void setBitmapToImageView(Bitmap bitmap){
-		ImageView img = (ImageView) mViewpagerAdapter.getViewList().get(0);
+		ImageView img = (ImageView) mViewpagerAdapter.getViewList().get(0).findViewById(R.id.app_publish_image_item);
 		img.setImageBitmap(bitmap);
 	}
 

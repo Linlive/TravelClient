@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="@dimen/y1"
-    android:paddingBottom="@dimen/y1"
+                                               android:layout_width="match_parent"
+                                               android:layout_height="match_parent"
+                                               xmlns:app="http://schemas.android.com/apk/res-auto"
+                                               android:paddingTop="@dimen/y1"
+                                               android:paddingBottom="@dimen/y1"
     >
 
     <ImageView
         android:id="@+id/app_index_goods_image_main"
-        android:layout_width="@dimen/x198"
-        android:layout_height="@dimen/y104"
+        android:layout_width="@dimen/x250"
+        android:layout_height="@dimen/y100"
         android:scaleType="fitXY"
         />
     <!--app:layout_widthPercent="60%"-->

@@ -1,6 +1,7 @@
 package com.tl.pro.travelkit.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.tl.pro.travelkit.R;
+import com.tl.pro.travelkit.activity.GoodsScanActivity;
 import com.tl.pro.travelkit.activity.IndexActivity;
 import com.tl.pro.travelkit.adapter.ListViewAdapter;
 import com.tl.pro.travelkit.fragment.base.MyBaseFragment;
@@ -267,7 +269,14 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			L.e(TAG, view.getId() + id + " click --");
+			L.e(TAG, "getid = " + view.getId() + "：id = " + id + " click --" + position);
+
+			Intent intent = new Intent(mContext, GoodsScanActivity.class);
+			intent.putExtra("indexUrl", mAdapter.getDataList().get((int)id).get("imageUrl"));
+
+			L.e(TAG, "url = " + mAdapter.getDataList().get((int)id).get("imageUrl"));
+			startActivity(intent);
+			//ImageLoader.getInstance().displayImage(mAdapter.getDataList().get(position).get("imageUrl"),  new ImageViewAware(vh.imageView), options, mAnimal);
 		}
 	}
 }

@@ -15,6 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity android:name=".activity.RegisterActivity">
             <intent-filter>
@@ -35,20 +39,10 @@
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
         </activity>
-        <!-- <activity android:name=".activity.ShopkeeperActivity"> -->
-        <!-- <intent-filter> -->
-        <!-- <category android:name="android.intent.category.DEFAULT"/> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
         <activity android:name=".test.PercentActivity">
         </activity>
         <activity android:name=".activity.PublishActivity">
-
         </activity>
         <activity android:name=".activity.GoodsDetailPublishActivity">
         </activity>
@@ -57,10 +51,9 @@
         <activity android:name=".activity.base.ToolBarBaseActivity">
         </activity>
         <activity android:name=".activity.GoodsScanActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
+        </activity>
+        <activity android:name=".activity.GoodsCommentActivity">
         </activity>
     </application>
 

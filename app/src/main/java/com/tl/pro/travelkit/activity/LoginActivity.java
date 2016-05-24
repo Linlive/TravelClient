@@ -249,8 +249,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 				//测试登录后的过程
 				login = true;
-				Intent intent = new Intent(LoginActivity.this, IndexActivity.class);
-				startActivity(intent);
+//				Intent intent = new Intent(LoginActivity.this, IndexActivity.class);
+//				startActivity(intent);
 
 				return;
 			}

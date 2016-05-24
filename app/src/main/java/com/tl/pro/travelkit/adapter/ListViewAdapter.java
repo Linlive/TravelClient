@@ -1,7 +1,6 @@
 package com.tl.pro.travelkit.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +11,12 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.tl.pro.travelkit.R;
+import com.tl.pro.travelkit.listener.ImageFirstDisplayListener;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -40,9 +36,16 @@ public class ListViewAdapter extends BaseAdapter {
 
 	private DisplayImageOptions options;
 
+	private ImageFirstDisplayListener mAnimal = new ImageFirstDisplayListener(this);
+
 	public void setData(List<HashMap<String, String>> data){
 		mDataList = data;
 	}
+
+	public List<HashMap<String, String>> getDataList(){
+		return mDataList;
+	}
+
 	public ListViewAdapter(Context context, List<HashMap<String, String>> data) {
 		this.mContext = context;
 		mDataList = data;
@@ -93,28 +96,10 @@ public class ListViewAdapter extends BaseAdapter {
 		} else {
 			vh = (ViewHolder) convertView.getTag();
 		}
+
 		vh.textViewDesc.setText(mDataList.get(position).get("describe"));
-		ImageLoader.getInstance().displayImage(mDataList.get(position).get("imageUrl"),  new ImageViewAware(vh.imageView), options, new AnimateFirstDisplayListener());
+		ImageLoader.getInstance().displayImage(mDataList.get(position).get("imageUrl"),  new ImageViewAware(vh.imageView), options, mAnimal);
 		return view;
-	}
-
-	private class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
-
-		final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
-
-		@Override
-		public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-
-			ListViewAdapter.this.notifyDataSetChanged();
-			if (loadedImage != null) {
-				ImageView imageView = (ImageView) view;
-				boolean firstDisplay = !displayedImages.contains(imageUri);
-				if (firstDisplay) {
-					FadeInBitmapDisplayer.animate(imageView, 500);
-					displayedImages.add(imageUri);
-				}
-			}
-		}
 	}
 
 	private class ViewHolder{

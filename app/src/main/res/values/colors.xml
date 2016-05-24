@@ -60,5 +60,7 @@
 	<!--color in scan goods-->
 	<color name="add_to_cart">@color/orange</color>
 	<color name="buy_goods">#f80f06</color>
+	<color name="view_comment_all">@color/bottomBtnColor</color>
+
 
 </resources>

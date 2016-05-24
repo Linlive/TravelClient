@@ -69,7 +69,8 @@ public class PostMultipart {
 
 	private static void addTextPart(MultipartBuilder multipartBuilder, HashMap<String, String> param) {
 		for (String key : param.keySet()){
-			multipartBuilder.addFormDataPart(key, param.get(key));
+//			multipartBuilder.addFormDataPart(key, param.get(key));
+			multipartBuilder.addFormDataPart(key, null, RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=gb2312"), param.get(key)));
 		}
 	}
 
@@ -95,6 +96,7 @@ public class PostMultipart {
 				.build();
 
 		//开始请求
+
 		client.newCall(request).enqueue(new Callback() {
 			@Override
 			public void onFailure(Request request, IOException e) {

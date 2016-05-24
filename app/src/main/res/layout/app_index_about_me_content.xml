@@ -71,7 +71,7 @@
             <LinearLayout
                 android:id="@+id/app_about_me_wait_for_money"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -80,7 +80,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/home_selected"/>
+                    android:src="@drawable/buy_goods_enabled"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
             <LinearLayout
                 android:id="@+id/app_about_me_wait_for_deliver"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -103,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/aboutMeWaitDeliver"
-                    android:src="@drawable/home_selected"/>
+                    android:src="@drawable/wait_accept_disabled"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,7 +116,7 @@
             <LinearLayout
                 android:id="@+id/app_about_me_wait_for_receive"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -125,7 +125,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/home_selected"/>
+                    android:src="@drawable/wait_accept_enabled"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -138,7 +138,7 @@
             <LinearLayout
                 android:id="@+id/app_about_me_wait_for_comment"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -147,7 +147,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/home_selected"/>
+                    android:src="@drawable/wait_comment_enabled"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -184,21 +184,21 @@
             <LinearLayout
                 android:id="@+id/app_about_me_my_comment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:paddingTop="@dimen/y4"
                 >
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/my_comments"
                     />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y2"
                     android:text="我的评价"
                     />
             </LinearLayout>
@@ -217,15 +217,12 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
-
                 >
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/im_shopkeeper_enabled"
                     />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

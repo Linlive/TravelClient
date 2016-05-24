@@ -88,7 +88,7 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 	private Intent mIntent;
 	private String userId;
 
-	private String mSession;
+	private String mSession = "sission";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -268,7 +268,6 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 					break;
 				}
 				displayImg(uri);
-				imageUris.add(uri);
 				break;
 			default:
 				break;
@@ -294,8 +293,10 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 	}
 	private void displayImg(String filePath) {
 
-		imageUris.add(Uri.fromFile(new File(filePath)));
-
+		Uri uri = Uri.fromFile(new File(filePath));
+		if(!imageUris.contains(uri)){
+			imageUris.add(uri);
+		}
 		Bitmap photo = BitmapFactory.decodeFile(filePath);
 		if (photo == null) return;
 
@@ -305,7 +306,6 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 	}
 	private void displayImg(Bitmap bitmap) {
 		if (bitmap == null) return;
-
 		if (theFirstImage) {
 			theFirstImage = false;
 			defaultPublishFragment.setBitmapToImageView(bitmap);
