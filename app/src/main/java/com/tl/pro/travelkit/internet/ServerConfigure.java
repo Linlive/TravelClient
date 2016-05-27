@@ -15,13 +15,17 @@ public class ServerConfigure {
 	// a li yun server
 	//public static final String SERVER_ADDRESS = "http://42.96.138.253";
 	// room server
-	public static final String SERVER_ADDRESS = "http://192.168.1.222:8080";
+	public static final String SERVER_ADDRESS = "http://192.168.1.222:8080/KitServer";
 	// hp server
 //	public static final String SERVER_ADDRESS = "http://192.168.23.1:8080";
-//	public static final String SERVER_ADDRESS = "http://192.168.56.2:8080";
+//	public static final String SERVER_ADDRESS = "http://192.168.56.2:8080/KitServer";
+
+	public static final String DATA_IN_SERVER_FLAG = "map";
+	public static final int SERVER_OK = 200;
 
 	private static final String CHARSET = "utf-8"; //设置编码
-	public static final String DATA_IN_SERVER_FLAG = "map";
+
+
 	public enum Request {
 
 		POST("POST"), GET("GET");
@@ -41,7 +45,7 @@ public class ServerConfigure {
 	 * connect to server time out.
 	 * unit is milliseconds
 	 */
-	private static final int REQUEST_TIME_OUT = 10000;
+	private static final int REQUEST_TIME_OUT = 100000;
 
 	/**
 	 * read message from server time out.

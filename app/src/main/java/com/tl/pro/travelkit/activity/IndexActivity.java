@@ -6,7 +6,10 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,13 +17,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tl.pro.travelkit.R;
+import com.tl.pro.travelkit.bean.GoodsDo;
 import com.tl.pro.travelkit.fragment.AppIndexAbMeFrag;
 import com.tl.pro.travelkit.fragment.AppIndexFragment;
 import com.tl.pro.travelkit.util.CommonText;
+import com.tl.pro.travelkit.util.PostMultipart;
 
 import java.util.ArrayList;
 
-public class IndexActivity extends Activity implements View.OnClickListener, AppIndexAbMeFrag.IndexDataListener {
+public class IndexActivity extends Activity implements View.OnClickListener, AppIndexAbMeFrag.IndexDataListener, Handler.Callback {
 
 	public static int mTextColor = Color.parseColor("#f42f94df");
 
@@ -50,6 +55,13 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 	private Intent mIntent;
 	private String userId;
 
+	private Handler handler = new Handler(this);
+
+	@Override
+	public boolean handleMessage(Message msg) {
+		return false;
+	}
+
 	@Override
 	public String getUserId() {
 		return userId;
@@ -67,6 +79,8 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 		initViews();
 		fragmentManager = getFragmentManager();
 		setTabSelection(0);
+
+		new GoodsAll().execute("");
 	}
 
 	private Point getDeviceDisplay(){
@@ -193,6 +207,25 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 		}
 	}
 
+	private class GoodsAll extends AsyncTask<String, Float, GoodsDo>{
+		public GoodsAll() {
+			super();
+		}
+
+		@Override
+		protected GoodsDo doInBackground(String... params) {
+			PostMultipart.getGoods();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(GoodsDo goodsDo) {
+			super.onPostExecute(goodsDo);
+		}
+	}
+
+
+	//界面事件侦听
 	private ArrayList<MyOnTouchListener> onTouchListeners = new ArrayList<MyOnTouchListener>();
 
 	@Override

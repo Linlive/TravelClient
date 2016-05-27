@@ -40,8 +40,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".test.PercentActivity">
-        </activity>
+
         <activity android:name=".activity.PublishActivity">
         </activity>
         <activity android:name=".activity.GoodsDetailPublishActivity">
@@ -51,10 +50,22 @@
         <activity android:name=".activity.base.ToolBarBaseActivity">
         </activity>
         <activity android:name=".activity.GoodsScanActivity">
-
         </activity>
         <activity android:name=".activity.GoodsCommentActivity">
         </activity>
+        <activity android:name=".activity.ShoppingCartActivity">
+
+        </activity>
+
+        <!--test-->
+        <activity android:name=".test.PercentActivity">
+
+        </activity>
+        <!--<activity-->
+            <!--android:name="com.mob.tools.MobUIShell"-->
+            <!--android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"-->
+            <!--android:theme="@android:style/Theme.NoTitleBar"-->
+            <!--android:windowSoftInputMode="stateHidden|adjustResize" />-->
     </application>
 
 </manifest>

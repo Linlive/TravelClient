@@ -32,7 +32,8 @@
 	<color name="colorRegisterButtonFocus">#aa00ff00</color>
 
 	<!--app title-->
-	<color name="appTitle">#880faff0</color>
+	<!--<color name="appTitle">#880faff0</color>-->
+	<color name="appTitle">#ff5fd409</color>
 	<!--app switch -->
 	<color name="appSwitch">#6ed5fffe</color>
 

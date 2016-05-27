@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
-import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.listener.ImageFirstDisplayListener;
 
@@ -54,7 +53,7 @@ public class ListViewAdapter extends BaseAdapter {
 		options = new DisplayImageOptions.Builder()
 				.showImageOnLoading(R.drawable.ic_stub)
 				.showImageForEmptyUri(R.drawable.ic_empty)
-				.showImageOnFail(R.drawable.ic_error)
+				.showImageOnFail(R.drawable.ic_empty)
 				.cacheInMemory(true)
 				.cacheOnDisk(true)
 				.considerExifParams(true)
@@ -98,7 +97,7 @@ public class ListViewAdapter extends BaseAdapter {
 		}
 
 		vh.textViewDesc.setText(mDataList.get(position).get("describe"));
-		ImageLoader.getInstance().displayImage(mDataList.get(position).get("imageUrl"),  new ImageViewAware(vh.imageView), options, mAnimal);
+		ImageLoader.getInstance().displayImage(mDataList.get(position).get("imageUrl"),  vh.imageView, options, mAnimal);
 		return view;
 	}
 

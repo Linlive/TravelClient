@@ -294,6 +294,7 @@ public class GoodsDetailPublishFragment extends Fragment implements View.OnClick
 		map.put("color", mColorText.getText().toString());
 		map.put("price", mPriceEdit.getText().toString());
 		map.put("repertory", mRepertoryEdit.getText().toString());
+		map.put("extraInfo", mGoodsOtherInfo.getText().toString());
 		retList.add(map);
 		return retList;
 	}

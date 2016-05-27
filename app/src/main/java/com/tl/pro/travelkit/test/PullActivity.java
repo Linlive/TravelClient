@@ -56,6 +56,8 @@ public class PullActivity extends AppCompatActivity implements RefreshListView.I
 
 		setData();
 		mAdapter = new TestAdapter(this, mData);
+		//HttpClient
+
 //		mAdapter.setData(mData);
 
 		/**

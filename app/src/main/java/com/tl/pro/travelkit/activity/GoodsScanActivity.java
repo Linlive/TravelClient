@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -82,7 +81,7 @@ public class GoodsScanActivity extends AppCompatActivity {
 		mScanScrollAdapter = new GoodsScanScrollAdapter(this, urls);
 		mPagerChangeListener = new ScanGoodsPageChangeListener(this, mDotViews);
 
-		for (String a : Constants.IMAGES2){
+		for (String a : Constants.IMAGES3){
 			urls.add(a);
 			View dot = addDotView();
 			mPagerChangeListener.addDotView(dot);
@@ -115,19 +114,16 @@ public class GoodsScanActivity extends AppCompatActivity {
 		//原点的宽高，动态创建
 		float viewH = r.getDimension(R.dimen.x11);
 		float viewW = r.getDimension(R.dimen.y9);
-		ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 				(int) viewW,
 				(int) viewH);
+		layoutParams.setMargins((int)r.getDimension(R.dimen.x2), 0, (int)r.getDimension(R.dimen.x2), 0);
+		dotView.setLayoutParams(layoutParams);
 		dotView.setLayoutParams(layoutParams);
 		dotView.setBackgroundResource(R.drawable.publish_foot_dot_normal);
 		return dotView;
 	}
 
-//	private void work() {
-//		mScanScrollAdapter.urls = this.urls;
-//		mScanScrollAdapter.addView(dynamicView());
-//		mViewPager.setCurrentItem(0);
-//	}
 	public class ImageFirstDisplayListener extends SimpleImageLoadingListener {
 
 		public final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
@@ -145,7 +141,7 @@ public class GoodsScanActivity extends AppCompatActivity {
 				ImageView imageView = (ImageView) view;
 				boolean firstDisplay = !displayedImages.contains(imageUri);
 				if (firstDisplay) {
-					FadeInBitmapDisplayer.animate(imageView, 1000);
+					FadeInBitmapDisplayer.animate(imageView, 500);
 					displayedImages.add(imageUri);
 				}
 				mScanScrollAdapter.notifyDataSetChanged();

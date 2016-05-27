@@ -24,4 +24,18 @@
 		<item name="android:layout_height">@dimen/y26</item>
 		<item name="android:layout_gravity">center</item>
 	</style>
+
+	<!--shopping cart-->
+	<style name="checkBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+		<item name="android:button">@drawable/text_check_box_background</item>
+	</style>
+	<style name="shoppingCartCommonTextStyle">
+		<item name="android:textColor">@color/textBlank</item>
+		<item name="android:textSize">14sp</item>
+	</style>
+	<style name="shoppingCartDetailTextStyle">
+		<item name="android:textColor">@color/lineView</item>
+		<item name="android:textSize">14sp</item>
+	</style>
+
 </resources>

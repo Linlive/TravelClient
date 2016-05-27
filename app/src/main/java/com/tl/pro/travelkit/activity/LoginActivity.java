@@ -6,12 +6,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,23 +40,45 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 	private static final int LOGIN_TIME_LIMIT = 1;
 
+	private static final int STOPSPLASH = 0;
+	private static final long SPLASHTIME = 2500;
+
+	private Animation animatinoIn;
+	private Animation animatinoAppIn;
+	private int status = 1;
+	private LinearLayout mLinearLayout;
+	private FrameLayout mLaunchFrm;
+
 	private Button mLoginOrRegisterButton;
 
 	private EditText mUserNameEdit;
-
 	private EditText mUserPasswordEdit;
-
 	private TextView mForgotPasswordText;
-
 	private LoginAsyncTask mAsyncTask = null;
+
+	private TextView mAdmistratorText;
+	private CheckBox mAdmistratorCheckBox;
 
 	View mTmpLayout;
 
 	View mLoginLayout;
 
 	boolean backGroundSuccess = false;
+	boolean isAdministrator = false;
 
 	int loginTime = 0;
+
+	private Handler splashHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case STOPSPLASH:
+					mLinearLayout.setVisibility(View.GONE);
+					mLaunchFrm.startAnimation(animatinoAppIn);
+					break;
+			}
+			super.handleMessage(msg);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +86,19 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.activity_login2);
+		setContentView(R.layout.activity_login);
 		initView();
+
+		animatinoIn = AnimationUtils.loadAnimation(this, R.anim.app_launcgh_img_in); //动画效果
+		animatinoAppIn = AnimationUtils.loadAnimation(this, R.anim.app_launch_frm_in); //动画效果
+
+		mLinearLayout = (LinearLayout) findViewById(R.id.goneLinear);
+		mLinearLayout.startAnimation(animatinoIn);
+		mLaunchFrm = (FrameLayout) findViewById(R.id.app_launch_frm);
+
+		Message msg = new Message();
+		msg.what = STOPSPLASH;
+		splashHandler.sendMessageDelayed(msg, SPLASHTIME);
 	}
 
 	private void initView() {
@@ -68,17 +108,31 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 		mForgotPasswordText = (TextView) findViewById(R.id.login_forget_password);
 		mTmpLayout = findViewById(R.id.login_frame_tmp);
 		mLoginLayout = findViewById(R.id.login_frame_login);
+
+		mAdmistratorCheckBox = (CheckBox) findViewById(R.id.app_administrator_check_box);
+		mAdmistratorText = (TextView) findViewById(R.id.app_administrator);
+
 		mLoginOrRegisterButton.setOnClickListener(this);
+		mAdmistratorCheckBox.setOnClickListener(this);
+		mAdmistratorText.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.login_login_or_register_button:
+				isAdministrator = mAdmistratorCheckBox.isChecked();
 				goToLogin();
 				break;
 			case R.id.login_forget_password:
 				goToFindPassword();
+				break;
+			case R.id.app_administrator_check_box:
+				break;
+			case R.id.app_administrator:
+				isAdministrator = !isAdministrator;
+				mAdmistratorCheckBox.setChecked(isAdministrator);
+				break;
 			default:
 				break;
 		}
@@ -217,7 +271,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 					String tmpPass = KitAESCoder.encrypt(object.getString("userPassword"));
 					object.put("userPassword", tmpPass);
 				}
-
+				if(isAdministrator){
+					object.put("permissionLevel", 0);
+				}
 				ServerTalk.writeToServer(con.getOutputStream(), params[0]);
 				L.i("server response code is: " + con.getResponseCode());
 
@@ -245,7 +301,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			backGroundSuccess = true;
 			enableView(true);
 			if(serverObject == null) {
-				Toast.makeText(LoginActivity.this, "请稍后再试", Toast.LENGTH_SHORT).show();
+				Toast.makeText(LoginActivity.this, R.string.pleaseWait, Toast.LENGTH_SHORT).show();
 
 				//测试登录后的过程
 				login = true;
@@ -256,14 +312,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			}
 			if(!serverObject.isSuccess()){
 				L.e("服务器返回操作失败");
-				Toast.makeText(LoginActivity.this, "请重试", Toast.LENGTH_SHORT).show();
+				Toast.makeText(LoginActivity.this,  R.string.pleaseWait, Toast.LENGTH_SHORT).show();
 				return;
 			}
 			try {
 				JSONObject object = (JSONObject) serverObject.getData();
 
 				if(object == null){
-					Toast.makeText(LoginActivity.this, "服务器未响应", Toast.LENGTH_SHORT).show();
+					Toast.makeText(LoginActivity.this, R.string.serverNotResponse, Toast.LENGTH_SHORT).show();
 					return;
 				}
 				if(!object.has("status")){
@@ -281,9 +337,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 					login = false;
 					String message = object.getString("message");
 					if("userNotExist".equals(message)){
+						if(isAdministrator) {
+							Toast.makeText(LoginActivity.this, R.string.passwordError, Toast.LENGTH_LONG).show();
+							return;
+						}
 						goToSignUp();
 					} else if("passwordNotMatch".equals(message)){
-						Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_LONG).show();
+						Toast.makeText(LoginActivity.this, R.string.passwordError, Toast.LENGTH_LONG).show();
 					}
 				}
 			} catch (JSONException e) {

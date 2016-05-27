@@ -23,5 +23,8 @@ public class MyBaseFragment extends Fragment {
     }
     private void applyScrollListener() {
         listView.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling));
+//      加载的时候禁止屏幕滑动
+//        listView.setShowViewWhileRefreshing(true);
+        listView.setScrollingWhileRefreshingEnabled(false);
     }
 }

@@ -25,12 +25,11 @@ public class ImageFirstDisplayListener extends SimpleImageLoadingListener {
 	}
 	@Override
 	public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-		mListAdapter.notifyDataSetChanged();
 		if (loadedImage != null) {
 			ImageView imageView = (ImageView) view;
 			boolean firstDisplay = !displayedImages.contains(imageUri);
 			if (firstDisplay) {
-				FadeInBitmapDisplayer.animate(imageView, 1000);
+				FadeInBitmapDisplayer.animate(imageView, 10);
 				displayedImages.add(imageUri);
 			}
 		}

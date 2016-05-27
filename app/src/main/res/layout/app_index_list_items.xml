@@ -3,15 +3,14 @@
                                                android:layout_width="match_parent"
                                                android:layout_height="match_parent"
                                                xmlns:app="http://schemas.android.com/apk/res-auto"
-                                               android:paddingTop="@dimen/y1"
-                                               android:paddingBottom="@dimen/y1"
+
     >
 
     <ImageView
         android:id="@+id/app_index_goods_image_main"
         android:layout_width="@dimen/x250"
         android:layout_height="@dimen/y100"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         />
     <!--app:layout_widthPercent="60%"-->
     <!--app:layout_heightPercent="40%"-->
@@ -27,8 +26,9 @@
         android:layout_height="@dimen/y102"
         android:layout_toEndOf="@id/app_index_goods_middle_view"
         android:layout_toRightOf="@id/app_index_goods_middle_view"
-        android:orientation="vertical">
-
+        android:orientation="vertical"
+        android:paddingTop="4dp"
+        >
         <LinearLayout
             android:id="@+id/app_index_name_liner"
             android:layout_width="wrap_content"

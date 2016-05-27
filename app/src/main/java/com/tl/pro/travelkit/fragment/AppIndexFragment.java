@@ -45,10 +45,25 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 	private View mLinerLayout;
 	private Button button;
 	private TextView appTitle;
+	/**
+	 * "http://banbao.chazidian.com/uploadfile/2016-01-25/s145368924044608.jpg",
+	 "http://e.hiphotos.baidu.com/image/pic/item/314e251f95cad1c8037ed8c97b3e6709c83d5112.jpg",
+	 "http://g.hiphotos.baidu.com/image/pic/item/a50f4bfbfbedab64dd596a2ef336afc379311e30.jpg",
+	 "http://a.hiphotos.baidu.com/image/pic/item/e7cd7b899e510fb3a78c787fdd33c895d0430c44.jpg",
+	 "http://f.hiphotos.baidu.com/image/pic/item/242dd42a2834349b7eaf886ccdea15ce37d3beaa.jpg",
+	 "http://d.hiphotos.baidu.com/image/pic/item/2e2eb9389b504fc2065e2bd2e1dde71191ef6de0.jpg",
+	 "http://h.hiphotos.baidu.com/image/pic/item/dbb44aed2e738bd4ec4f29e6a58b87d6267ff9ff.jpg",
+	 "http://c.hiphotos.baidu.com/image/pic/item/1f178a82b9014a90a47fdd6aad773912b21beea0.jpg",
+	 "http://b.hiphotos.baidu.com/image/pic/item/aec379310a55b319a28419a247a98226cefc17e3.jpg",
+	 "http://h.hiphotos.baidu.com/image/pic/item/8601a18b87d6277f31d064e72c381f30e824fc2b.jpg"
+	 */
 	private String[] urls = {
+			"http://img2.imgtn.bdimg.com/it/u=1344363743,3376718665&fm=21&gp=0.jpg",
+			"http://img.tnc.com.cn/upload/news/010/2011/08/29/1600557089.jpg",
 			"http://pic36.nipic.com/20131217/6704106_233034463381_2.jpg",
 			"http://pic32.nipic.com/20130829/12906030_124355855000_2.png",
-			"http://banbao.chazidian.com/uploadfile/2016-01-25/s145368924044608.jpg"
+			"http://files.3158.cn/article/201502/2807/392559400737298.png",
+			"http://www.lagou.com/image1/M00/0F/B4/Cgo8PFT9cmqAK2nKAADF4_eZqkc634.jpg"
 	};
 
 	private Point point;
@@ -83,7 +98,9 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 		setData();
 		mAdapter = new ListViewAdapter(mContext, mData);
 		listView.setAdapter(mAdapter);
+
 		mAdapter.setData(mData);
+		listView.onRefreshComplete();
 	}
 	private void setListener() {
 
@@ -172,8 +189,8 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 
 	private void setData() {
 		HashMap<String, String> map;
-		for(int i = 1; i < 4; i++){
-			map = new HashMap<String, String>();
+		for(int i = 1; i < urls.length + 1; i++){
+			map = new HashMap<>();
 			map.put("imageUrl", urls[i-1]);
 			map.put("describe", "这里是商品描述" + i + "可能会有很多内容，可能会显示不完全，所以应该用eclipse显示结束位置。");
 			//map.put("title", "标题" + i);
@@ -202,7 +219,10 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 			// Simulates a background job.
 			try {
 				Thread.sleep(1000);
+
+
 			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 			return urls;
 		}
@@ -214,7 +234,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 			//向RefreshListView Item 添加一行数据  并刷新ListView
 			//mListItems.addLast("Added after refresh...");
 			HashMap map = new HashMap();
-			map.put("imageUrl", result[0]);
+			map.put("imageUrl", "http://img5.imgtn.bdimg.com/it/u=686836975,1440550048&fm=21&gp=0.jpg");
 			map.put("describe", "描述更新后的一个,可能会有很多内容，可能会显示不完全，所以应该用eclipse显示结束位置");
 			//map.put("title", "标题 更新后的 一个");
 			mData.addFirst(map);
@@ -251,7 +271,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 			//向RefreshListView Item 添加一行数据  并刷新ListView
 			//mListItems.addLast("Added after refresh...");
 			HashMap<String, String> map = new HashMap<>();
-			map.put("imageUrl", result[0]);
+			map.put("imageUrl", "http://img2.imgtn.bdimg.com/it/u=765479998,1984663438&fm=21&gp=0.jpg");
 			map.put("describe", "描述更新后的一个");
 			map.put("title", "标题 更新后的 一个");
 			mData.addLast(map);

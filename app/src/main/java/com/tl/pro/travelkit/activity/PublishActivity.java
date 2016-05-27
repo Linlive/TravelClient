@@ -293,6 +293,9 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 	}
 	private void displayImg(String filePath) {
 
+		if(filePath == null){
+			return;
+		}
 		Uri uri = Uri.fromFile(new File(filePath));
 		if(!imageUris.contains(uri)){
 			imageUris.add(uri);
@@ -354,7 +357,7 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 
 		L.e(TAG, imageUris.size() + " size");
 		if (detailPublishFragment == null) {
-			Toast.makeText(this, "请添加详细信息", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.pleaseAddDetailInfo, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		final List<HashMap<String, String>> mapList = detailPublishFragment.getSelectInfo();
@@ -363,6 +366,7 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 		for (Uri uri : imageUris) {
 			thisFilePaths.add(StoragePathHolder.getPath(this, uri));
 		}
+		//extraInfo
 		addUserInfo(mapList);
 		PostMultipart.upLoadGoods(mapList, thisFilePaths, uploadProgressListener);
 	}
@@ -382,7 +386,7 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 		}
 		if ((ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)) {
 			if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-				Toast.makeText(this, "你需要拍照上传商品图片，请允许使用相机", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, R.string.pleaseAllowCamera, Toast.LENGTH_LONG).show();
 			} else {
 				requestPermission(context, permission, CAMERA_REQUEST_CODE);
 			}
@@ -437,57 +441,18 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 	 * @return filePath
 	 */
 	private String saveImageToGallery(Context context) {
-		// 首先保存图片
-		File appDir = new File(currentPicturePath);
-		if (!appDir.exists() && !appDir.mkdirs()) {
-			L.e(TAG, "can not create a dir :" + appDir);
+
+		File file = createImgFile();
+		if(file == null){
 			return null;
 		}
-		String savePath = null;
-		final Calendar mCalendar = Calendar.getInstance();
-		mCalendar.setTimeInMillis(System.currentTimeMillis());
-		int mYear = mCalendar.get(Calendar.YEAR);
-		int mMonth = mCalendar.get(Calendar.MONTH) + 1;
-		int mDay = mCalendar.get(Calendar.DATE);
-		int mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
-		int mMinuets = mCalendar.get(Calendar.MINUTE);
-		int mSec = mCalendar.get(Calendar.SECOND);
-		String date = "" + mYear + mMonth + mDay + mHour + mMinuets + mSec;
-		String fileName = "IMG" + date + ".jpg";
-		File file = new File(appDir, fileName);
-
 		Bitmap bmp = BitmapFactory.decodeFile(currentPicturePath + "temp.jpg");
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(file);
-			bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-			savePath = file.getAbsolutePath();
-			File tmpPng = new File(currentPicturePath, "temp.jpg");
-			tmpPng.delete();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if(fos != null){
-				try {
-					fos.flush();
-					fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		// 其次把文件插入到系统图库
-		try {
-			MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), fileName, null);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		// 最后通知图库更新
-		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + "")));
-		return savePath;
+		saveImageToGallery(context, bmp);
+
+		return file.getAbsolutePath();
 	}
 
-	private Uri saveImageToGallery(Context context, Bitmap bitmap) {
+	private File createImgFile(){
 		// 首先保存图片
 		File appDir = new File(currentPicturePath);
 		Uri retUri = null;
@@ -506,7 +471,12 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 		String date = "" + mYear + mMonth + mDay + mHour + mMinuets + mSec;
 		String fileName = "IMG" + date + ".jpg";
 		File file = new File(appDir, fileName);
+		return file;
+	}
 
+	private Uri saveImageToGallery(Context context, Bitmap bitmap) {
+		Uri retUri = null;
+		File file = createImgFile();
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(file);
@@ -527,7 +497,7 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 		}
 		// 其次把文件插入到系统图库
 		try {
-			MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), fileName, null);
+			MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), file.getName(), null);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

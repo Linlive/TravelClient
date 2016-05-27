@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shopName">足下旅行</string>
+    <string name="goodsDetail">新品上市，欢迎抢购，买的多，送得多，亲们快来啊~</string>
+    <string name="goodsPrice">￥60</string>
+    <string name="goodsBuyNumber">X1</string>
+
+</resources>

@@ -4,20 +4,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/back_white"
     android:orientation="vertical"
     >
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/goneLinear"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <include layout="@layout/activity_temporary" android:id="@+id/login_frame_tmp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:weightSum="10">
+
+        <ImageView
+            android:id="@+id/launchImg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:scaleType="centerCrop"
+            android:src="@drawable/web_site"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/colorRegisterButtonPress"
+            android:gravity="center"
+            android:text="欢迎来到旅行装备商店"
+            android:textColor="@color/textBlank"
+            android:textSize="25sp"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/app_launch_frm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <include
+            android:id="@+id/login_frame_tmp"
+            layout="@layout/activity_temporary"/>
         <android.support.percent.PercentRelativeLayout
+            android:id="@+id/login_frame_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/login_back"
-            android:id="@+id/login_frame_login"
             >
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -26,7 +59,6 @@
                 android:textColor="@color/appTitle"
                 android:textSize="25sp"
                 />
-
             <com.tl.pro.travelkit.view.custom.PercentLinearLayout
                 android:id="@+id/percentLinear"
                 android:layout_width="match_parent"
@@ -63,15 +95,44 @@
                     android:id="@+id/login_login_or_register_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/percentLinear"
                     android:layout_alignStart="@id/percentLinear"
                     android:layout_below="@id/percentLinear"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/login_login_button_style"
                     android:text="登录/注册"
                     android:textSize="20sp"
-                    app:layout_widthPercent="100%"
-                    android:layout_alignLeft="@id/percentLinear" />
+                    app:layout_widthPercent="100%"/>
             </com.tl.pro.travelkit.view.custom.PercentLinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/login_forget_password"
+                android:layout_alignLeft="@+id/login_forget_password"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/app_administrator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="管理员"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    />
+                <CheckBox
+                    android:id="@+id/app_administrator_check_box"
+                    style="@style/checkBoxStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="3dp"
+                    />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/login_forget_password"
@@ -79,11 +140,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="2dp"
                 android:background="@drawable/login_forgot_password_text"
                 android:ellipsize="end"
+                android:paddingRight="16dp"
                 android:text="@string/forgotPassword"
+                android:textColor="@color/black"
                 android:textSize="18sp"
-                android:layout_alignParentRight="true" />
+                />
         </android.support.percent.PercentRelativeLayout>
     </FrameLayout>
 

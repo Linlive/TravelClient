@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pleaseAllowCamera">你需要拍照上传商品图片，请允许使用相机</string>
+    <string name="pleaseAddDetailInfo">请添加详细信息</string>
+</resources>

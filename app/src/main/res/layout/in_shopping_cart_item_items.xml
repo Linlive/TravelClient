@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:weightSum="5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:background="@color/appSwitch"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            android:paddingBottom="5dp"
+            android:paddingTop="1dp"
+            >
+            <CheckBox
+                android:id="@+id/app_shopping_cart_check_box"
+                style="@style/checkBoxStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_weight="10"
+                />
+
+            <ImageView
+                android:id="@+id/app_shopping_cart_item_goods_img"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/y80"
+                android:layout_weight="22"
+                android:src="@drawable/shoe_photo"
+                />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="60"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="4dp">
+
+                <TextView
+                    style="@style/shoppingCartCommonTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="2"
+                    android:paddingBottom="2dp"
+                    android:text="@string/goodsDetail"/>
+
+                <TextView
+                    style="@style/shoppingCartDetailTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="颜色分类:红色"
+                    android:paddingBottom="2dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="￥60"
+                    android:textSize="16sp"
+                    android:textColor="@color/red"/>
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/shoppingCartCommonTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="10"
+                android:gravity="center"
+                android:text="X1"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

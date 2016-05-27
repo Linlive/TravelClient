@@ -21,5 +21,6 @@
     <string name="shopkeeperNameValueIntroduce">商家名称(网络获取)</string>
     <string name="goodsComments">商品评价</string>
     <string name="goodsCommentsValue">老板很和蔼，对客户很热心，下次再来，满分好评！</string>
+    <string name="shopCommonIntroduce">本店主要经营户外装备，为骆驼品牌直销，请认准骆驼牌标志，多谢支持！</string>
 
 </resources>

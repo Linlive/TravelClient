@@ -19,6 +19,11 @@ android {
     productFlavors {
     }
 }
+repositories{
+    flatDir{
+        dirs 'libs'
+    }
+}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -32,7 +37,10 @@ dependencies {
     compile 'com.nobrain.android.permissions:library:1.1.0'
     compile 'cn.edu.zafu:coreprogress:0.0.3'
     compile 'com.zhy:okhttputils:2.4.1'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'org.apache.httpcomponents:httpclient:4.3.5'
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile project(':pullrefresh')
-    //compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
+    compile name:'SMSSDK-2.0.2', ext:'aar'
+    compile name:'SMSSDKGUI-2.0.2', ext:'aar'
 }

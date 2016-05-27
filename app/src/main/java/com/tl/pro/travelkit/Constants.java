@@ -171,6 +171,15 @@ public final class Constants {
 			"https://lh3.googleusercontent.com/--L0Km39l5J8/URquXHGcdNI/AAAAAAAAAbs/3ZrSJNrSomQ/s1024/Antelope%252520Butte.jpg",
 			"https://lh6.googleusercontent.com/-8HO-4vIFnlw/URquZnsFgtI/AAAAAAAAAbs/WT8jViTF7vw/s1024/Antelope%252520Hallway.jpg",
 			"https://lh4.googleusercontent.com/-WIuWgVcU3Qw/URqubRVcj4I/AAAAAAAAAbs/YvbwgGjwdIQ/s1024/Antelope%252520Walls.jpg"};
+
+	public static final String[] IMAGES3 = new String[] {
+			// Heavy images
+			"http://img3.redocn.com/tupian/20140730/huwaiyundongnanzhuangtaobaofuzhuanghaibao_2633381.jpg",
+			"http://image.buy.ccb.com/images/47040328/1368075906024.jpg",
+			"http://pic7.nipic.com/20100618/4286241_185455073244_2.jpg",
+			"http://img4.imgtn.bdimg.com/it/u=4023390987,1206903131&fm=21&gp=0.jpg"
+			};
+
 	private Constants() {
 	}
 

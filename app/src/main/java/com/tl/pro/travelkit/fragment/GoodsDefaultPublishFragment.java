@@ -181,9 +181,10 @@ public class GoodsDefaultPublishFragment extends Fragment implements ViewPagerCl
 		//原点的宽高，动态创建
 		float viewH = r.getDimension(R.dimen.x11);
 		float viewW = r.getDimension(R.dimen.y9);
-		ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 				(int) viewW,
 				(int) viewH);
+		layoutParams.setMargins((int)r.getDimension(R.dimen.x2), 0, (int)r.getDimension(R.dimen.x2), 0);
 		dotView.setLayoutParams(layoutParams);
 		dotView.setBackgroundResource(R.drawable.publish_foot_dot_normal);
 		return dotView;
