@@ -10,6 +10,10 @@ public class UrlSource {
 
 	public static final String SIGNUP = "/register";
 	public static final String SIGNIN = "/login";
-	public static final String USER_INFO = "/";
-	public static final String UPLOAD_PHOTO_AND_DETAIL = "/uploadDetail";
+	public static final String GETGOODS = "/getGoods";
+	public static final String UPLOAD_PHOTO_AND_DETAIL = "/uploadGoods";
+
+	public static final String ADD_TO_SHOPPING_CART = "/addToShoppingCart";
+
+
 }

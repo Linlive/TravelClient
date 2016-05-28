@@ -2,4 +2,5 @@
 <resources>
     <string name="pleaseAllowCamera">你需要拍照上传商品图片，请允许使用相机</string>
     <string name="pleaseAddDetailInfo">请添加详细信息</string>
+    <string name="pleaseAddPhotoInfo">请添加至少一张图片</string>
 </resources>

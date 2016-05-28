@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.tl.pro.travelkit.R;
+import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.listener.ViewPagerClickListener;
 import com.tl.pro.travelkit.util.log.L;
 
@@ -85,43 +86,44 @@ public class GoodsScanScrollAdapter extends PagerAdapter {
 		View xml = mInflater.inflate(R.layout.scan_goods_img_scroll, container, false);
 		ImageView img = (ImageView) xml.findViewById(R.id.scan_goods_img_scroll_item);
 
-
-		ImageLoader.getInstance().displayImage(urls.get(position), img, options, new SimpleImageLoadingListener() {
-			@Override
-			public void onLoadingStarted(String imageUri, View view) {
-				L.e("tag", "load start ================== ");
-			}
-
-			@Override
-			public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-				String message = null;
-				switch (failReason.getType()) {
-					case IO_ERROR:
-						message = "Input/Output error";
-						break;
-					case DECODING_ERROR:
-						message = "Image can't be decoded";
-						break;
-					case NETWORK_DENIED:
-						message = "Downloads are denied";
-						break;
-					case OUT_OF_MEMORY:
-						message = "Out Of Memory error";
-						break;
-					case UNKNOWN:
-						message = "Unknown error";
-						break;
-				}
-				Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
-
-			}
-
-			@Override
-			public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-				L.e("tag", "load start ================== end");
-			}
-		});
+		ImageLoader.getInstance().displayImage(ServerConfigure.SERVER_ADDRESS + urls.get(position), img, options, new ImgLoadListener());
 		((ViewPager) container).addView(xml, 0);
 		return xml;
+	}
+
+	private class ImgLoadListener extends SimpleImageLoadingListener{
+		@Override
+		public void onLoadingStarted(String imageUri, View view) {
+			L.e("tag", "load start ================== ");
+		}
+
+		@Override
+		public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+			String message = null;
+			switch (failReason.getType()) {
+				case IO_ERROR:
+					message = "Input/Output error";
+					break;
+				case DECODING_ERROR:
+					message = "Image can't be decoded";
+					break;
+				case NETWORK_DENIED:
+					message = "Downloads are denied";
+					break;
+				case OUT_OF_MEMORY:
+					message = "Out Of Memory error";
+					break;
+				case UNKNOWN:
+					message = "Unknown error";
+					break;
+			}
+			Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+
+		}
+
+		@Override
+		public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+			L.e("tag", "load start ================== end");
+		}
 	}
 }

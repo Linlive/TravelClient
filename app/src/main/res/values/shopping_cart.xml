@@ -5,4 +5,7 @@
     <string name="goodsPrice">￥60</string>
     <string name="goodsBuyNumber">X1</string>
 
+    <string name="addToShoppingCartSuccess">成功添加至购物车</string>
+    <string name="addToShoppingCartFailed">您的网络似乎出了一些问题</string>
+
 </resources>

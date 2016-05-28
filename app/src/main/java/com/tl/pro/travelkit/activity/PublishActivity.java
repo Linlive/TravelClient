@@ -356,8 +356,13 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 	private void toUploadGoods() {
 
 		L.e(TAG, imageUris.size() + " size");
-		if (detailPublishFragment == null) {
+		if (detailPublishFragment == null || detailPublishFragment.getSelectInfo() == null
+				|| detailPublishFragment.getSelectInfo().size() == 0) {
 			Toast.makeText(this, R.string.pleaseAddDetailInfo, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if(imageUris == null || imageUris.size() == 0){
+			Toast.makeText(this, R.string.pleaseAddPhotoInfo, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		final List<HashMap<String, String>> mapList = detailPublishFragment.getSelectInfo();

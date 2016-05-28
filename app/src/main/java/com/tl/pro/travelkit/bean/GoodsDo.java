@@ -1,12 +1,15 @@
 package com.tl.pro.travelkit.bean;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * 商品 对象，属性包含：
  * 品牌，类型，尺寸，颜色，适合于什么地方，价格（售价）
  * 库存
  * Created by Administrator on 2016/5/21.
  */
-public class GoodsDo {
+public class GoodsDo implements Serializable{
 
 	//common info
 	private String goodsId;
@@ -26,6 +29,8 @@ public class GoodsDo {
 	private String goodsTypeValue;
 	private String goodsSizeValue;
 	private String goodsColorValue;
+
+	private List<String> imgUrlList;
 
 	// 额外信息
 	private String goodsExtras;
@@ -182,5 +187,22 @@ public class GoodsDo {
 	public void setGoodsExtras (String goodsExtras) {
 
 		this.goodsExtras = goodsExtras;
+	}
+
+	public List<String> getImgUrlList () {
+
+		return imgUrlList;
+	}
+
+	public void setImgUrlList (List<String> imgUrlList) {
+
+		this.imgUrlList = imgUrlList;
+	}
+
+	@Override
+	public String toString () {
+
+		return "GoodsDo:" + goodsId + goodsName + goodsBrandValue + goodsTypeValue + goodsSizeValue
+				+ goodsColorValue + shopKeeperId;
 	}
 }

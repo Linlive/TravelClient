@@ -20,10 +20,12 @@ import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.bean.GoodsDo;
 import com.tl.pro.travelkit.fragment.AppIndexAbMeFrag;
 import com.tl.pro.travelkit.fragment.AppIndexFragment;
+import com.tl.pro.travelkit.fragment.ShoppingCartFragment;
 import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.PostMultipart;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class IndexActivity extends Activity implements View.OnClickListener, AppIndexAbMeFrag.IndexDataListener, Handler.Callback {
 
@@ -31,10 +33,12 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 
 	private FragmentManager fragmentManager;
 	private AppIndexFragment homeFragment;
-//	private ImageListFragment homeFragment;
+	private ShoppingCartFragment shoppingCartFragment;
+	//	private ImageListFragment homeFragment;
 	private AppIndexAbMeFrag aboutFragment;
 
 	private View homeLayout;
+	private View cartLayout;
 	private View aboutMeLayout;
 	/**
 	 * title image view
@@ -43,9 +47,11 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 	private ImageView mSearchOrSettingImg;
 
 	private ImageView homeImage;
+	private ImageView cartImage;
 	private ImageView aboutMeImage;
 
 	private TextView homeText;
+	private TextView cartText;
 	private TextView aboutMeText;
 
 	// display
@@ -83,29 +89,34 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 		new GoodsAll().execute("");
 	}
 
-	private Point getDeviceDisplay(){
+	private Point getDeviceDisplay() {
 		WindowManager wm = this.getWindowManager();
 
 		Point p = new Point();
 		wm.getDefaultDisplay().getSize(p);
 		return p;
 	}
+
 	/**
 	 * 在这里获取到每个需要用到的控件的实例，并给它们设置好必要的点击事件。
 	 */
 	private void initViews() {
 		homeLayout = findViewById(R.id.index_home_layout);
+		cartLayout = findViewById(R.id.index_shopping_cart_layout);
 		aboutMeLayout = findViewById(R.id.index_about_me_layout);
 
 		homeImage = (ImageView) findViewById(R.id.index_home_image);
+		cartImage = (ImageView) findViewById(R.id.index_shopping_cart_image);
 		aboutMeImage = (ImageView) findViewById(R.id.index_about_me_image);
 		mGoBackImg = (ImageView) findViewById(R.id.app_index_go_back_image);
 		mSearchOrSettingImg = (ImageView) findViewById(R.id.app_index_search_or_setting_image);
 
 		homeText = (TextView) findViewById(R.id.index_home_text);
+		cartText = (TextView) findViewById(R.id.index_shopping_cart_text);
 		aboutMeText = (TextView) findViewById(R.id.index_about_me_text);
 
 		homeLayout.setOnClickListener(this);
+		cartLayout.setOnClickListener(this);
 		aboutMeLayout.setOnClickListener(this);
 	}
 
@@ -137,9 +148,18 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 					// 如果MessageFragment不为空，则直接将它显示出来
 					transaction.show(homeFragment);
 				}
-
 				break;
 			case 1:
+				cartImage.setImageResource(R.drawable.cart_enabled);
+				cartText.setTextColor(mTextColor);
+				if (shoppingCartFragment == null) {
+					shoppingCartFragment = new ShoppingCartFragment();
+					transaction.add(R.id.container, shoppingCartFragment);
+				} else {
+					transaction.show(shoppingCartFragment);
+				}
+				break;
+			case 2:
 				aboutMeImage.setImageResource(R.drawable.user_selected);
 				mSearchOrSettingImg.setImageResource(R.drawable.setting_enabled);
 				aboutMeText.setTextColor(mTextColor);
@@ -149,11 +169,8 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 					aboutFragment.setPoint(point);
 					transaction.add(R.id.container, aboutFragment);
 				} else {
-
 					transaction.show(aboutFragment);
 				}
-				break;
-			case 2:
 				break;
 			case 3:
 			default:
@@ -168,6 +185,10 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 	private void clearSelection() {
 		homeImage.setImageResource(R.drawable.home_unselected);
 		homeText.setTextColor(Color.parseColor("#82858b"));
+
+		cartImage.setImageResource(R.drawable.cart_disabled);
+		cartText.setTextColor(Color.parseColor("#82858b"));
+
 		aboutMeImage.setImageResource(R.drawable.user_unselected);
 		aboutMeText.setTextColor(Color.parseColor("#82858b"));
 	}
@@ -181,6 +202,9 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 		if (homeFragment != null) {
 			transaction.hide(homeFragment);
 		}
+		if (shoppingCartFragment != null) {
+			transaction.hide(shoppingCartFragment);
+		}
 		if (aboutFragment != null) {
 			transaction.hide(aboutFragment);
 		}
@@ -193,34 +217,38 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 				// 当点击了消息tab时，选中第1个tab
 				setTabSelection(0);
 				break;
+			case R.id.index_shopping_cart_layout:
+				setTabSelection(1);
+				break;
 			case R.id.index_about_me_layout:
 				// 当点击了联系人tab时，选中第2个tab
-				setTabSelection(1);
+				setTabSelection(2);
 				break;
 			case R.id.app_index_go_back_image:
 				break;
 			case R.id.app_index_search_or_setting_image:
-
 				break;
 			default:
 				break;
 		}
 	}
 
-	private class GoodsAll extends AsyncTask<String, Float, GoodsDo>{
-		public GoodsAll() {
-			super();
+	private class GoodsAll extends AsyncTask<String, Float, List<GoodsDo>> {
+		@Override
+		protected void onPostExecute(List<GoodsDo> goodsDoList) {
+
+			System.out.println(goodsDoList.size());
+			homeFragment.initData(goodsDoList);
 		}
 
 		@Override
-		protected GoodsDo doInBackground(String... params) {
-			PostMultipart.getGoods();
-			return null;
+		protected List<GoodsDo> doInBackground(String... params) {
+			return PostMultipart.getGoods();
 		}
 
 		@Override
-		protected void onPostExecute(GoodsDo goodsDo) {
-			super.onPostExecute(goodsDo);
+		protected void onCancelled() {
+			super.onCancelled();
 		}
 	}
 

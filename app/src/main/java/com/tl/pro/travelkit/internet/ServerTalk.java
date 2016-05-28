@@ -71,6 +71,13 @@ public class ServerTalk {
 			e.printStackTrace();
 			L.e("编码错误或写入服务器失败！");
 			return false;
+		} finally {
+			try {
+				writer.flush();
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return true;
 	}

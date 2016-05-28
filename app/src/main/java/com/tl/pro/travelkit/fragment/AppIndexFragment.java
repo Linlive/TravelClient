@@ -21,11 +21,13 @@ import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.activity.GoodsScanActivity;
 import com.tl.pro.travelkit.activity.IndexActivity;
 import com.tl.pro.travelkit.adapter.ListViewAdapter;
+import com.tl.pro.travelkit.bean.GoodsDo;
 import com.tl.pro.travelkit.fragment.base.MyBaseFragment;
+import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.log.L;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -35,27 +37,32 @@ import java.util.LinkedList;
 public class AppIndexFragment extends MyBaseFragment implements View.OnTouchListener {
 
 	public static final String TAG = "AppIndexFragment";
-	private static LinkedList<HashMap<String, String>> mData = new LinkedList<>();
+	private static List<GoodsDo> mData = new ArrayList<>();
 
 	private Context mContext;
 	//private PullToRefreshListView mPullToRefreshListView = listView;
 	private ListViewAdapter mAdapter;
 	private IndexActivity.MyOnTouchListener onTouchListener;
 
+	AppIndexAbMeFrag.IndexDataListener dataListener;
+
 	private View mLinerLayout;
 	private Button button;
 	private TextView appTitle;
+
+
+
 	/**
 	 * "http://banbao.chazidian.com/uploadfile/2016-01-25/s145368924044608.jpg",
-	 "http://e.hiphotos.baidu.com/image/pic/item/314e251f95cad1c8037ed8c97b3e6709c83d5112.jpg",
-	 "http://g.hiphotos.baidu.com/image/pic/item/a50f4bfbfbedab64dd596a2ef336afc379311e30.jpg",
-	 "http://a.hiphotos.baidu.com/image/pic/item/e7cd7b899e510fb3a78c787fdd33c895d0430c44.jpg",
-	 "http://f.hiphotos.baidu.com/image/pic/item/242dd42a2834349b7eaf886ccdea15ce37d3beaa.jpg",
-	 "http://d.hiphotos.baidu.com/image/pic/item/2e2eb9389b504fc2065e2bd2e1dde71191ef6de0.jpg",
-	 "http://h.hiphotos.baidu.com/image/pic/item/dbb44aed2e738bd4ec4f29e6a58b87d6267ff9ff.jpg",
-	 "http://c.hiphotos.baidu.com/image/pic/item/1f178a82b9014a90a47fdd6aad773912b21beea0.jpg",
-	 "http://b.hiphotos.baidu.com/image/pic/item/aec379310a55b319a28419a247a98226cefc17e3.jpg",
-	 "http://h.hiphotos.baidu.com/image/pic/item/8601a18b87d6277f31d064e72c381f30e824fc2b.jpg"
+	 * "http://e.hiphotos.baidu.com/image/pic/item/314e251f95cad1c8037ed8c97b3e6709c83d5112.jpg",
+	 * "http://g.hiphotos.baidu.com/image/pic/item/a50f4bfbfbedab64dd596a2ef336afc379311e30.jpg",
+	 * "http://a.hiphotos.baidu.com/image/pic/item/e7cd7b899e510fb3a78c787fdd33c895d0430c44.jpg",
+	 * "http://f.hiphotos.baidu.com/image/pic/item/242dd42a2834349b7eaf886ccdea15ce37d3beaa.jpg",
+	 * "http://d.hiphotos.baidu.com/image/pic/item/2e2eb9389b504fc2065e2bd2e1dde71191ef6de0.jpg",
+	 * "http://h.hiphotos.baidu.com/image/pic/item/dbb44aed2e738bd4ec4f29e6a58b87d6267ff9ff.jpg",
+	 * "http://c.hiphotos.baidu.com/image/pic/item/1f178a82b9014a90a47fdd6aad773912b21beea0.jpg",
+	 * "http://b.hiphotos.baidu.com/image/pic/item/aec379310a55b319a28419a247a98226cefc17e3.jpg",
+	 * "http://h.hiphotos.baidu.com/image/pic/item/8601a18b87d6277f31d064e72c381f30e824fc2b.jpg"
 	 */
 	private String[] urls = {
 			"http://img2.imgtn.bdimg.com/it/u=1344363743,3376718665&fm=21&gp=0.jpg",
@@ -68,9 +75,15 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 
 	private Point point;
 
-	public void setPoint(Point point){
+	public void setPoint(Point point) {
 		this.point = point;
 	}
+
+	public void initData(List<GoodsDo> goodsData){
+		mAdapter.setData(goodsData);
+		mAdapter.notifyDataSetChanged();
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,27 +94,28 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		mContext = getActivity();
+		dataListener = (AppIndexAbMeFrag.IndexDataListener) mContext;
 		View view = inflater.inflate(R.layout.frag_index_layout, container, false);
 		initView(view);
 		setListener();
 		return view;
 	}
+
 	/**
-	 *
 	 * @param v 布局视图
 	 */
 	private void initView(View v) {
 		listView = (PullToRefreshListView) v.findViewById(R.id.app_index_pull_refresh_list);
 		//listView = mPullToRefreshListView;
-		setData();
+		//setData();
 		mAdapter = new ListViewAdapter(mContext, mData);
 		listView.setAdapter(mAdapter);
 
-		mAdapter.setData(mData);
 		listView.onRefreshComplete();
 	}
+
 	private void setListener() {
 
 		onTouchListener = new IndexActivity.MyOnTouchListener() {
@@ -111,22 +125,24 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 				return AppIndexFragment.this.dispatchTouchEvent(ev);
 			}
 		};
-		((IndexActivity)getActivity()).registerMyOnTouchListener(onTouchListener);
+		((IndexActivity) getActivity()).registerMyOnTouchListener(onTouchListener);
 
 		listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 			@Override
-			public void onPullDownToRefresh( PullToRefreshBase<ListView> refreshView) {
+			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 				//Toast.makeText(mContext, "onPullDownToRefresh", Toast.LENGTH_SHORT).show();
-				new GetDataTask().execute();
+				new DataFreshTask().execute();
 			}
+
 			@Override
-			public void onPullUpToRefresh( PullToRefreshBase<ListView> refreshView) {
+			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				//Toast.makeText(mContext, "onPullUpToRefresh", Toast.LENGTH_SHORT).show();
 				new DataLoadTask().execute();
 			}
 		});
 		listView.setOnItemClickListener(new MyPullViewOnItemClickListener());
 	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -139,6 +155,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 
 	/***
 	 * 暂未使用
+	 *
 	 * @param v
 	 * @param event
 	 * @return
@@ -173,32 +190,18 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 
 	/***
 	 * 暂未使用
+	 *
 	 * @param flag
 	 */
-	private void enableTitle(boolean flag){
-		if(flag){
+	private void enableTitle(boolean flag) {
+		if (flag) {
 			mLinerLayout.setVisibility(View.VISIBLE);
 			return;
 		}
 		mLinerLayout.setVisibility(View.GONE);
 	}
 
-	/**
-	 *
-	 */
-
-	private void setData() {
-		HashMap<String, String> map;
-		for(int i = 1; i < urls.length + 1; i++){
-			map = new HashMap<>();
-			map.put("imageUrl", urls[i-1]);
-			map.put("describe", "这里是商品描述" + i + "可能会有很多内容，可能会显示不完全，所以应该用eclipse显示结束位置。");
-			//map.put("title", "标题" + i);
-			mData.add(map);
-		}
-	}
-
-	private boolean dispatchTouchEvent(MotionEvent event){
+	private boolean dispatchTouchEvent(MotionEvent event) {
 		final int action = event.getAction();
 
 		switch (action) {
@@ -211,7 +214,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 
 	//模拟网络加载数据的   异步请求类
 	//
-	private class GetDataTask extends AsyncTask<String, Void, String[]> {
+	private class DataFreshTask extends AsyncTask<String, Void, String[]> {
 
 		//子线程请求数据
 		@Override
@@ -219,8 +222,6 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 			// Simulates a background job.
 			try {
 				Thread.sleep(1000);
-
-
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -231,25 +232,15 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 		@Override
 		protected void onPostExecute(String[] result) {
 
-			//向RefreshListView Item 添加一行数据  并刷新ListView
-			//mListItems.addLast("Added after refresh...");
-			HashMap map = new HashMap();
-			map.put("imageUrl", "http://img5.imgtn.bdimg.com/it/u=686836975,1440550048&fm=21&gp=0.jpg");
-			map.put("describe", "描述更新后的一个,可能会有很多内容，可能会显示不完全，所以应该用eclipse显示结束位置");
-			//map.put("title", "标题 更新后的 一个");
-			mData.addFirst(map);
 			mAdapter.notifyDataSetChanged();
 
 			//通知RefreshListView 我们已经更新完成
-			// Call onRefreshComplete when the list has been refreshed.
 			listView.onRefreshComplete();
-
 			super.onPostExecute(result);
 		}
 	}
 
 	private class DataLoadTask extends AsyncTask<String, Void, String[]> {
-
 		//子线程请求数据
 		@Override
 		protected String[] doInBackground(String... params) {
@@ -268,19 +259,9 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 		@Override
 		protected void onPostExecute(String[] result) {
 
-			//向RefreshListView Item 添加一行数据  并刷新ListView
-			//mListItems.addLast("Added after refresh...");
-			HashMap<String, String> map = new HashMap<>();
-			map.put("imageUrl", "http://img2.imgtn.bdimg.com/it/u=765479998,1984663438&fm=21&gp=0.jpg");
-			map.put("describe", "描述更新后的一个");
-			map.put("title", "标题 更新后的 一个");
-			mData.addLast(map);
 			mAdapter.notifyDataSetChanged();
-
 			//通知RefreshListView 我们已经更新完成
-			// Call onRefreshComplete when the list has been refreshed.
 			listView.onLoadMoreComplete();
-
 			super.onPostExecute(result);
 		}
 	}
@@ -291,10 +272,12 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			L.e(TAG, "getid = " + view.getId() + "：id = " + id + " click --" + position);
 
+			Bundle bundle = new Bundle();
+			bundle.putSerializable("goodsDo", mAdapter.getDataList().get((int) id));
 			Intent intent = new Intent(mContext, GoodsScanActivity.class);
-			intent.putExtra("indexUrl", mAdapter.getDataList().get((int)id).get("imageUrl"));
+			intent.putExtra("indexUrl", bundle);
+			intent.putExtra(CommonText.userId, dataListener.getUserId());
 
-			L.e(TAG, "url = " + mAdapter.getDataList().get((int)id).get("imageUrl"));
 			startActivity(intent);
 			//ImageLoader.getInstance().displayImage(mAdapter.getDataList().get(position).get("imageUrl"),  new ImageViewAware(vh.imageView), options, mAnimal);
 		}

@@ -4,7 +4,9 @@
     <string name="appIndexTitle">@string/app_name</string>
     <string name="appIndexGoodsName">名称: </string>
     <string name="appIndexGoodsPrice">价格:</string>
+    <string name="appIndexGoodsSoldPrice">售价:</string>
     <string name="appIndexGoodsRepertory">库存:</string>
+    <string name="appIndexGoodsRepertoryLeft">剩余:</string>
     <string name="appIndexGoodsDelivery">配送:</string>
     
     <!--我的主页-->

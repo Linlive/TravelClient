@@ -37,6 +37,8 @@
 	<!--app switch -->
 	<color name="appSwitch">#6ed5fffe</color>
 
+	<color name="appIndexBottomBar">#82858b</color>
+
 	<!--sign in text-->
 	<color name="signingText">#000000</color>
 	<!--test-->

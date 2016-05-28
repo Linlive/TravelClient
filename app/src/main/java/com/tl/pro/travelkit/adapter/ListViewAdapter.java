@@ -13,9 +13,10 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.tl.pro.travelkit.R;
+import com.tl.pro.travelkit.bean.GoodsDo;
+import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.listener.ImageFirstDisplayListener;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ import java.util.List;
 public class ListViewAdapter extends BaseAdapter {
 
 	public static final String TAG = "ListViewAdapter";
-	private static List<HashMap<String, String>> mDataList;
+	private static List<GoodsDo> mDataList;
 
 	private Context mContext;
 
@@ -37,15 +38,15 @@ public class ListViewAdapter extends BaseAdapter {
 
 	private ImageFirstDisplayListener mAnimal = new ImageFirstDisplayListener(this);
 
-	public void setData(List<HashMap<String, String>> data){
+	public void setData(List<GoodsDo> data) {
 		mDataList = data;
 	}
 
-	public List<HashMap<String, String>> getDataList(){
+	public List<GoodsDo> getDataList() {
 		return mDataList;
 	}
 
-	public ListViewAdapter(Context context, List<HashMap<String, String>> data) {
+	public ListViewAdapter(Context context, List<GoodsDo> data) {
 		this.mContext = context;
 		mDataList = data;
 		mLayoutInflater = LayoutInflater.from(context);
@@ -60,7 +61,8 @@ public class ListViewAdapter extends BaseAdapter {
 				.displayer(new SimpleBitmapDisplayer())
 				.build();
 	}
-	public void setPoint(Point point){
+
+	public void setPoint(Point point) {
 		this.displayPoint = point;
 	}
 
@@ -85,7 +87,7 @@ public class ListViewAdapter extends BaseAdapter {
 		ViewHolder vh;
 		View view = convertView;
 
-		if(convertView == null){
+		if (convertView == null) {
 			vh = new ViewHolder();
 			view = mLayoutInflater.inflate(R.layout.app_index_list_items, parent, false);
 
@@ -95,13 +97,17 @@ public class ListViewAdapter extends BaseAdapter {
 		} else {
 			vh = (ViewHolder) convertView.getTag();
 		}
+		if(mDataList.size() == 0 || (mDataList.get(position).getImgUrlList().size() == 0)) {
+			return view;
+		}
+		vh.textViewDesc.setText(mDataList.get(position).getGoodsExtras());
 
-		vh.textViewDesc.setText(mDataList.get(position).get("describe"));
-		ImageLoader.getInstance().displayImage(mDataList.get(position).get("imageUrl"),  vh.imageView, options, mAnimal);
+		String url = ServerConfigure.SERVER_ADDRESS + mDataList.get(position).getImgUrlList().get(0);
+		ImageLoader.getInstance().displayImage(url, vh.imageView, options, mAnimal);
 		return view;
 	}
 
-	private class ViewHolder{
+	private class ViewHolder {
 		ImageView imageView;
 		TextView textViewTitle;
 		TextView textViewDesc;

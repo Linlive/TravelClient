@@ -20,8 +20,15 @@
 
     <!--goods list text style-->
 
-    <style name="goodsTextStyle">
+    <style name="goodsTextTitleStyle">
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="goodsTextStyle">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>

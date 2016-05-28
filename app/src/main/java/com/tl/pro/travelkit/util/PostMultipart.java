@@ -16,6 +16,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.tl.pro.travelkit.bean.CartDo;
 import com.tl.pro.travelkit.bean.GoodsDo;
 import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.internet.ServerTalk;
@@ -40,6 +41,7 @@ import cn.edu.zafu.coreprogress.listener.impl.UIProgressListener;
  */
 public class PostMultipart {
 
+	public static final String TAG = "PostMultipart";
 	private static final String IMG_CLIENT_ID = UUID.randomUUID().toString();
 	private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
@@ -60,14 +62,15 @@ public class PostMultipart {
 	}
 	*/
 
-	public static void upLoad(final Context context, ArrayList<String> filePaths){
-		for (String tmpPath : filePaths){
+	public static void upLoad(final Context context, ArrayList<String> filePaths) {
+		for (String tmpPath : filePaths) {
 			upLoad(context, tmpPath);
 		}
 	}
-	private static MultipartBuilder addFilePart(MultipartBuilder multipartBuilder, ArrayList<String> filePaths){
+
+	private static MultipartBuilder addFilePart(MultipartBuilder multipartBuilder, ArrayList<String> filePaths) {
 		int i = 0;
-		for (String path : filePaths){
+		for (String path : filePaths) {
 			i++;
 			File file = new File(path);
 			multipartBuilder.addFormDataPart("photo_" + i, file.getName(), RequestBody.create(null, file));
@@ -76,29 +79,28 @@ public class PostMultipart {
 	}
 
 	private static void addTextPart(MultipartBuilder multipartBuilder, HashMap<String, String> param) {
-		for (String key : param.keySet()){
+		for (String key : param.keySet()) {
 //			multipartBuilder.addFormDataPart(key, param.get(key));
 			multipartBuilder.addFormDataPart(key, null, RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=utf8"), param.get(key)));
 		}
 	}
 
 	/**
-	 *
- 	 * @param params
+	 * @param params
 	 * @param filePaths
 	 * @param uiProgressListener
 	 */
-	public static void upLoadGoods(List<HashMap<String, String>> params, ArrayList<String> filePaths, UIProgressListener uiProgressListener){
+	public static void upLoadGoods(List<HashMap<String, String>> params, ArrayList<String> filePaths, UIProgressListener uiProgressListener) {
 		MultipartBuilder multipartBuilder = new MultipartBuilder().type(MultipartBuilder.FORM);
 
-		for(HashMap<String, String> map : params){
+		for (HashMap<String, String> map : params) {
 			addTextPart(multipartBuilder, map);
 		}
 		addFilePart(multipartBuilder, filePaths);
 		RequestBody requestBody = multipartBuilder.build();
 		//进行包装，使其支持进度回调
-		final Request request = new Request.Builder().
-				url(ServerConfigure.SERVER_ADDRESS + UrlSource.UPLOAD_PHOTO_AND_DETAIL)
+		final Request request = new Request.Builder()
+				.url(ServerConfigure.SERVER_ADDRESS + UrlSource.UPLOAD_PHOTO_AND_DETAIL)
 				.post(ProgressHelper.addProgressRequestListener(
 						requestBody, uiProgressListener))
 				.build();
@@ -110,6 +112,7 @@ public class PostMultipart {
 			public void onFailure(Request request, IOException e) {
 				Log.e("TAG", "error " + e.getMessage());
 			}
+
 			@Override
 			public void onResponse(Response response) throws IOException {
 				Log.e("TAG", response.body().string());
@@ -117,10 +120,11 @@ public class PostMultipart {
 		});
 
 	}
-	public static void upLoad(final Context context, String filePath){
+
+	public static void upLoad(final Context context, String filePath) {
 		OkHttpClient client = new OkHttpClient();
 		File file = new File(filePath);
-		if(!file.canRead()) {
+		if (!file.canRead()) {
 			return;
 		}
 		//这个是ui线程回调，可直接操作UI
@@ -140,13 +144,13 @@ public class PostMultipart {
 			@Override
 			public void onUIStart(long bytesWrite, long contentLength, boolean done) {
 
-				Toast.makeText(context,"start",Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "start", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onUIFinish(long bytesWrite, long contentLength, boolean done) {
 
-				Toast.makeText(context,"end",Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "end", Toast.LENGTH_SHORT).show();
 			}
 		};
 		//构造上传请求，类似web表单
@@ -170,6 +174,7 @@ public class PostMultipart {
 			public void onFailure(Request request, IOException e) {
 				Log.e("TAG", "error " + e.getMessage());
 			}
+
 			@Override
 			public void onResponse(Response response) throws IOException {
 				Log.e("TAG", response.body().string());
@@ -177,57 +182,108 @@ public class PostMultipart {
 		});
 	}
 
-	public static List<GoodsDo> getGoods(){
+	/**
+	 * 进入系统主页
+	 * //			Request request = new Request.Builder()
+	 * //					.url(ServerConfigure.SERVER_ADDRESS + UrlSource.GETGOODS)
+	 * //					.post(RequestBody.create(MediaType.parse("text/x-markdown; charset=utf-8"), "null"))
+	 * //					.build();
+	 * @return 所有查询到的货物对象
+	 */
+	public static List<GoodsDo> getGoods() {
 
+		List<GoodsDo> list = null;
 		HttpURLConnection connection;
 		try {
-			connection = ServerConfigure.getConnection("/getGoods", ServerConfigure.Request.POST);
+			connection = ServerConfigure.getConnection(UrlSource.GETGOODS, ServerConfigure.Request.POST);
 			ServerTalk.writeToServer(connection.getOutputStream(), "body");
 
-			if(!(connection.getResponseCode() == ServerConfigure.SERVER_OK)){
+
+
+			if (!(connection.getResponseCode() == ServerConfigure.SERVER_OK)) {
 				return null;
 			}
 			String serString = ServerTalk.readFromServer(connection.getInputStream());
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(serString);
 			boolean jo = je.isJsonObject();
-			List<GoodsDo> list = new ArrayList<>();
-			if(jo){
-				JsonObject dataObj = je.getAsJsonObject();
-				if(dataObj.has("data")){
-					JsonElement s = dataObj.get("data");
-					if(s.isJsonArray()){
-						JsonArray jsonArray = s.getAsJsonArray();
-						System.out.println(jsonArray.toString());
 
-						Iterator<JsonElement> it = jsonArray.iterator();
-						while (it.hasNext()){
-							JsonElement element = it.next();
-							Gson gson = new Gson();
-							GoodsDo goodsDo = gson.fromJson(element, GoodsDo.class);
-							System.out.println("while--" + gson.toString());
-							list.add(goodsDo);
-						}
-
-					}
-					//System.out.println(goodsArray.toString());
-				}
+			if (!jo) {
+				return null;
 			}
-			System.out.println("list size = " + list.size());
-
-//			JSONObject dataObj = new JSONObject(serString);
-//			if(!dataObj.has("data")){
-//				return null;
-//			}
-//			JSONArray array = new JSONArray(dataObj.getJSONArray("data"));
-//
-//
-//			L.e("PostMultpart aray = ", array.toString());
+			JsonObject dataObj = je.getAsJsonObject();
+			if (dataObj.has("data")) {
+				JsonElement s = dataObj.get("data");
+				list = transGoodsDo(s);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return list;
 	}
+
+	public static boolean addToShoppingCart(String userId, GoodsDo goodsDo, UIProgressListener uiProgressListener){
+
+		HttpURLConnection con = null;
+
+		try {
+			Gson cartGson = new Gson();
+			CartDo cartDo = new CartDo();
+			cartDo.setUserId(userId);
+			cartDo.setGoodsDo(goodsDo);
+			cartDo.setGoodsCount(1);
+
+			con = ServerConfigure.getConnection(UrlSource.ADD_TO_SHOPPING_CART, ServerConfigure.Request.POST);
+			con.connect();
+			ServerTalk.writeToServer(con.getOutputStream(), cartGson.toJson(cartDo));
+
+			if (!(con.getResponseCode() == ServerConfigure.SERVER_OK)) {
+				return false;
+			}
+			String serverMessage = ServerTalk.readFromServer(con.getInputStream());
+
+			JsonParser jsonParser = new JsonParser();
+			JsonElement jsonElement = jsonParser.parse(serverMessage);
+			if(!jsonElement.isJsonObject()){
+				return false;
+			}
+			JsonObject object = jsonElement.getAsJsonObject();
+
+			if(object.has("status")){
+				System.out.println(object.get("status").getAsBoolean());
+				return true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			if (con != null) {
+				con.disconnect();
+			}
+		}
+		return false;
+	}
+
+
+	private static List<GoodsDo> transGoodsDo(JsonElement jsonElement) {
+		if (!jsonElement.isJsonArray()) {
+			return null;
+		}
+		JsonArray jsonArray = jsonElement.getAsJsonArray();
+		Iterator<JsonElement> it = jsonArray.iterator();
+		List<GoodsDo> list = new ArrayList<>();
+		while (it.hasNext()) {
+			JsonElement element = it.next();
+			Gson gson = new Gson();
+			GoodsDo goodsDo = gson.fromJson(element, GoodsDo.class);
+			System.out.println("while--" + goodsDo.toString());
+			list.add(goodsDo);
+		}
+		return list;
+	}
+
+
+
 
 	// 下载
 	private void download() {

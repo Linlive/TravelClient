@@ -355,6 +355,7 @@
                     android:layout_weight="1"
                     android:background="@color/orange"
                     android:gravity="center"
+                    android:id="@+id/app_scan_goods_add_to_cart_text"
                     android:text="@string/addToCart"
                     android:textColor="@color/textBlank"/>
             </LinearLayout>
@@ -371,6 +372,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:id="@+id/app_scan_goods_but_it_now_text"
                     android:background="@color/buy_goods"
                     android:gravity="center"
                     android:text="@string/buyItNow"

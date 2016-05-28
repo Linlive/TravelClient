@@ -42,6 +42,8 @@ public class GoodsDetailPublishFragment extends Fragment implements View.OnClick
 	private View mPlaceLinear;
 	private View mColorLinear;
 
+	private EditText mGoodsNameEdit;
+
 	private TextView mBrandText;
 	private TextView mTypeText;
 	private TextView mSizeText;
@@ -81,6 +83,8 @@ public class GoodsDetailPublishFragment extends Fragment implements View.OnClick
 		mSizeLinear =  v.findViewById(R.id.size_linear);
 		mPlaceLinear = v.findViewById(R.id.place_linear);
 		mColorLinear = v.findViewById(R.id.color_linear);
+
+		mGoodsNameEdit = (EditText) v.findViewById(R.id.app_publish_goods_goods_name);
 
 		mBrandText = (TextView) v.findViewById(R.id.app_publish_brand_value_text);
 		mTypeText = (TextView) v.findViewById(R.id.app_publish_type_value_text);
@@ -287,6 +291,7 @@ public class GoodsDetailPublishFragment extends Fragment implements View.OnClick
 //		if(mRepertoryEdit.getText().length() <= 0){
 //			Toast.makeText(mContext, "输入商品库存", Toast.LENGTH_SHORT).show();
 //		}
+		map.put("name", mGoodsNameEdit.getText().toString());
 		map.put("brand", mBrandText.getText().toString());
 		map.put("type", mTypeText.getText().toString());
 		map.put("size", mSizeText.getText().toString());
