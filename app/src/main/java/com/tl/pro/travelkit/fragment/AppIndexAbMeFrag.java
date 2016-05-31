@@ -13,6 +13,8 @@ import android.widget.ImageView;
 
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.activity.ShopkeeperActivity;
+import com.tl.pro.travelkit.activity.WaitForActivity;
+import com.tl.pro.travelkit.listener.IndexDataListener;
 import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.log.L;
 
@@ -26,6 +28,7 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 	public static final String TAG = "AppIndexAbMeFrag";
 	private Context mContext;
 
+	private View mViewAllIndent;
 	private View mShopkeeper;
 	private View mWaitForMoney;
 	private View mWaitForDeliver;
@@ -40,10 +43,6 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 	IndexDataListener dataListener;
 //	IndexActivity dataListener;
 
-	public interface IndexDataListener {
-		String getUserId();
-	}
-
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,10 +56,13 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 		setListener();
 		return view;
 	}
-	public void setPoint(Point point){
+
+	public void setPoint(Point point) {
 		this.point = point;
 	}
-	private void initView(View v){
+
+	private void initView(View v) {
+		mViewAllIndent = v.findViewById(R.id.about_me_my_indent_title);
 		mShopkeeper = v.findViewById(R.id.app_about_me_im_shopkeeper);
 		mWaitForMoney = v.findViewById(R.id.app_about_me_wait_for_money);
 		mWaitForDeliver = v.findViewById(R.id.app_about_me_wait_for_deliver);
@@ -69,7 +71,9 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 		mMyComment = v.findViewById(R.id.app_about_me_my_comment);
 		mViewAllIndentImg = (ImageView) v.findViewById(R.id.app_about_me_view_all_indent_img);
 	}
-	private void setListener(){
+
+	private void setListener() {
+		mViewAllIndent.setOnClickListener(this);
 		mShopkeeper.setOnClickListener(this);
 		mWaitForMoney.setOnClickListener(this);
 		mWaitForDeliver.setOnClickListener(this);
@@ -81,11 +85,12 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()){
+		Intent intent = null;
+		switch (v.getId()) {
 			case R.id.app_about_me_im_shopkeeper:
 				L.i(TAG, "click Im app_about_me_im_shopkeeper");
 				//do something
-				Intent intent = new Intent(mContext, ShopkeeperActivity.class);
+				intent = new Intent(mContext, ShopkeeperActivity.class);
 				intent.putExtra(CommonText.userId, dataListener.getUserId());
 
 				startActivity(intent);
@@ -93,24 +98,40 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 				break;
 			case R.id.app_about_me_wait_for_money:
 				L.i(TAG, "app_about_me_wait_for_money");
+				intent = new Intent(mContext, WaitForActivity.class);
+				intent.putExtra("index", 1);
 				break;
 			case R.id.app_about_me_wait_for_deliver:
 				L.i(TAG, "app_about_me_wait_for_deliver");
+				intent = new Intent(mContext, WaitForActivity.class);
+				intent.putExtra("index", 2);
 				break;
 			case R.id.app_about_me_wait_for_receive:
 				L.i(TAG, "app_about_me_wait_for_receive");
+				intent = new Intent(mContext, WaitForActivity.class);
+				intent.putExtra("index", 3);
 				break;
 			case R.id.app_about_me_wait_for_comment:
 				L.i(TAG, "app_about_me_wait_for_comment");
+				intent = new Intent(mContext, WaitForActivity.class);
+				intent.putExtra("index", 4);
 				break;
 			case R.id.app_about_me_my_comment:
 				L.i(TAG, "app_about_me_my_comment");
 				break;
 			case R.id.app_about_me_view_all_indent_img:
 				L.i(TAG, "app_about_me_view_all_indent_img");
+			case R.id.about_me_my_indent_title:
+				L.i(TAG, "app_about_me_view_all_title");
+				intent = new Intent(mContext, WaitForActivity.class);
+				intent.putExtra("index", 0);
 				break;
 			default:
 				break;
 		}
+		if (intent == null) {
+			return;
+		}
+		startActivity(intent);
 	}
 }

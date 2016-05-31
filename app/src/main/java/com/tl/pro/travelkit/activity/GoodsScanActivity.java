@@ -132,7 +132,7 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 		protected void onPostExecute(Boolean aBoolean) {
 
 			if (aBoolean) {
-				Toast.makeText(GoodsScanActivity.this, R.string.addToShoppingCartSuccess, Toast.LENGTH_LONG).show();
+				Toast.makeText(GoodsScanActivity.this, R.string.addToShoppingCartSuccess, Toast.LENGTH_SHORT).show();
 			} else {
 				Toast.makeText(GoodsScanActivity.this, R.string.addToShoppingCartFailed, Toast.LENGTH_LONG).show();
 			}

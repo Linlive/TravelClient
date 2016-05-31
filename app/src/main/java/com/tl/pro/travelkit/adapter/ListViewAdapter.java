@@ -103,6 +103,7 @@ public class ListViewAdapter extends BaseAdapter {
 		vh.textViewDesc.setText(mDataList.get(position).getGoodsExtras());
 
 		String url = ServerConfigure.SERVER_ADDRESS + mDataList.get(position).getImgUrlList().get(0);
+//		String url = mDataList.get(position).getImgUrlList().get(0);
 		ImageLoader.getInstance().displayImage(url, vh.imageView, options, mAnimal);
 		return view;
 	}

@@ -51,7 +51,12 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 
 	private static final String TAG = "PublishActivity";
 
+	public static final int UP_LOAD_MESSAGE_CODE = 401;
+	public static final String UP_LOAD_MESSAGE_KEY_CODE = "upLoadProgress";
+
+
 	private final int PICTURE_MAX_NUMBER = 6;
+
 	private int fragmentIndex = 0;
 
 	private static final int CAMERA_REQUEST_CODE = 0x1;
@@ -62,7 +67,7 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 	private static final String IMAGE_UNSPECIFIED = "image/*";
 
 	private String currentPicturePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Travelkit/images/";
-	private UploadProgressListener uploadProgressListener = new UploadProgressListener();
+	private UIProgressListener uploadProgressListener = ShopkeeperActivity.uploadProgressListener; //new UploadProgressListener();
 
 	private ArrayList<Uri> imageUris = new ArrayList<>();
 
@@ -278,7 +283,7 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 	/**
 	 * 根据选择的图片uri显示到主界面
 	 *
-	 * @param uri
+	 * @param uri uri
 	 */
 	private void displayImg(Uri uri) {
 		imageUris.add(uri);
@@ -374,6 +379,7 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 		//extraInfo
 		addUserInfo(mapList);
 		PostMultipart.upLoadGoods(mapList, thisFilePaths, uploadProgressListener);
+		finish();
 	}
 
 	private void addUserInfo(List<HashMap<String, String>> mapList){
@@ -509,31 +515,5 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 		// 最后通知图库更新
 		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + "")));
 		return retUri;
-	}
-
-	private class UploadProgressListener extends UIProgressListener {
-		@Override
-		public void onUIProgress(long bytesWrite, long contentLength, boolean done) {
-			L.e(TAG, "bytesWrite:" + bytesWrite);
-			L.e(TAG, "contentLength" + contentLength);
-			L.e(TAG, (100 * bytesWrite) / contentLength + " % done ");
-			L.e(TAG, "done:" + done);
-			L.e(TAG, "================================");
-			//ui层回调
-			//uploadProgress.setProgress((int) ((100 * bytesWrite) / contentLength));
-			//Toast.makeText(context, bytesWrite + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
-		}
-
-		@Override
-		public void onUIStart(long bytesWrite, long contentLength, boolean done) {
-
-			Toast.makeText(PublishActivity.this,"start", Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onUIFinish(long bytesWrite, long contentLength, boolean done) {
-
-			Toast.makeText(PublishActivity.this, "end",Toast.LENGTH_SHORT).show();
-		}
 	}
 }

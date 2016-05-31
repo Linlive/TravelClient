@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.utils.L;
 import com.tl.pro.travelkit.R;
+import com.tl.pro.travelkit.internet.RequestMethod;
 import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.internet.ServerInfoObj;
 import com.tl.pro.travelkit.internet.ServerTalk;
@@ -142,7 +143,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 			ServerInfoObj<JSONObject> serverInfoObj = new ServerInfoObj<>();
 			try {
 				publishProgress(20f);
-				con = ServerConfigure.getConnection(UrlSource.SIGNUP, ServerConfigure.Request.POST);
+				con = ServerConfigure.getConnection(UrlSource.SIGNUP, RequestMethod.POST);
 				con.connect();
 				JSONObject object = params[0];
 				publishProgress(50f);

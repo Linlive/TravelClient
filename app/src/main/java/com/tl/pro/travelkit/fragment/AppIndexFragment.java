@@ -23,7 +23,9 @@ import com.tl.pro.travelkit.activity.IndexActivity;
 import com.tl.pro.travelkit.adapter.ListViewAdapter;
 import com.tl.pro.travelkit.bean.GoodsDo;
 import com.tl.pro.travelkit.fragment.base.MyBaseFragment;
+import com.tl.pro.travelkit.listener.IndexDataListener;
 import com.tl.pro.travelkit.util.CommonText;
+import com.tl.pro.travelkit.util.PostMultipart;
 import com.tl.pro.travelkit.util.log.L;
 
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 	private ListViewAdapter mAdapter;
 	private IndexActivity.MyOnTouchListener onTouchListener;
 
-	AppIndexAbMeFrag.IndexDataListener dataListener;
+	IndexDataListener dataListener;
 
 	private View mLinerLayout;
 	private Button button;
@@ -96,7 +98,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
 		mContext = getActivity();
-		dataListener = (AppIndexAbMeFrag.IndexDataListener) mContext;
+		dataListener = (IndexDataListener) mContext;
 		View view = inflater.inflate(R.layout.frag_index_layout, container, false);
 		initView(view);
 		setListener();
@@ -109,7 +111,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 	private void initView(View v) {
 		listView = (PullToRefreshListView) v.findViewById(R.id.app_index_pull_refresh_list);
 		//listView = mPullToRefreshListView;
-		//setData();
+//		setData();
 		mAdapter = new ListViewAdapter(mContext, mData);
 		listView.setAdapter(mAdapter);
 
@@ -214,50 +216,36 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 
 	//模拟网络加载数据的   异步请求类
 	//
-	private class DataFreshTask extends AsyncTask<String, Void, String[]> {
+	private class DataFreshTask extends AsyncTask<String, Float, List<GoodsDo>> {
 
 		//子线程请求数据
 		@Override
-		protected String[] doInBackground(String... params) {
-			// Simulates a background job.
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return urls;
+		protected List<GoodsDo> doInBackground(String... params) {
+			return PostMultipart.getGoods();
 		}
 
 		//主线程更新UI
 		@Override
-		protected void onPostExecute(String[] result) {
+		protected void onPostExecute(List<GoodsDo> result) {
 
+			initData(result);
 			mAdapter.notifyDataSetChanged();
-
 			//通知RefreshListView 我们已经更新完成
 			listView.onRefreshComplete();
 			super.onPostExecute(result);
 		}
 	}
 
-	private class DataLoadTask extends AsyncTask<String, Void, String[]> {
+	private class DataLoadTask extends AsyncTask<String, Float, List<GoodsDo>> {
 		//子线程请求数据
 		@Override
-		protected String[] doInBackground(String... params) {
-			// Simulates a background job.
-			String[] res = null;
-			try {
-				Thread.sleep(1000);
-				res = new String[]{"http://pic41.nipic.com/20140501/2531170_162158900000_2.jpg"};
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return res;
+		protected List<GoodsDo> doInBackground(String... params) {
+			return null;
 		}
 
 		//主线程更新UI
 		@Override
-		protected void onPostExecute(String[] result) {
+		protected void onPostExecute(List<GoodsDo> result) {
 
 			mAdapter.notifyDataSetChanged();
 			//通知RefreshListView 我们已经更新完成

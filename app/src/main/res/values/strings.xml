@@ -17,6 +17,8 @@
     <string name="error_incorrect_password">账户和密码不匹配</string>
     <string name="error_field_required">此项不能为空</string>
     <string name="permission_rationale">"需要联系人权限"</string>
+    <string name="pleaseInputVerification">请输入验证码</string>
+    <string name="inputVerificationError">验证码错误</string>
 
     <!-- Labels -->
     <string name="label_examples">Examples</string>

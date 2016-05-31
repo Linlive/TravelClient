@@ -14,6 +14,15 @@ public class UrlSource {
 	public static final String UPLOAD_PHOTO_AND_DETAIL = "/uploadGoods";
 
 	public static final String ADD_TO_SHOPPING_CART = "/addToShoppingCart";
+	public static final String DELETE_FROM_SHOPPING_CART = "/deleteFromShoppingCart";
+	public static final String QUERY_SHOPPING_CART = "/queryShoppingCart";
 
+	public static final String CREATE_INDENT = "/createIndent";
+	public static final String VIEW_INDENT = "/viewIndent";
+	public static final String EDIT_INDENT = "/editIndent";
+	public static final String UPDATE_INDENT = "/editIndent";
+
+	public static final String REMOVE_INDENT = "/removeIndent";
+	public static final String DELETE_INDENT = "/deleteIndent";
 
 }

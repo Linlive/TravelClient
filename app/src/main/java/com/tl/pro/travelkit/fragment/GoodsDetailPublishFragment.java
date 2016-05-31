@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.activity.GoodsDetailPublishActivity;
@@ -268,8 +269,12 @@ public class GoodsDetailPublishFragment extends Fragment implements View.OnClick
 	 * @return key-value的集合
 	 */
 	public List<HashMap<String, String>> getSelectInfo() {
-		List<HashMap<String, String>> retList = new ArrayList<>();
-		HashMap<String, String> map = new HashMap<>();
+
+		boolean cancel = false;
+		if(mGoodsNameEdit.getText().length() <= 0){
+			Toast.makeText(mContext, "输入名称", Toast.LENGTH_SHORT).show();
+			cancel = true;
+		}
 //		if(mBrandText.getText().length() <= 0){
 //			Toast.makeText(mContext, "输入品牌", Toast.LENGTH_SHORT).show();
 //		}
@@ -285,12 +290,19 @@ public class GoodsDetailPublishFragment extends Fragment implements View.OnClick
 //		if(mColorText.getText().length() <= 0){
 //			Toast.makeText(mContext, "输入商品颜色", Toast.LENGTH_SHORT).show();
 //		}
-//		if(mPriceEdit.getText().length() <= 0){
-//			Toast.makeText(mContext, "输入商品价格", Toast.LENGTH_SHORT).show();
-//		}
-//		if(mRepertoryEdit.getText().length() <= 0){
-//			Toast.makeText(mContext, "输入商品库存", Toast.LENGTH_SHORT).show();
-//		}
+		if(mPriceEdit.getText().length() <= 0){
+			Toast.makeText(mContext, "输入商品价格", Toast.LENGTH_SHORT).show();
+			cancel = true;
+		}
+		if(mRepertoryEdit.getText().length() <= 0){
+			Toast.makeText(mContext, "输入商品库存", Toast.LENGTH_SHORT).show();
+			cancel = true;
+		}
+		if(cancel){
+			return null;
+		}
+		List<HashMap<String, String>> retList = new ArrayList<>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("name", mGoodsNameEdit.getText().toString());
 		map.put("brand", mBrandText.getText().toString());
 		map.put("type", mTypeText.getText().toString());

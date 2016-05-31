@@ -8,16 +8,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
         android:background="@color/appSwitch"
+        android:paddingLeft="10dp"
         >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="100"
             android:paddingBottom="5dp"
             android:paddingTop="1dp"
+            android:weightSum="100"
             >
             <CheckBox
                 android:id="@+id/app_shopping_cart_check_box"
@@ -29,7 +29,7 @@
                 />
 
             <ImageView
-                android:id="@+id/app_shopping_cart_item_goods_img"
+                android:id="@+id/app_shopping_cart_goods_detail_picture_index"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/y80"
                 android:layout_weight="22"
@@ -39,7 +39,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="60"
+                android:layout_weight="58"
                 android:orientation="vertical"
                 android:paddingLeft="10dp"
                 android:paddingTop="4dp">
@@ -50,33 +50,65 @@
                     android:layout_height="wrap_content"
                     android:lines="2"
                     android:paddingBottom="2dp"
-                    android:text="@string/goodsDetail"/>
+                    android:text="@string/goodsDetail"
+                    android:id="@+id/app_shopping_cart_goods_detail_text"/>
 
                 <TextView
                     style="@style/shoppingCartDetailTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingBottom="2dp"
                     android:text="颜色分类:红色"
-                    android:paddingBottom="2dp"/>
+                    android:id="@+id/app_shopping_cart_goods_brand_and_color"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="￥60"
+                    android:textColor="@color/red"
                     android:textSize="16sp"
-                    android:textColor="@color/red"/>
+                    android:id="@+id/app_shopping_cart_goods_price_text"/>
 
             </LinearLayout>
 
-            <TextView
-                style="@style/shoppingCartCommonTextStyle"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="10"
-                android:gravity="center"
-                android:text="X1"/>
+                android:layout_weight="12"
+                android:orientation="vertical"
+                android:background="@color/add_to_cart"
+                android:gravity="center_horizontal"
+                android:layout_marginRight="5dp">
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:src="@drawable/minus_disabled"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:id="@+id/app_shopping_cart_minus_img"
+                    />
+
+                <TextView
+                    style="@style/shoppingCartCommonTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="X1"
+                    android:layout_weight="1"
+                    android:id="@+id/app_shopping_cart_choose_value"/>
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:src="@drawable/plus_disabled"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:id="@+id/app_shopping_cart_plus_img"/>
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>

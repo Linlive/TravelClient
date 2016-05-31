@@ -70,18 +70,18 @@ public class ShoppingCartActivity extends AppCompatActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = convertView;
-			ViewHolder vh;
-			if(convertView == null){
-				v = inflater.inflate(R.layout.shopping_cart_list_item, parent, false);
-				vh = new ViewHolder();
-				vh.il = (ListView) v.findViewById(R.id.app_shopping_cart_pull_refresh_list_item);
-				vh.tv = (TextView) v.findViewById(R.id.app_shopping_cart_view_shop_textView);
-				v.setTag(vh);
-			}else {
-				vh = (ViewHolder) convertView.getTag();
-			}
-			//vh.tv.setText("gaibian============================");
-			vh.il.setAdapter(childAdapter);
+//			ViewHolder vh;
+//			if(convertView == null){
+//				v = inflater.inflate(R.layout.shopping_cart_list_item, parent, false);
+//				vh = new ViewHolder();
+//				vh.il = (ListView) v.findViewById(R.id.app_shopping_cart_pull_refresh_list_item);
+//				vh.tv = (TextView) v.findViewById(R.id.app_shopping_cart_view_shop_textView);
+//				v.setTag(vh);
+//			}else {
+//				vh = (ViewHolder) convertView.getTag();
+//			}
+//			//vh.tv.setText("gaibian============================");
+//			vh.il.setAdapter(childAdapter);
 			return v;
 		}
 

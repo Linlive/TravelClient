@@ -40,7 +40,6 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.PublishActivity">
         </activity>
         <activity android:name=".activity.GoodsDetailPublishActivity">
@@ -54,18 +53,21 @@
         <activity android:name=".activity.GoodsCommentActivity">
         </activity>
         <activity android:name=".activity.ShoppingCartActivity">
-
         </activity>
 
-        <!--test-->
+        <!-- test -->
         <activity android:name=".test.PercentActivity">
 
         </activity>
-        <!--<activity-->
-            <!--android:name="com.mob.tools.MobUIShell"-->
-            <!--android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"-->
-            <!--android:theme="@android:style/Theme.NoTitleBar"-->
-            <!--android:windowSoftInputMode="stateHidden|adjustResize" />-->
+        <!-- <activity -->
+        <!-- android:name="com.mob.tools.MobUIShell" -->
+        <!-- android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection" -->
+        <!-- android:theme="@android:style/Theme.NoTitleBar" -->
+        <!-- android:windowSoftInputMode="stateHidden|adjustResize" /> -->
+        <activity android:name=".activity.AliPayActivity">
+        </activity>
+        <activity android:name=".activity.WaitForActivity">
+        </activity>
     </application>
 
 </manifest>

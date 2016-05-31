@@ -1,8 +1,6 @@
 package com.tl.pro.travelkit.util;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -18,10 +16,17 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.tl.pro.travelkit.bean.CartDo;
 import com.tl.pro.travelkit.bean.GoodsDo;
+import com.tl.pro.travelkit.bean.IndentDo;
+import com.tl.pro.travelkit.bean.ShoppingCartDo;
+import com.tl.pro.travelkit.internet.RequestMethod;
 import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.internet.ServerTalk;
 import com.tl.pro.travelkit.internet.UrlSource;
 import com.tl.pro.travelkit.util.listener.ProgressResponseListener;
+import com.tl.pro.travelkit.util.pay.PayResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +42,8 @@ import cn.edu.zafu.coreprogress.listener.impl.UIProgressListener;
 
 
 /**
+ * 复杂请求构造类
+ * 文件上传等
  * Created by Administrator on 2016/5/19.
  */
 public class PostMultipart {
@@ -46,27 +53,6 @@ public class PostMultipart {
 	private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
 	private static final OkHttpClient client = new OkHttpClient();
-
-	/*
-	public static void post(HashMap<String, String> param, ArrayList<String> paths){
-		PostFormBuilder postFileBuilder = OkHttpUtils.post().params(param);
-		postFileBuilder.url(ServerConfigure.SERVER_ADDRESS + UrlSource.UPLOAD_PHOTO_AND_DETAIL);
-		for (String str : paths) {
-			postFileBuilder.addFile("mfile", str, new File(str));
-		}
-		try {
-			okhttp3.Response response = postFileBuilder.build().execute();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
-
-	public static void upLoad(final Context context, ArrayList<String> filePaths) {
-		for (String tmpPath : filePaths) {
-			upLoad(context, tmpPath);
-		}
-	}
 
 	private static MultipartBuilder addFilePart(MultipartBuilder multipartBuilder, ArrayList<String> filePaths) {
 		int i = 0;
@@ -86,9 +72,11 @@ public class PostMultipart {
 	}
 
 	/**
-	 * @param params
-	 * @param filePaths
-	 * @param uiProgressListener
+	 * 发布商品
+	 * @param params 文字信息
+	 * @param filePaths 文件路径
+	 * @param uiProgressListener 文件进度侦听
+	 *
 	 */
 	public static void upLoadGoods(List<HashMap<String, String>> params, ArrayList<String> filePaths, UIProgressListener uiProgressListener) {
 		MultipartBuilder multipartBuilder = new MultipartBuilder().type(MultipartBuilder.FORM);
@@ -106,7 +94,6 @@ public class PostMultipart {
 				.build();
 
 		//开始请求
-
 		client.newCall(request).enqueue(new Callback() {
 			@Override
 			public void onFailure(Request request, IOException e) {
@@ -119,67 +106,6 @@ public class PostMultipart {
 			}
 		});
 
-	}
-
-	public static void upLoad(final Context context, String filePath) {
-		OkHttpClient client = new OkHttpClient();
-		File file = new File(filePath);
-		if (!file.canRead()) {
-			return;
-		}
-		//这个是ui线程回调，可直接操作UI
-		final UIProgressListener uiProgressRequestListener = new UIProgressListener() {
-			@Override
-			public void onUIProgress(long bytesWrite, long contentLength, boolean done) {
-				Log.e("TAG", "bytesWrite:" + bytesWrite);
-				Log.e("TAG", "contentLength" + contentLength);
-				Log.e("TAG", (100 * bytesWrite) / contentLength + " % done ");
-				Log.e("TAG", "done:" + done);
-				Log.e("TAG", "================================");
-				//ui层回调
-				//uploadProgress.setProgress((int) ((100 * bytesWrite) / contentLength));
-				Toast.makeText(context, bytesWrite + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
-			}
-
-			@Override
-			public void onUIStart(long bytesWrite, long contentLength, boolean done) {
-
-				Toast.makeText(context, "start", Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void onUIFinish(long bytesWrite, long contentLength, boolean done) {
-
-				Toast.makeText(context, "end", Toast.LENGTH_SHORT).show();
-			}
-		};
-		//构造上传请求，类似web表单
-		RequestBody requestBody = new MultipartBuilder().type(MultipartBuilder.FORM)
-				.addFormDataPart("photo", file.getName(), RequestBody.create(null, file))
-//				.addPart(Headers.of("Content-Disposition",
-//						"form-data; name=\"goodsPictures\";filename=\"" + file.getName() + "\""),
-//						RequestBody.create(MediaType.parse("application/octet-stream"), file))
-				.build();
-
-		//进行包装，使其支持进度回调
-		final Request request = new Request.Builder().
-				url(ServerConfigure.SERVER_ADDRESS + UrlSource.UPLOAD_PHOTO_AND_DETAIL)
-				.post(ProgressHelper.addProgressRequestListener(
-						requestBody, uiProgressRequestListener))
-				.build();
-
-		//开始请求
-		client.newCall(request).enqueue(new Callback() {
-			@Override
-			public void onFailure(Request request, IOException e) {
-				Log.e("TAG", "error " + e.getMessage());
-			}
-
-			@Override
-			public void onResponse(Response response) throws IOException {
-				Log.e("TAG", response.body().string());
-			}
-		});
 	}
 
 	/**
@@ -188,6 +114,7 @@ public class PostMultipart {
 	 * //					.url(ServerConfigure.SERVER_ADDRESS + UrlSource.GETGOODS)
 	 * //					.post(RequestBody.create(MediaType.parse("text/x-markdown; charset=utf-8"), "null"))
 	 * //					.build();
+	 *
 	 * @return 所有查询到的货物对象
 	 */
 	public static List<GoodsDo> getGoods() {
@@ -195,9 +122,8 @@ public class PostMultipart {
 		List<GoodsDo> list = null;
 		HttpURLConnection connection;
 		try {
-			connection = ServerConfigure.getConnection(UrlSource.GETGOODS, ServerConfigure.Request.POST);
+			connection = ServerConfigure.getConnection(UrlSource.GETGOODS, RequestMethod.POST);
 			ServerTalk.writeToServer(connection.getOutputStream(), "body");
-
 
 
 			if (!(connection.getResponseCode() == ServerConfigure.SERVER_OK)) {
@@ -214,7 +140,7 @@ public class PostMultipart {
 			JsonObject dataObj = je.getAsJsonObject();
 			if (dataObj.has("data")) {
 				JsonElement s = dataObj.get("data");
-				list = transGoodsDo(s);
+				list = transGoodsDos(s);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -222,7 +148,7 @@ public class PostMultipart {
 		return list;
 	}
 
-	public static boolean addToShoppingCart(String userId, GoodsDo goodsDo, UIProgressListener uiProgressListener){
+	public static boolean addToShoppingCart(String userId, GoodsDo goodsDo, UIProgressListener uiProgressListener) {
 
 		HttpURLConnection con = null;
 
@@ -233,7 +159,7 @@ public class PostMultipart {
 			cartDo.setGoodsDo(goodsDo);
 			cartDo.setGoodsCount(1);
 
-			con = ServerConfigure.getConnection(UrlSource.ADD_TO_SHOPPING_CART, ServerConfigure.Request.POST);
+			con = ServerConfigure.getConnection(UrlSource.ADD_TO_SHOPPING_CART, RequestMethod.POST);
 			con.connect();
 			ServerTalk.writeToServer(con.getOutputStream(), cartGson.toJson(cartDo));
 
@@ -244,12 +170,12 @@ public class PostMultipart {
 
 			JsonParser jsonParser = new JsonParser();
 			JsonElement jsonElement = jsonParser.parse(serverMessage);
-			if(!jsonElement.isJsonObject()){
+			if (!jsonElement.isJsonObject()) {
 				return false;
 			}
 			JsonObject object = jsonElement.getAsJsonObject();
 
-			if(object.has("status")){
+			if (object.has("status")) {
 				System.out.println(object.get("status").getAsBoolean());
 				return true;
 			}
@@ -264,8 +190,125 @@ public class PostMultipart {
 		return false;
 	}
 
+	public static boolean deleteFromShoppingCart(String goodsId) {
+		HttpURLConnection con = null;
 
-	private static List<GoodsDo> transGoodsDo(JsonElement jsonElement) {
+		try {
+			con = ServerConfigure.getConnection(UrlSource.DELETE_FROM_SHOPPING_CART, RequestMethod.POST);
+			JSONObject object = new JSONObject();
+			object.put("goodsId", goodsId);
+			ServerTalk.writeToServer(con.getOutputStream(), object);
+
+			String serverStr = ServerTalk.readFromServer(con.getInputStream());
+
+			JSONObject objectIn = new JSONObject(serverStr);
+			if (!objectIn.has("status")) {
+				return false;
+			}
+			if (objectIn.getBoolean("status")) {
+				return true;
+			}
+
+		} catch (JSONException | IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (con != null) {
+				con.disconnect();
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 根据用户的id 查询用户的购物车
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public static List<ShoppingCartDo> queryUserCart(String userId) {
+
+		List<ShoppingCartDo> retDataList = null;
+		HttpURLConnection con = null;
+		try {
+			con = ServerConfigure.getConnection(UrlSource.QUERY_SHOPPING_CART, RequestMethod.POST);
+			JSONObject objOut = new JSONObject();
+			objOut.put(CommonText.userId, userId);
+			ServerTalk.writeToServer(con.getOutputStream(), objOut);
+
+			String serverStr = ServerTalk.readFromServer(con.getInputStream());
+//			JsonElement jsonElement = jp.parse(new JsonReader(new InputStreamReader(con.getInputStream())));
+			JsonParser jp = new JsonParser();
+			JsonElement jsonElement = jp.parse(serverStr);
+
+			if (jsonElement.isJsonObject()) {
+				System.out.println("obj");
+				return null;
+			}
+			if (jsonElement.isJsonArray()) {
+				System.out.println("json array");
+				retDataList = transCartDos(jsonElement);
+			}
+
+		} catch (IOException | JSONException e) {
+			e.printStackTrace();
+		} finally {
+			if (con != null) {
+				con.disconnect();
+			}
+		}
+		return retDataList;
+	}
+
+
+	public static boolean buyGoods(String buyerId, ShoppingCartDo goodsDo, int state) {
+
+		IndentDo indentDo = new IndentDo();
+		indentDo.setBuyerId(buyerId);
+		indentDo.setShopKeeperId(goodsDo.getShopKeeperId());
+		indentDo.setGoodsId(goodsDo.getGoodsId());
+		indentDo.setGoodsSize(goodsDo.getGoodsSize());
+		//支付成功
+		if (state == PayResult.PAY_SUCCESS) {
+			state = IndentDo.State.PAY_SUCCESS.getValue();
+		}
+		indentDo.setIndentState(state);
+		indentDo.setGoodsType(goodsDo.getGoodsType());
+
+		Gson gsonIndent = new Gson();
+		String jsonString = gsonIndent.toJson(indentDo);
+
+		HttpURLConnection con = null;
+		try {
+			con = ServerConfigure.getConnection(UrlSource.CREATE_INDENT, RequestMethod.POST);
+			ServerTalk.writeToServer(con.getOutputStream(), jsonString);
+
+			String serverString = ServerTalk.readFromServer(con.getInputStream());
+			JSONObject object = new JSONObject(serverString);
+			if (!object.has("status")) {
+				return false;
+			}
+			if (object.getBoolean("status")) {
+				return true;
+			}
+
+		} catch (IOException | JSONException e) {
+			e.printStackTrace();
+		} finally {
+			if (con != null) {
+				con.disconnect();
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * 转换成goodsDodu集合
+	 *
+	 * @param jsonElement
+	 * @return
+	 */
+	private static List<GoodsDo> transGoodsDos(JsonElement jsonElement) {
 		if (!jsonElement.isJsonArray()) {
 			return null;
 		}
@@ -282,8 +325,28 @@ public class PostMultipart {
 		return list;
 	}
 
-
-
+	/**
+	 * 转换成cartList集合
+	 *
+	 * @param jsonElement
+	 * @return
+	 */
+	private static List<ShoppingCartDo> transCartDos(JsonElement jsonElement) {
+		if (!jsonElement.isJsonArray()) {
+			return null;
+		}
+		JsonArray jsonArray = jsonElement.getAsJsonArray();
+		Iterator<JsonElement> it = jsonArray.iterator();
+		List<ShoppingCartDo> list = new ArrayList<>();
+		while (it.hasNext()) {
+			JsonElement element = it.next();
+			Gson gson = new Gson();
+			ShoppingCartDo cartDo = gson.fromJson(element, ShoppingCartDo.class);
+			System.out.println("while--" + cartDo.toString());
+			list.add(cartDo);
+		}
+		return list;
+	}
 
 	// 下载
 	private void download() {

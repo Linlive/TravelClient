@@ -8,4 +8,28 @@
     <string name="addToShoppingCartSuccess">成功添加至购物车</string>
     <string name="addToShoppingCartFailed">您的网络似乎出了一些问题</string>
 
+    <string name="selectedNumber">数量</string>
+    <string name="selectPrice">金额</string>
+    <string name="selectComplete">结 算</string>
+
+    <style name="shoppingCartBottomBarSmallTextStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:gravity">center|bottom</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="shoppingCartBottomBarTitleStyle">
+        <item name="android:layout_weight">3</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/thisBarColor</item>
+    </style>
+
+    <color name="thisBarColor">#bf000000</color>
+    <color name="selectPrice">@color/red</color>
 </resources>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:scaleType="fitCenter"
+            android:id="@+id/app_about_for_status_goods_index_img"/>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_above="@+id/app_about_for_status_button_last_first_right">
+                    <TextView
+                        android:id="@+id/app_about_for_status_goods_desc_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        android:ellipsize="end"
+                        android:lines="2"
+                        android:paddingRight="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="商品描述"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:gravity="start"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:id="@+id/app_about_for_status_goods_privilege_text"
+                        android:layout_marginTop="1dp"
+                        android:text="优惠信息"
+                        android:textColor="@color/lineView"
+                        android:textSize="12sp"
+                        android:gravity="center_vertical"
+                        />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/app_about_for_status_button_last_first_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/y25"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/app_about_for_status_button_back"
+
+                    />
+                <Button
+                    android:id="@+id/app_about_for_status_button_last_second"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/y25"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/app_about_for_status_button_last_first_right"
+                    android:background="@drawable/app_about_for_status_button_back"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y1"
+        android:background="@color/darkBlank"
+        />
+</LinearLayout>

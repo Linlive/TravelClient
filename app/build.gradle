@@ -40,6 +40,8 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'org.apache.httpcomponents:httpclient:4.3.5'
     compile files('libs/universal-image-loader-1.9.5.jar')
+    compile files('libs/alipaySdk-20160223.jar')
+
     compile project(':pullrefresh')
     compile name:'SMSSDK-2.0.2', ext:'aar'
     compile name:'SMSSDKGUI-2.0.2', ext:'aar'

@@ -21,15 +21,19 @@ import com.tl.pro.travelkit.bean.GoodsDo;
 import com.tl.pro.travelkit.fragment.AppIndexAbMeFrag;
 import com.tl.pro.travelkit.fragment.AppIndexFragment;
 import com.tl.pro.travelkit.fragment.ShoppingCartFragment;
+import com.tl.pro.travelkit.listener.IndexDataListener;
+import com.tl.pro.travelkit.listener.IndexTabSelectListener;
 import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.PostMultipart;
+import com.tl.pro.travelkit.util.log.L;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndexActivity extends Activity implements View.OnClickListener, AppIndexAbMeFrag.IndexDataListener, Handler.Callback {
+public class IndexActivity extends Activity implements View.OnClickListener, IndexDataListener, IndexTabSelectListener, Handler.Callback {
 
 	public static int mTextColor = Color.parseColor("#f42f94df");
+	public static final String TAG = "IndexActivity";
 
 	private FragmentManager fragmentManager;
 	private AppIndexFragment homeFragment;
@@ -71,6 +75,11 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 	@Override
 	public String getUserId() {
 		return userId;
+	}
+
+	@Override
+	public void setSelect(int index) {
+		setTabSelection(index);
 	}
 
 	@Override
@@ -135,7 +144,7 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 		switch (index) {
 			case 0:
 				// 当点击了消息tab时，改变控件的图片和文字颜色
-				homeImage.setImageResource(R.drawable.home_selected);
+				homeImage.setImageResource(R.drawable.home_enabled);
 				mSearchOrSettingImg.setImageResource(R.drawable.search_enabled);
 				homeText.setTextColor(mTextColor);
 				if (homeFragment == null) {
@@ -160,7 +169,7 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 				}
 				break;
 			case 2:
-				aboutMeImage.setImageResource(R.drawable.user_selected);
+				aboutMeImage.setImageResource(R.drawable.user_enabled);
 				mSearchOrSettingImg.setImageResource(R.drawable.setting_enabled);
 				aboutMeText.setTextColor(mTextColor);
 				if (aboutFragment == null) {
@@ -183,13 +192,13 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 	 * 清除掉所有的选中状态。
 	 */
 	private void clearSelection() {
-		homeImage.setImageResource(R.drawable.home_unselected);
+		homeImage.setImageResource(R.drawable.home_disabled);
 		homeText.setTextColor(Color.parseColor("#82858b"));
 
 		cartImage.setImageResource(R.drawable.cart_disabled);
 		cartText.setTextColor(Color.parseColor("#82858b"));
 
-		aboutMeImage.setImageResource(R.drawable.user_unselected);
+		aboutMeImage.setImageResource(R.drawable.user_disabled);
 		aboutMeText.setTextColor(Color.parseColor("#82858b"));
 	}
 
@@ -235,17 +244,15 @@ public class IndexActivity extends Activity implements View.OnClickListener, App
 
 	private class GoodsAll extends AsyncTask<String, Float, List<GoodsDo>> {
 		@Override
-		protected void onPostExecute(List<GoodsDo> goodsDoList) {
-
-			System.out.println(goodsDoList.size());
-			homeFragment.initData(goodsDoList);
-		}
-
-		@Override
 		protected List<GoodsDo> doInBackground(String... params) {
 			return PostMultipart.getGoods();
 		}
 
+		@Override
+		protected void onPostExecute(List<GoodsDo> goodsDoList) {
+			L.e(TAG, "login init data size = " + goodsDoList.size());
+			homeFragment.initData(goodsDoList);
+		}
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();

@@ -62,21 +62,21 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
+        android:layout_weight="1"
+        android:background="@color/common_white">
     </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="#ffffff">
-
+        android:layout_height="@dimen/y40"
+        android:background="@color/back_darkgray"
+        android:paddingBottom="1dp"
+        >
         <RelativeLayout
             android:id="@+id/index_home_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/home_unselected"/>
+                    android:src="@drawable/home_disabled"/>
 
                 <TextView
                     android:id="@+id/index_home_text"
@@ -142,7 +142,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/user_unselected"/>
+                    android:src="@drawable/user_disabled"/>
 
                 <TextView
                     android:id="@+id/index_about_me_text"

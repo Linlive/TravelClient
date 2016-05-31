@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,16 +19,19 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.utils.L;
 import com.tl.pro.travelkit.R;
+import com.tl.pro.travelkit.internet.RequestMethod;
 import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.internet.ServerInfoObj;
 import com.tl.pro.travelkit.internet.ServerTalk;
 import com.tl.pro.travelkit.internet.UrlSource;
+import com.tl.pro.travelkit.util.CodeUtil;
 import com.tl.pro.travelkit.util.check.StringToJsonObject;
 import com.tl.pro.travelkit.util.encryption.KitAESCoder;
 
@@ -38,22 +42,29 @@ import java.net.HttpURLConnection;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-	private static final int LOGIN_TIME_LIMIT = 1;
+	private static final int LOGIN_TIME_LIMIT = 5;
 
 	private static final int STOPSPLASH = 0;
 	private static final long SPLASHTIME = 2500;
+	private static final String SHAREPREFRENCE = "userLogin";
+	private static final String LOGIN_TIME = "logTime";
 
 	private Animation animatinoIn;
 	private Animation animatinoAppIn;
 	private int status = 1;
-	private LinearLayout mLinearLayout;
+	private LinearLayout mGoneLinearLayout;
 	private FrameLayout mLaunchFrm;
 
 	private Button mLoginOrRegisterButton;
 
 	private EditText mUserNameEdit;
 	private EditText mUserPasswordEdit;
+	private EditText mVerificationEdit;
+	private ImageView mVerificationImage;
 	private TextView mForgotPasswordText;
+
+	private LinearLayout mVerificationLinearLay;
+
 	private LoginAsyncTask mAsyncTask = null;
 
 	private TextView mAdmistratorText;
@@ -68,12 +79,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 	int loginTime = 0;
 
+	CodeUtil mCodeUtil = CodeUtil.getInstance();
+	String code;
+
 	private Handler splashHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case STOPSPLASH:
-					mLinearLayout.setVisibility(View.GONE);
-					mLaunchFrm.startAnimation(animatinoAppIn);
+					mGoneLinearLayout.setVisibility(View.GONE);
+					//mLaunchFrm.startAnimation(animatinoAppIn);
 					break;
 			}
 			super.handleMessage(msg);
@@ -92,8 +106,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 		animatinoIn = AnimationUtils.loadAnimation(this, R.anim.app_launcgh_img_in); //动画效果
 		animatinoAppIn = AnimationUtils.loadAnimation(this, R.anim.app_launch_frm_in); //动画效果
 
-		mLinearLayout = (LinearLayout) findViewById(R.id.goneLinear);
-		mLinearLayout.startAnimation(animatinoIn);
+		mGoneLinearLayout = (LinearLayout) findViewById(R.id.goneLinear);
+		mVerificationLinearLay = (LinearLayout) findViewById(R.id.app_login_verification_linear);
+		mVerificationEdit = (EditText) findViewById(R.id.app_login_verification_edit);
+		mGoneLinearLayout.startAnimation(animatinoIn);
 		mLaunchFrm = (FrameLayout) findViewById(R.id.app_launch_frm);
 
 		Message msg = new Message();
@@ -104,6 +120,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 	private void initView() {
 		mLoginOrRegisterButton = (Button) findViewById(R.id.login_login_or_register_button);
 		mUserNameEdit = (EditText) findViewById(R.id.login_name_edit);
+		mVerificationImage = (ImageView) findViewById(R.id.app_login_verification_img);
 		mUserPasswordEdit = (EditText) findViewById(R.id.login_password_edit);
 		mForgotPasswordText = (TextView) findViewById(R.id.login_forget_password);
 		mTmpLayout = findViewById(R.id.login_frame_tmp);
@@ -115,6 +132,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 		mLoginOrRegisterButton.setOnClickListener(this);
 		mAdmistratorCheckBox.setOnClickListener(this);
 		mAdmistratorText.setOnClickListener(this);
+		mVerificationImage.setOnClickListener(this);
 	}
 
 	@Override
@@ -133,6 +151,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 				isAdministrator = !isAdministrator;
 				mAdmistratorCheckBox.setChecked(isAdministrator);
 				break;
+			case R.id.app_login_verification_img:
+				code = mCodeUtil.createCode();
+				mVerificationImage.setImageBitmap(mCodeUtil.createBitmap(code));
+				break;
 			default:
 				break;
 		}
@@ -144,10 +166,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 	}
 
 	boolean register = false;
+	boolean firstLogin = true;
 
 	private void goToLogin() {
 
-		loginTime++;
 		if (mAsyncTask != null && !backGroundSuccess) {
 			return;
 		}
@@ -170,14 +192,41 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			mUserNameEdit.setError(getString(R.string.error_field_required));
 			cancel = true;
 		}
-
 		if (cancel) {
 			return;
 		}
-		if(loginTime > LOGIN_TIME_LIMIT){
+		if (loginTime > LOGIN_TIME_LIMIT && firstLogin) {
 			//验证码
-			Toast.makeText(LoginActivity.this, "请输入验证码！", Toast.LENGTH_LONG).show();
+			//Toast.makeText(LoginActivity.this, "请输入验证码！", Toast.LENGTH_LONG).show();
+			mVerificationLinearLay.setVisibility(View.VISIBLE);
+			code = mCodeUtil.createCode();
+			Bitmap bitmap = mCodeUtil.createBitmap(code);
+
+			mVerificationImage.setImageBitmap(bitmap);
+			firstLogin = false;
+			return;
 		}
+		if(loginTime > LOGIN_TIME_LIMIT){
+			if(TextUtils.isEmpty(mVerificationEdit.getText().toString())){
+				Toast.makeText(this, R.string.pleaseInputVerification, Toast.LENGTH_SHORT).show();
+				cancel = true;
+			}
+			if(cancel){
+				return;
+			}
+			String input = mVerificationEdit.getText().toString();
+			String tmpCode = code.toLowerCase();
+			if(!tmpCode.equals(input.toLowerCase())){
+				Toast.makeText(this, R.string.inputVerificationError, Toast.LENGTH_SHORT).show();
+				cancel = true;
+			}
+			if(cancel){
+				code = mCodeUtil.createCode();
+				mVerificationImage.setImageBitmap(mCodeUtil.createBitmap(code));
+				return;
+			}
+		}
+
 		JSONObject objectIn = new JSONObject();
 		try {
 
@@ -194,7 +243,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 				mAsyncTask = null;
 			}
 		}
+		loginTime++;
 	}
+
 	private void goToSignUp() {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
 		dialog.setMessage("你还没用成为本系统用户，快来加入吧~");
@@ -222,7 +273,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 	/**
 	 * 找回密码
 	 */
-	private void goToFindPassword(){
+	private void goToFindPassword() {
 
 	}
 
@@ -259,7 +310,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			ServerInfoObj<JSONObject> serverInfoObj = null;// = new ServerInfoObj<>();
 			try {
 				publishProgress(20f);
-				con = ServerConfigure.getConnection(UrlSource.SIGNIN, ServerConfigure.Request.POST);
+				con = ServerConfigure.getConnection(UrlSource.SIGNIN, RequestMethod.POST);
 				con.connect();
 				JSONObject object = params[0];
 				publishProgress(50f);
@@ -271,7 +322,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 					String tmpPass = KitAESCoder.encrypt(object.getString("userPassword"));
 					object.put("userPassword", tmpPass);
 				}
-				if(isAdministrator){
+				if (isAdministrator) {
 					object.put("permissionLevel", 0);
 				}
 				ServerTalk.writeToServer(con.getOutputStream(), params[0]);
@@ -300,7 +351,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 			backGroundSuccess = true;
 			enableView(true);
-			if(serverObject == null) {
+			if (serverObject == null) {
 				Toast.makeText(LoginActivity.this, R.string.pleaseWait, Toast.LENGTH_SHORT).show();
 
 				//测试登录后的过程
@@ -310,46 +361,53 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 				return;
 			}
-			if(!serverObject.isSuccess()){
+			if (!serverObject.isSuccess()) {
 				L.e("服务器返回操作失败");
-				Toast.makeText(LoginActivity.this,  R.string.pleaseWait, Toast.LENGTH_SHORT).show();
+				Toast.makeText(LoginActivity.this, R.string.pleaseWait, Toast.LENGTH_SHORT).show();
 				return;
 			}
 			try {
 				JSONObject object = (JSONObject) serverObject.getData();
 
-				if(object == null){
+				if (object == null) {
 					Toast.makeText(LoginActivity.this, R.string.serverNotResponse, Toast.LENGTH_SHORT).show();
 					return;
 				}
-				if(!object.has("status")){
+				if (!object.has("status")) {
 					L.w("服务器数据格式需要检查");
 					return;
 				}
 				if (object.getBoolean("status")) {
 					login = true;
+					saveInfo(LOGIN_TIME, "0");
+					loginTime = 0;
 					Intent intent = new Intent(LoginActivity.this, IndexActivity.class);
 					intent.putExtra("userId", mUserNameEdit.getText().toString());
-
 					startActivity(intent);
 
 				} else {
 					login = false;
 					String message = object.getString("message");
-					if("userNotExist".equals(message)){
-						if(isAdministrator) {
+					if ("userNotExist".equals(message)) {
+						if (isAdministrator) {
 							Toast.makeText(LoginActivity.this, R.string.passwordError, Toast.LENGTH_LONG).show();
 							return;
 						}
 						goToSignUp();
-					} else if("passwordNotMatch".equals(message)){
+					} else if ("passwordNotMatch".equals(message)) {
 						Toast.makeText(LoginActivity.this, R.string.passwordError, Toast.LENGTH_LONG).show();
+						if(loginTime > LOGIN_TIME_LIMIT){
+							code = mCodeUtil.createCode();
+							mVerificationImage.setImageBitmap(mCodeUtil.createBitmap(code));
+						}
+						return;
 					}
+					saveInfo(LOGIN_TIME, String.valueOf(loginTime));
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			} finally {
-				if(login || register){
+				if (login || register) {
 					finish();
 				} else {
 					enableView(true);
@@ -363,27 +421,43 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			mAsyncTask = null;
 		}
 	}
-	@Override
-	protected void onStop() {
-		//1、打开Preferences，名称为setting，如果存在则打开它，否则创建新的Preferences
-		SharedPreferences settings = getSharedPreferences("userLogin", MODE_PRIVATE);
+
+	private void saveInfo(String key, String value) {
+		SharedPreferences settings = getSharedPreferences(SHAREPREFRENCE, MODE_PRIVATE);
 		//2、让setting处于编辑状态
 		SharedPreferences.Editor editor = settings.edit();
 		//3、存放数据
-		editor.putString("name", mUserNameEdit.getText().toString());
+		editor.putString(key, value);
 		//4、完成提交
 		editor.apply();
+	}
+
+	private String readInfo(String key) {
+		SharedPreferences settings = getSharedPreferences(SHAREPREFRENCE, MODE_PRIVATE);
+		//if(LOGIN_TIME.equals(key))
+		{
+			//return settings.getInt(key, 0);
+		}
+		return settings.getString(key, "");
+	}
+
+	@Override
+	protected void onStop() {
+		saveInfo("name", mUserNameEdit.getText().toString());
 		super.onStop();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//1、获取Preferences
-		SharedPreferences settings = getSharedPreferences("userLogin", MODE_PRIVATE);
-		//2、取出数据
-		String name = settings.getString("name", "");
-		mUserNameEdit.setText(name);
+		mUserNameEdit.setText(readInfo("name"));
+
+		if (0 == readInfo(LOGIN_TIME).length()) {
+			loginTime = 0;
+		} else {
+			loginTime = Integer.valueOf(readInfo(LOGIN_TIME));
+		}
+		super.onResume();
 	}
 
 	@Override

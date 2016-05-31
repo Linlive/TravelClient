@@ -3,55 +3,74 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:background="@color/back_white"
         android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:background="@color/common_white">
+        android:orientation="horizontal"
+        android:paddingLeft="10dp">
+
         <CheckBox
+            android:id="@+id/app_shopping_cart_shop_check_box"
+            style="@style/checkBoxStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            style="@style/checkBoxStyle"
-            android:id="@+id/app_shopping_cart_shop_check_box"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/shopkeeper_enabled"
-            android:scaleType="fitCenter"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/shopName"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:layout_marginLeft="12dp"
-            android:id="@+id/app_shopping_cart_view_shop_textView"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/app_shopping_cart_view_shop_imageView"
-            android:src="@drawable/right_enabled"
-            android:layout_marginLeft="2dp"
-            />
+            android:gravity="center"
+            android:id="@+id/app_shopping_cart_title_linear">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/shopkeeper_enabled"/>
+            <TextView
+                android:id="@+id/app_shopping_cart_view_shop_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:text="@string/shopName"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+
+            <ImageView
+                android:id="@+id/app_shopping_cart_view_shop_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/right_enabled"
+                />
+        </LinearLayout>
     </LinearLayout>
 
-    <com.tl.pro.travelkit.view.custom.InListView
-        android:id="@+id/app_shopping_cart_pull_refresh_list_item"
+    <LinearLayout
+        android:id="@+id/app_shopping_cart_linear_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/divider_line"
-        android:dividerHeight="2dp"
-        android:divider="@color/common_white"
-        android:fadingEdge="none"
-        android:fastScrollEnabled="false"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-        android:smoothScrollbar="true"
+        android:orientation="vertical"
+        android:background="@color/appSwitch1"
         >
-    </com.tl.pro.travelkit.view.custom.InListView>
+    </LinearLayout>
+    <!--<com.tl.pro.travelkit.view.custom.InListView-->
+    <!--android:id="@+id/app_shopping_cart_pull_refresh_list_item"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/divider_line"-->
+    <!--android:dividerHeight="2dp"-->
+    <!--android:divider="@color/common_white"-->
+    <!--android:fadingEdge="none"-->
+    <!--android:fastScrollEnabled="false"-->
+    <!--android:footerDividersEnabled="false"-->
+    <!--android:headerDividersEnabled="false"-->
+    <!--android:smoothScrollbar="true"-->
+    <!--&gt;-->
+    <!--</com.tl.pro.travelkit.view.custom.InListView>-->
 </LinearLayout>

@@ -1,19 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/common_white"
+    android:orientation="vertical"
     tools:context="com.tl.pro.travelkit.activity.ShoppingCartActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y30"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:id="@+id/app_shopping_cart_bottom_bar"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="3"
+            android:background="@drawable/app_shopping_cart_bar_boder"
+            >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_weight="1">
+                <TextView
+                    style="@style/shoppingCartBottomBarTitleStyle"
+                    android:text="@string/selectedNumber"
+                    android:id="@+id/app_shopping_cart_select_number_text"
+                    />
+                <TextView
+                    style="@style/shoppingCartBottomBarSmallTextStyle"
+                    android:text="0"
+                    android:id="@+id/app_shopping_cart_select_number_value_text"
+                    />
+            </LinearLayout>
+            <View
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:background="@color/black"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/shoppingCartBottomBarTitleStyle"
+                    android:text="@string/selectPrice"
+                    android:id="@+id/app_shopping_cart_select_price_text"
+                    />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:text="￥0.0"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textColor="@color/selectPrice"
+                    android:id="@+id/app_shopping_cart_select_price_value_text"/>
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/selectComplete"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@color/red"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:id="@+id/app_shopping_cart_buy_text"/>
+    </LinearLayout>
+
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/app_shopping_cart_pull_refresh_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="@dimen/y1"
+        android:dividerHeight="@dimen/y8"
         android:fadingEdge="none"
         android:fastScrollEnabled="false"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true"
+        android:layout_above="@+id/app_shopping_cart_bottom_bar"
         />
-</LinearLayout>
+</RelativeLayout>

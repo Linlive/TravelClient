@@ -17,6 +17,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         >
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,8 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/myShopName"
-            android:textSize="20sp"
             android:textColor="@color/textBlank"
+            android:textSize="20sp"
             />
     </RelativeLayout>
 
@@ -74,6 +75,7 @@
             android:layout_height="60dp"
             android:orientation="horizontal"
             >
+
             <LinearLayout
                 android:id="@+id/app_shopkeeper_up_goods"
                 android:layout_width="0dp"
@@ -83,18 +85,41 @@
                 android:orientation="vertical"
                 >
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/publish_goods_enabled"
-                    />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:max="100"
+                        android:progressDrawable="@drawable/upload_progress_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progress="1"
+                        android:id="@+id/app_publish_upload_progress"
+                        android:visibility="invisible"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:visibility="visible">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textBlank"
-                    android:text="@string/myShopPublishGoods"
-                    />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/publish_goods_enabled"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/myShopPublishGoods"
+                            android:textColor="@color/textBlank"
+                            />
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
 
             <View
@@ -122,8 +147,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/textBlank"
                     android:text="@string/myShopGoodsManager"
+                    android:textColor="@color/textBlank"
                     />
             </LinearLayout>
 
@@ -152,8 +177,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/textBlank"
                     android:text="@string/myShopIndentManager"
+                    android:textColor="@color/textBlank"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -171,13 +196,14 @@
         android:layout_marginTop="10dp"
         android:background="@color/common_white"
         >
+
         <TextView
             style="@style/appAboutTitleTextSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/textBlank"
             android:hint="一个网格布局将在这里，\n\n这里是店铺描述,\n\n和最新发布的商品"
+            android:textColor="@color/textBlank"
             />
     </ScrollView>
 </RelativeLayout>

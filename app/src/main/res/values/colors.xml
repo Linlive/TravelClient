@@ -36,13 +36,14 @@
 	<color name="appTitle">#ff5fd409</color>
 	<!--app switch -->
 	<color name="appSwitch">#6ed5fffe</color>
+	<color name="appSwitch1">#2ad5fffe</color>
 
 	<color name="appIndexBottomBar">#82858b</color>
 
 	<!--sign in text-->
 	<color name="signingText">#000000</color>
 	<!--test-->
-	<color name="common_white">#DFFFFFFF</color>
+	<color name="common_white">#DFEFEFEF</color>
 	<color name="listview_gray">#cccccc</color>
 	<color name="view_backgroud">#f1f1f1</color>
 	<color name="back_darkgray">#f7f7f7</color>

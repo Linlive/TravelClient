@@ -25,22 +25,6 @@ public class ServerConfigure {
 
 	private static final String CHARSET = "utf-8"; //设置编码
 
-
-	public enum Request {
-
-		POST("POST"), GET("GET");
-		private String method;
-
-		Request(String method){
-			this.method = method;
-		}
-
-		@Override
-		public String toString() {
-			return "in " + this.getClass().getName() + ": " + method;
-		}
-	}
-
 	/**
 	 * connect to server time out.
 	 * unit is milliseconds
@@ -61,7 +45,7 @@ public class ServerConfigure {
 	 * @throws MalformedURLException if url is invalid
 	 */
 	public static HttpURLConnection getConnection(String urlString) throws MalformedURLException {
-		return getConnection(urlString, Request.GET, false, true);
+		return getConnection(urlString, RequestMethod.GET, false, true);
 	}
 
 	/**
@@ -72,7 +56,7 @@ public class ServerConfigure {
 	 * @return a connection created by the specified urlString.
 	 * @throws MalformedURLException if url is invalid
 	 */
-	public static HttpURLConnection getConnection(String urlString, Request method) throws
+	public static HttpURLConnection getConnection(String urlString, RequestMethod method) throws
 			MalformedURLException {
 		return getConnection(urlString, method, true, true);
 	}
@@ -87,7 +71,7 @@ public class ServerConfigure {
 	 * @return a connection created by the specified urlString.
 	 * @throws MalformedURLException if url is invalid
 	 */
-	public static HttpURLConnection getConnection(String urlString, Request method, boolean input,
+	public static HttpURLConnection getConnection(String urlString, RequestMethod method, boolean input,
 	                                              boolean output) throws MalformedURLException {
 		HttpURLConnection httpURLConnection = null;
 		URL url = new URL(SERVER_ADDRESS + urlString);
