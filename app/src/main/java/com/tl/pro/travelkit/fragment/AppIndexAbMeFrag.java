@@ -39,6 +39,8 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 	private ImageView mViewAllIndentImg;
 	private Point point;
 
+	private String userId;
+
 	//activity data
 	IndexDataListener dataListener;
 //	IndexActivity dataListener;
@@ -51,6 +53,7 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 		mContext = getActivity();
 		View view = inflater.inflate(R.layout.frag_index_about_me, container, false);
 		dataListener = (IndexDataListener) getActivity();
+		userId = dataListener.getUserId();
 		//dataListener.getUserId();
 		initView(view);
 		setListener();
@@ -93,28 +96,31 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 				intent = new Intent(mContext, ShopkeeperActivity.class);
 				intent.putExtra(CommonText.userId, dataListener.getUserId());
 
-				startActivity(intent);
-
 				break;
 			case R.id.app_about_me_wait_for_money:
 				L.i(TAG, "app_about_me_wait_for_money");
 				intent = new Intent(mContext, WaitForActivity.class);
 				intent.putExtra("index", 1);
+				intent.putExtra(CommonText.userId, userId);
+
 				break;
 			case R.id.app_about_me_wait_for_deliver:
 				L.i(TAG, "app_about_me_wait_for_deliver");
 				intent = new Intent(mContext, WaitForActivity.class);
 				intent.putExtra("index", 2);
+				intent.putExtra(CommonText.userId, userId);
 				break;
 			case R.id.app_about_me_wait_for_receive:
 				L.i(TAG, "app_about_me_wait_for_receive");
 				intent = new Intent(mContext, WaitForActivity.class);
 				intent.putExtra("index", 3);
+				intent.putExtra(CommonText.userId, userId);
 				break;
 			case R.id.app_about_me_wait_for_comment:
 				L.i(TAG, "app_about_me_wait_for_comment");
 				intent = new Intent(mContext, WaitForActivity.class);
 				intent.putExtra("index", 4);
+				intent.putExtra(CommonText.userId, userId);
 				break;
 			case R.id.app_about_me_my_comment:
 				L.i(TAG, "app_about_me_my_comment");
@@ -125,6 +131,7 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 				L.i(TAG, "app_about_me_view_all_title");
 				intent = new Intent(mContext, WaitForActivity.class);
 				intent.putExtra("index", 0);
+				intent.putExtra(CommonText.userId, userId);
 				break;
 			default:
 				break;

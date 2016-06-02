@@ -30,7 +30,9 @@ public class NormalCheck {
 	 * @return true if valid
 	 */
 	public static boolean isEmail(String emailString) {
-
+		if(null == emailString){
+			return false;
+		}
 		final Pattern pattern = Pattern.compile(EMAIL_REGEX);
 
 		return innerCheck(emailString, pattern);
@@ -42,6 +44,9 @@ public class NormalCheck {
 	 * @return true if phoneNumber is valid.
 	 */
 	public static boolean isPhoneNumber(String phoneNumber) {
+		if(null == phoneNumber){
+			return false;
+		}
 		Pattern pattern = Pattern.compile(PHONE_REGEX);
 		return innerCheck(phoneNumber, pattern);
 	}

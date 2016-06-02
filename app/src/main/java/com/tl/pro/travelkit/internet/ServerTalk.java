@@ -86,6 +86,11 @@ public class ServerTalk {
 
 		return writeToServer(writer, object.toString());
 	}
+	public static boolean writeToServer(OutputStream writer, Object object) {
+
+		Gson gson = new Gson();
+		return writeToServer(writer, gson.toJson(object));
+	}
 	public static boolean writeToServer(OutputStream writer, ServerInfoObj object) {
 
 		Gson gson = new Gson();

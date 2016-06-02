@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         android:weightSum="10">
 
         <TextView
@@ -61,6 +61,7 @@
                 android:text="@string/app_name"
                 android:textColor="@color/appTitle"
                 android:textSize="25sp"
+                android:id="@+id/app_app_title"
                 />
 
             <com.tl.pro.travelkit.view.custom.PercentLinearLayout
@@ -70,6 +71,8 @@
                 android:layout_centerInParent="true"
                 android:orientation="vertical"
                 app:layout_widthPercent="60%"
+                android:layout_below="@id/app_app_title"
+                android:layout_marginTop="@dimen/y120"
                 >
                 <EditText
                     android:id="@+id/login_name_edit"
@@ -140,14 +143,31 @@
                     app:layout_widthPercent="100%"/>
             </com.tl.pro.travelkit.view.custom.PercentLinearLayout>
 
+            <TextView
+                android:id="@+id/login_forget_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:paddingRight="16dp"
+                android:text="@string/forgotPassword"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_marginBottom="@dimen/y16"
+                android:layout_marginRight="@dimen/y16"
+                />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/login_forget_password"
-                android:layout_alignLeft="@+id/login_forget_password"
+                android:layout_above="@id/login_forget_password"
+                android:layout_alignLeft="@id/login_forget_password"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/y8">
 
                 <TextView
                     android:id="@+id/app_administrator"
@@ -169,22 +189,6 @@
                     android:layout_marginLeft="3dp"
                     />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/login_forget_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/login_forgot_password_text"
-                android:ellipsize="end"
-                android:paddingRight="16dp"
-                android:text="@string/forgotPassword"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                />
         </android.support.percent.PercentRelativeLayout>
     </FrameLayout>
 

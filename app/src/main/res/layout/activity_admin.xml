@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.tl.pro.travelkit.activity.AdminActivity"
+    android:background="@drawable/out_side">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:gravity="right"
+        android:layout_marginBottom="@dimen/y60"
+        app:layout_widthPercent="80%"
+        app:layout_heightPercent="60%"
+        >
+        <Button
+            android:id="@+id/app_admin_log_button"
+            android:text="查看日志"
+            style="@style/appAdminButtonStyle"/>
+
+        <Button
+            android:id="@+id/app_admin_user_manage"
+            android:text="用户管理"
+            style="@style/appAdminButtonStyle"/>
+
+        <Button
+            android:id="@+id/app_admin_check_user_application"
+            android:text="查看商家申请"
+            style="@style/appAdminButtonStyle"/>
+    </LinearLayout>
+
+</android.support.percent.PercentRelativeLayout>

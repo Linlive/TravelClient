@@ -116,7 +116,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 			objectIn.put("userName", nameEditText);
 			objectIn.put("userPassword", passwordText);
 			objectIn.put("permissionLevel", 1);
-
+			if(!ServerConfigure.beforeConnect(this)) {
+				Toast.makeText(this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+				return;
+			}
 			mSignInTask = new SignInAsyncTask();
 			mSignInTask.execute(objectIn);
 
@@ -143,7 +146,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 			ServerInfoObj<JSONObject> serverInfoObj = new ServerInfoObj<>();
 			try {
 				publishProgress(20f);
-				con = ServerConfigure.getConnection(UrlSource.SIGNUP, RequestMethod.POST);
+				con = ServerConfigure.getConnection(RegisterActivity.this, UrlSource.SIGNUP, RequestMethod.POST);
 				con.connect();
 				JSONObject object = params[0];
 				publishProgress(50f);

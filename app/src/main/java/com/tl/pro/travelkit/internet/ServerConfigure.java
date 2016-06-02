@@ -1,5 +1,12 @@
 package com.tl.pro.travelkit.internet;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.widget.Toast;
+
+import com.tl.pro.travelkit.R;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -38,14 +45,38 @@ public class ServerConfigure {
 	private static final int READ_TIME_OUT = 600000;
 
 	/**
+	 * 检查网络是否可用
+	 *
+	 * @param context
+	 * @return
+	 */
+	public static boolean beforeConnect(Context context) {
+		//Context context = activity.getApplicationContext();
+
+		// 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo[] networkInfo = connectivityManager.getAllNetworkInfo();
+		if (networkInfo == null || networkInfo.length == 0) {
+			return false;
+		}
+		for (int i = 0; i < networkInfo.length; i++) {
+			if (networkInfo[i].getState() == NetworkInfo.State.CONNECTED) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	/**
 	 * 获取一个http链接，只能从网络获取数据，不能传输数据到服务器上
 	 *
 	 * @param urlString url
 	 * @return a connection created by the specified urlString.
 	 * @throws MalformedURLException if url is invalid
 	 */
-	public static HttpURLConnection getConnection(String urlString) throws MalformedURLException {
-		return getConnection(urlString, RequestMethod.GET, false, true);
+	public static HttpURLConnection getConnection(Context context, String urlString) throws MalformedURLException {
+		return getConnection(context, urlString, RequestMethod.GET, false, true);
 	}
 
 	/**
@@ -56,9 +87,9 @@ public class ServerConfigure {
 	 * @return a connection created by the specified urlString.
 	 * @throws MalformedURLException if url is invalid
 	 */
-	public static HttpURLConnection getConnection(String urlString, RequestMethod method) throws
+	public static HttpURLConnection getConnection(Context context, String urlString, RequestMethod method) throws
 			MalformedURLException {
-		return getConnection(urlString, method, true, true);
+		return getConnection(context, urlString, method, true, true);
 	}
 
 	/**
@@ -71,8 +102,12 @@ public class ServerConfigure {
 	 * @return a connection created by the specified urlString.
 	 * @throws MalformedURLException if url is invalid
 	 */
-	public static HttpURLConnection getConnection(String urlString, RequestMethod method, boolean input,
+	public static HttpURLConnection getConnection(Context context, String urlString, RequestMethod method, boolean input,
 	                                              boolean output) throws MalformedURLException {
+		if (!beforeConnect(context)) {
+			Toast.makeText(context, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+			return null;
+		}
 		HttpURLConnection httpURLConnection = null;
 		URL url = new URL(SERVER_ADDRESS + urlString);
 
@@ -108,8 +143,42 @@ public class ServerConfigure {
 		return httpURLConnection;
 	}
 
+	public static HttpURLConnection getSessionConnection(String urlString, String sessionId) throws MalformedURLException {
+		HttpURLConnection httpURLConnection = null;
+		URL url = new URL(SERVER_ADDRESS + urlString);
+
+		try {
+			httpURLConnection = (HttpURLConnection) url.openConnection();
+			httpURLConnection.setConnectTimeout(REQUEST_TIME_OUT);
+			httpURLConnection.setReadTimeout(READ_TIME_OUT);
+			httpURLConnection.setRequestMethod("POST");
+			httpURLConnection.setDoInput(true);
+			httpURLConnection.setDoOutput(true);
+			httpURLConnection.setUseCaches(false);
+			httpURLConnection.setRequestProperty("Charset", CHARSET);  //设置编码
+			httpURLConnection.setRequestProperty("connection", "Keep-Alive");
+
+			if (null == sessionId) {
+				httpURLConnection.setRequestProperty("Cookie", "Keep-Alive");
+			} else {
+
+			}
+			httpURLConnection.setRequestProperty("Cookie", sessionId);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			//nop
+		}
+		return httpURLConnection;
+
+
+	}
+
+
 	// 文件上传
 	private static final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+
 	public static HttpURLConnection getMultiPartConnection(String urlString, String boundary) throws MalformedURLException {
 		HttpURLConnection httpURLConnection = null;
 		URL url = new URL(SERVER_ADDRESS + urlString);

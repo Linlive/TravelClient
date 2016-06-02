@@ -22,7 +22,8 @@
 	<color name="colorAccent">#FF4081</color>
 
 	<!--login button-->
-	<color name="colorLoginButtonDefault">#af1f2a09</color>
+	<!--<color name="colorLoginButtonDefault">#af1f2a09</color>-->
+	<color name="colorLoginButtonDefault">#6f0fda65</color>
 	<color name="colorLoginButtonPress">#6a00efae</color>
 	<color name="colorLoginButtonFocus">#aa00ff00</color>
 

@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/app_index_pull_refresh_list"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="2dp"
-        android:divider="@color/divider_line"
-        android:fadingEdge="none"
-        android:fastScrollEnabled="false"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-        android:smoothScrollbar="true"
-        />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/app_about_for_status_empty_data_to_see"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="没有未收货的商品~"
+            android:textColor="@color/lineView"
+            android:textSize="20sp"
+            android:visibility="invisible"
+            />
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+            android:id="@+id/app_index_pull_refresh_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/divider_line"
+            android:dividerHeight="2dp"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="false"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:smoothScrollbar="true"
+            android:visibility="visible"
+            />
+    </FrameLayout>
 
 </LinearLayout>

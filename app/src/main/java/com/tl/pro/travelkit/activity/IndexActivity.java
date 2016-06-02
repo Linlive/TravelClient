@@ -3,6 +3,7 @@ package com.tl.pro.travelkit.activity;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -94,8 +95,7 @@ public class IndexActivity extends Activity implements View.OnClickListener, Ind
 		initViews();
 		fragmentManager = getFragmentManager();
 		setTabSelection(0);
-
-		new GoodsAll().execute("");
+		new GoodsAll(this).execute("");
 	}
 
 	private Point getDeviceDisplay() {
@@ -243,9 +243,13 @@ public class IndexActivity extends Activity implements View.OnClickListener, Ind
 	}
 
 	private class GoodsAll extends AsyncTask<String, Float, List<GoodsDo>> {
+		private Context context;
+		public GoodsAll(Context context){
+			this.context = context;
+		}
 		@Override
 		protected List<GoodsDo> doInBackground(String... params) {
-			return PostMultipart.getGoods();
+			return PostMultipart.getGoods(context);
 		}
 
 		@Override

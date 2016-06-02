@@ -54,6 +54,7 @@
                     android:paddingBottom="8dp"
                     android:textSize="18sp"
                     android:layout_weight="68"
+                    android:id="@+id/app_goods_scan_goods_desc_text"
                     />
                 <View
                     android:layout_width="@dimen/x1"
@@ -166,6 +167,7 @@
                         android:textColor="@color/textBlank"
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp"
+                        android:id="@+id/app_scan_goods_comment_value_text"
                         />
                 </RelativeLayout>
 

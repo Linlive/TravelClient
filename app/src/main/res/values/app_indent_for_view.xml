@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="noAllIndentToSee">没有更多的数据了</string>
+    <string name="noWaitMoneyIndentToSee">没有未付款的商品</string>
+    <string name="noWaitAcceptIndentToSee">没有未收货的商品</string>
+    <string name="noWaitDeliverIndentToSee">没有未发货的商品</string>
+    <string name="noWaitCommentIndentToSee">没有未评价的商品</string>
+</resources>

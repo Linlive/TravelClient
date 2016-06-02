@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@color/transparent" android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <gradient android:centerColor="@color/listview_gray"
+                      android:endColor="@color/appSwitch"
+                      android:startColor="@color/common_white"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+
+            <gradient
+                android:endColor="#4fEFEFEF"
+                android:startColor="#2019af1a"
+                android:centerColor="#2a00efae"
+                android:type="linear"
+                />
+        </shape>
+    </item>
+
+</selector>

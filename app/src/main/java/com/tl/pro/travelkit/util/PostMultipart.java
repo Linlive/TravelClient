@@ -1,5 +1,6 @@
 package com.tl.pro.travelkit.util;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -17,12 +18,14 @@ import com.squareup.okhttp.Response;
 import com.tl.pro.travelkit.bean.CartDo;
 import com.tl.pro.travelkit.bean.GoodsDo;
 import com.tl.pro.travelkit.bean.IndentDo;
+import com.tl.pro.travelkit.bean.IndentViewDo;
 import com.tl.pro.travelkit.bean.ShoppingCartDo;
 import com.tl.pro.travelkit.internet.RequestMethod;
 import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.internet.ServerTalk;
 import com.tl.pro.travelkit.internet.UrlSource;
 import com.tl.pro.travelkit.util.listener.ProgressResponseListener;
+import com.tl.pro.travelkit.util.log.L;
 import com.tl.pro.travelkit.util.pay.PayResult;
 
 import org.json.JSONException;
@@ -34,6 +37,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,10 +77,10 @@ public class PostMultipart {
 
 	/**
 	 * 发布商品
-	 * @param params 文字信息
-	 * @param filePaths 文件路径
-	 * @param uiProgressListener 文件进度侦听
 	 *
+	 * @param params             文字信息
+	 * @param filePaths          文件路径
+	 * @param uiProgressListener 文件进度侦听
 	 */
 	public static void upLoadGoods(List<HashMap<String, String>> params, ArrayList<String> filePaths, UIProgressListener uiProgressListener) {
 		MultipartBuilder multipartBuilder = new MultipartBuilder().type(MultipartBuilder.FORM);
@@ -117,12 +121,12 @@ public class PostMultipart {
 	 *
 	 * @return 所有查询到的货物对象
 	 */
-	public static List<GoodsDo> getGoods() {
+	public static List<GoodsDo> getGoods(Context mContext) {
 
 		List<GoodsDo> list = null;
 		HttpURLConnection connection;
 		try {
-			connection = ServerConfigure.getConnection(UrlSource.GETGOODS, RequestMethod.POST);
+			connection = ServerConfigure.getConnection(mContext, UrlSource.GETGOODS, RequestMethod.POST);
 			ServerTalk.writeToServer(connection.getOutputStream(), "body");
 
 
@@ -148,7 +152,7 @@ public class PostMultipart {
 		return list;
 	}
 
-	public static boolean addToShoppingCart(String userId, GoodsDo goodsDo, UIProgressListener uiProgressListener) {
+	public static boolean addToShoppingCart(Context context, String userId, GoodsDo goodsDo, UIProgressListener uiProgressListener) {
 
 		HttpURLConnection con = null;
 
@@ -159,7 +163,7 @@ public class PostMultipart {
 			cartDo.setGoodsDo(goodsDo);
 			cartDo.setGoodsCount(1);
 
-			con = ServerConfigure.getConnection(UrlSource.ADD_TO_SHOPPING_CART, RequestMethod.POST);
+			con = ServerConfigure.getConnection(context, UrlSource.ADD_TO_SHOPPING_CART, RequestMethod.POST);
 			con.connect();
 			ServerTalk.writeToServer(con.getOutputStream(), cartGson.toJson(cartDo));
 
@@ -190,11 +194,11 @@ public class PostMultipart {
 		return false;
 	}
 
-	public static boolean deleteFromShoppingCart(String goodsId) {
+	public static boolean deleteFromShoppingCart(Context context, String goodsId) {
 		HttpURLConnection con = null;
 
 		try {
-			con = ServerConfigure.getConnection(UrlSource.DELETE_FROM_SHOPPING_CART, RequestMethod.POST);
+			con = ServerConfigure.getConnection(context, UrlSource.DELETE_FROM_SHOPPING_CART, RequestMethod.POST);
 			JSONObject object = new JSONObject();
 			object.put("goodsId", goodsId);
 			ServerTalk.writeToServer(con.getOutputStream(), object);
@@ -225,12 +229,12 @@ public class PostMultipart {
 	 * @param userId
 	 * @return
 	 */
-	public static List<ShoppingCartDo> queryUserCart(String userId) {
+	public static List<ShoppingCartDo> queryUserCart(Context context, String userId) {
 
 		List<ShoppingCartDo> retDataList = null;
 		HttpURLConnection con = null;
 		try {
-			con = ServerConfigure.getConnection(UrlSource.QUERY_SHOPPING_CART, RequestMethod.POST);
+			con = ServerConfigure.getConnection(context, UrlSource.QUERY_SHOPPING_CART, RequestMethod.POST);
 			JSONObject objOut = new JSONObject();
 			objOut.put(CommonText.userId, userId);
 			ServerTalk.writeToServer(con.getOutputStream(), objOut);
@@ -260,7 +264,7 @@ public class PostMultipart {
 	}
 
 
-	public static boolean buyGoods(String buyerId, ShoppingCartDo goodsDo, int state) {
+	public static boolean buyGoods(Context context, String buyerId, ShoppingCartDo goodsDo, int state) {
 
 		IndentDo indentDo = new IndentDo();
 		indentDo.setBuyerId(buyerId);
@@ -279,7 +283,7 @@ public class PostMultipart {
 
 		HttpURLConnection con = null;
 		try {
-			con = ServerConfigure.getConnection(UrlSource.CREATE_INDENT, RequestMethod.POST);
+			con = ServerConfigure.getConnection(context, UrlSource.CREATE_INDENT, RequestMethod.POST);
 			ServerTalk.writeToServer(con.getOutputStream(), jsonString);
 
 			String serverString = ServerTalk.readFromServer(con.getInputStream());
@@ -299,6 +303,60 @@ public class PostMultipart {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 查看所有订单
+	 *
+	 * @return 已查询到的订单列表
+	 */
+	public static ArrayList<IndentViewDo> queryIndentAll(Context context, String userId) {
+		ArrayList<IndentViewDo> resultList = null;
+		HttpURLConnection connection = null;
+
+		try {
+			connection = ServerConfigure.getConnection(context, UrlSource.VIEW_INDENT_DEFAULT, RequestMethod.POST);
+			JSONObject objOut = new JSONObject();
+			objOut.put("userId", userId);
+			ServerTalk.writeToServer(connection.getOutputStream(), objOut);
+
+			String serverStr = ServerTalk.readFromServer(connection.getInputStream());
+			if(null == serverStr || serverStr.length() == 0){
+				L.e(TAG, "server response nothing !!!");
+				return null;
+			}
+			JsonParser jp = new JsonParser();
+			JsonElement je = jp.parse(serverStr);
+			if(!je.isJsonObject()){
+				L.e(TAG, "server response format error");
+				return null;
+			}
+			JsonObject jo = je.getAsJsonObject();
+			je = jo.get("data");
+			if(!je.isJsonArray()){
+				L.e(TAG, "server response format error");
+				return null;
+			}
+			resultList = transIndentViewDao(je);
+
+		} catch (IOException | JSONException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
+		}
+		return resultList;
+	}
+
+	/**
+	 * 查看所有订单
+	 *
+	 * @return 已查询到的订单列表
+	 */
+	public static List<IndentViewDo> queryIndentByState() {
+		List<IndentViewDo> resultList = new LinkedList<>();
+		return resultList;
 	}
 
 
@@ -344,6 +402,23 @@ public class PostMultipart {
 			ShoppingCartDo cartDo = gson.fromJson(element, ShoppingCartDo.class);
 			System.out.println("while--" + cartDo.toString());
 			list.add(cartDo);
+		}
+		return list;
+	}
+
+	private static ArrayList<IndentViewDo> transIndentViewDao(JsonElement jsonElement){
+		if (!jsonElement.isJsonArray()) {
+			return null;
+		}
+		JsonArray jsonArray = jsonElement.getAsJsonArray();
+		Iterator<JsonElement> it = jsonArray.iterator();
+		ArrayList<IndentViewDo> list = new ArrayList<>();
+		while (it.hasNext()) {
+			JsonElement element = it.next();
+			Gson gson = new Gson();
+			IndentViewDo viewDo = gson.fromJson(element, IndentViewDo.class);
+			System.out.println("while--" + viewDo.toString());
+			list.add(viewDo);
 		}
 		return list;
 	}

@@ -14,7 +14,8 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:scaleType="fitCenter"
-            android:id="@+id/app_about_for_status_goods_index_img"/>
+            android:id="@+id/app_about_for_status_goods_index_img"
+            android:src="@drawable/ic_empty"/>
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"

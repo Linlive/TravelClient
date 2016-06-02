@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@color/transparent" android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="6dp"/>
+            <gradient android:centerColor="@color/listview_gray"
+                      android:endColor="@color/appSwitch"
+                      android:startColor="@color/common_white"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="6dp"/>
+            <gradient
+                android:startColor="#4fEFEFEF"
+                android:endColor="#2000ff00"
+                android:type="linear"
+                />
+        </shape>
+    </item>
+
+</selector>

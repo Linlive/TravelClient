@@ -6,5 +6,6 @@ package com.tl.pro.travelkit.util;
  */
 public class CommonText {
 	public static final String userId = "userId";
+	public static final String emailAddr = "emailAddr";
 	public static final String sessionId = "sessionId";
 }

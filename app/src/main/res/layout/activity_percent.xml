@@ -6,11 +6,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.tl.pro.travelkit.test.PercentActivity">
 
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/drawable_test"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/image"
-        app:layout_heightPercent="50%"
-        app:layout_widthPercent="50%"
+        app:layout_heightPercent="10%"
+        app:layout_widthPercent="10%"
         />
 </android.support.percent.PercentRelativeLayout>

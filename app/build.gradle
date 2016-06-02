@@ -39,6 +39,7 @@ dependencies {
     compile 'com.zhy:okhttputils:2.4.1'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'org.apache.httpcomponents:httpclient:4.3.5'
+    compile 'com.lzy.widget:view-core:0.2.1'
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile files('libs/alipaySdk-20160223.jar')
 

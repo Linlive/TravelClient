@@ -91,7 +91,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		userId = mDataListener.getUserId();
 		View view = inflater.inflate(R.layout.activity_shopping_cart, container, false);
 		initView(view);
-		shoppingCartTask = new MyAsyncTask();
+		shoppingCartTask = new MyAsyncTask(mContext);
 		shoppingCartTask.execute(userId);
 		return view;
 	}
@@ -108,7 +108,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				shoppingCartTask = new MyAsyncTask();
+				shoppingCartTask = new MyAsyncTask(mContext);
 				shoppingCartTask.execute(userId);
 			}
 
@@ -124,8 +124,10 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 	 * 刷新购物车
 	 */
 	private class MyAsyncTask extends AsyncTask<String, Void, List<ShoppingCartDo>> {
-		public MyAsyncTask() {
+		private Context context;
+		public MyAsyncTask(Context context) {
 			super();
+			this.context = context;
 		}
 
 		@Override
@@ -135,8 +137,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 
 		@Override
 		protected List<ShoppingCartDo> doInBackground(String... params) {
-
-			return PostMultipart.queryUserCart(params[0]);
+			return PostMultipart.queryUserCart(context, params[0]);
 		}
 
 		@Override
@@ -401,13 +402,14 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 			if (isChecked) {
-				mList.add(cartDo);
-				if (selectListGoodsDo.containsKey(shopId) && !selectListGoodsDo.containsValue(cartDo)) {
+
+				if (selectListGoodsDo.containsKey(shopId) && !selectListGoodsDo.get(shopId).contains(cartDo)) {
 					selectListGoodsDo.get(shopId).add(cartDo);
 					selectNumber++;
 					totalPrice += cartDo.getGoodsPrice();
 //					return;
 				} else {
+					mList.add(cartDo);
 					selectListGoodsDo.put(shopId, mList);
 					selectNumber++;
 					totalPrice += cartDo.getGoodsPrice();
@@ -424,6 +426,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 				if(selectListGoodsDo.get(shopId).size() == 0){
 					selectListGoodsDo.remove(shopId);
 				}
+				mList.remove(cartDo);
 				selectNumber--;
 				totalPrice -= cartDo.getGoodsPrice();
 			}
@@ -583,7 +586,6 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 	}
 
 	private void delete(ViewGroup vg, String goodsId) {
-
 		new DeleteAsyncTask(vg).execute(goodsId);
 	}
 
@@ -627,7 +629,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 				Toast.makeText(mContext, "请选择商品", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			//new BuyGoodsTask().execute();
+
 			Intent intent = new Intent(mContext, AliPayActivity.class);
 			ArrayList<String> goodsNameArray = new ArrayList<>();
 			ArrayList<String> goodsDescArray = new ArrayList<>();
@@ -656,7 +658,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		}
 	}
 
-	final int payRequestCode = 401;
+	final int payRequestCode = 402;
 	int selectNumber = 0;
 	float totalPrice = 0f;
 	ShoppingCartDo goingToBuyCartDo;
@@ -670,7 +672,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		}
 		@Override
 		protected Boolean doInBackground(String... params) {
-			return PostMultipart.deleteFromShoppingCart(params[0]);
+			return PostMultipart.deleteFromShoppingCart(mContext, params[0]);
 		}
 
 		@Override
@@ -700,18 +702,20 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		String buyerId;
 		ShoppingCartDo cartDo;
 		int state;
+		private Context context;
 
-		public BuyGoodsTask(String buyerId, ShoppingCartDo cartDo, int state) {
+		public BuyGoodsTask(Context context, String buyerId, ShoppingCartDo cartDo, int state) {
 			super();
 			this.buyerId = buyerId;
 			this.cartDo = cartDo;
 			this.state = state;
+			this.context = context;
 		}
 
 		@Override
 		protected Boolean doInBackground(String[]... params) {
 
-			return PostMultipart.buyGoods(buyerId, cartDo, state);
+			return PostMultipart.buyGoods(context, buyerId, cartDo, state);
 		}
 
 		@Override
@@ -742,7 +746,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 			case payRequestCode:
 				if(resultCode == PayResult.PAY_SUCCESS){
 					//支付成功
-					new BuyGoodsTask(userId, goingToBuyCartDo, PayResult.PAY_SUCCESS).execute();
+					new BuyGoodsTask(mContext, userId, goingToBuyCartDo, PayResult.PAY_SUCCESS).execute();
 
 				}
 				System.out.println("");

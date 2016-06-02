@@ -203,7 +203,7 @@ public class ViewPagerIndicator extends LinearLayout {
 	public void setViewPager(ViewPager mViewPager, int pos) {
 		this.mViewPager = mViewPager;
 
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+		mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
 				// 设置字体颜色高亮

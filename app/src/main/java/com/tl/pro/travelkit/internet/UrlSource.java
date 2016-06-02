@@ -10,6 +10,9 @@ public class UrlSource {
 
 	public static final String SIGNUP = "/register";
 	public static final String SIGNIN = "/login";
+	public static final String RESET_PASSWORD = "/resetPassword";
+	public static final String RESET_PASSWORD_CHECK = "/checkSms";
+
 	public static final String GETGOODS = "/getGoods";
 	public static final String UPLOAD_PHOTO_AND_DETAIL = "/uploadGoods";
 
@@ -18,7 +21,9 @@ public class UrlSource {
 	public static final String QUERY_SHOPPING_CART = "/queryShoppingCart";
 
 	public static final String CREATE_INDENT = "/createIndent";
-	public static final String VIEW_INDENT = "/viewIndent";
+	public static final String VIEW_INDENT_DEFAULT = "/viewIndentDefault";
+	public static final String VIEW_INDENT_CUSTOM = "/viewIndentCustom";
+
 	public static final String EDIT_INDENT = "/editIndent";
 	public static final String UPDATE_INDENT = "/editIndent";
 

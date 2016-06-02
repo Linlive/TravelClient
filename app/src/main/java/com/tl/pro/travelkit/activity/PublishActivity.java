@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.fragment.GoodsDefaultPublishFragment;
 import com.tl.pro.travelkit.fragment.GoodsDetailPublishFragment;
+import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.listener.PublishFragmentListener;
 import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.PostMultipart;
@@ -224,6 +225,10 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 			case R.id.app_publish_bottom_confirm_btn:
 				// 确定按钮，上传图片和文字
 				// 这里是将图片原文件上传以保证图片的清晰度
+				if(!ServerConfigure.beforeConnect(this)) {
+					Toast.makeText(this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+					break;
+				}
 				toUploadGoods();
 				//System.out.println("year"+mYear+mMonth+mDay+mHour+mMinuts+mSec);
 				break;

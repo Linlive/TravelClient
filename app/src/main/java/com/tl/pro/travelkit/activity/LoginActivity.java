@@ -32,6 +32,8 @@ import com.tl.pro.travelkit.internet.ServerInfoObj;
 import com.tl.pro.travelkit.internet.ServerTalk;
 import com.tl.pro.travelkit.internet.UrlSource;
 import com.tl.pro.travelkit.util.CodeUtil;
+import com.tl.pro.travelkit.util.CommonText;
+import com.tl.pro.travelkit.util.check.NormalCheck;
 import com.tl.pro.travelkit.util.check.StringToJsonObject;
 import com.tl.pro.travelkit.util.encryption.KitAESCoder;
 
@@ -133,6 +135,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 		mAdmistratorCheckBox.setOnClickListener(this);
 		mAdmistratorText.setOnClickListener(this);
 		mVerificationImage.setOnClickListener(this);
+		mForgotPasswordText.setOnClickListener(this);
 	}
 
 	@Override
@@ -169,7 +172,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 	boolean firstLogin = true;
 
 	private void goToLogin() {
-
 		if (mAsyncTask != null && !backGroundSuccess) {
 			return;
 		}
@@ -206,21 +208,21 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			firstLogin = false;
 			return;
 		}
-		if(loginTime > LOGIN_TIME_LIMIT){
-			if(TextUtils.isEmpty(mVerificationEdit.getText().toString())){
+		if (loginTime > LOGIN_TIME_LIMIT) {
+			if (TextUtils.isEmpty(mVerificationEdit.getText().toString())) {
 				Toast.makeText(this, R.string.pleaseInputVerification, Toast.LENGTH_SHORT).show();
 				cancel = true;
 			}
-			if(cancel){
+			if (cancel) {
 				return;
 			}
 			String input = mVerificationEdit.getText().toString();
 			String tmpCode = code.toLowerCase();
-			if(!tmpCode.equals(input.toLowerCase())){
+			if (!tmpCode.equals(input.toLowerCase())) {
 				Toast.makeText(this, R.string.inputVerificationError, Toast.LENGTH_SHORT).show();
 				cancel = true;
 			}
-			if(cancel){
+			if (cancel) {
 				code = mCodeUtil.createCode();
 				mVerificationImage.setImageBitmap(mCodeUtil.createBitmap(code));
 				return;
@@ -274,7 +276,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 	 * 找回密码
 	 */
 	private void goToFindPassword() {
-
+		Intent intent = new Intent(LoginActivity.this, PasswordResetActivity.class);
+		String userId = mUserNameEdit.getText().toString();
+		if (NormalCheck.isPhoneNumber(userId)) {
+			intent.putExtra(CommonText.userId, userId);
+		}
+		if (NormalCheck.isEmail(userId)) {
+			intent.putExtra(CommonText.emailAddr, userId);
+		}
+		startActivity(intent);
 	}
 
 	private class LoginAsyncTask extends AsyncTask<JSONObject, Float, ServerInfoObj> {
@@ -310,7 +320,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			ServerInfoObj<JSONObject> serverInfoObj = null;// = new ServerInfoObj<>();
 			try {
 				publishProgress(20f);
-				con = ServerConfigure.getConnection(UrlSource.SIGNIN, RequestMethod.POST);
+				con = ServerConfigure.getConnection(LoginActivity.this, UrlSource.SIGNIN, RequestMethod.POST);
 				con.connect();
 				JSONObject object = params[0];
 				publishProgress(50f);
@@ -352,7 +362,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			backGroundSuccess = true;
 			enableView(true);
 			if (serverObject == null) {
-				Toast.makeText(LoginActivity.this, R.string.pleaseWait, Toast.LENGTH_SHORT).show();
+
+				Toast.makeText(LoginActivity.this, R.string.serverNotResponse, Toast.LENGTH_SHORT).show();
 
 				//测试登录后的过程
 				login = true;
@@ -381,6 +392,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 					login = true;
 					saveInfo(LOGIN_TIME, "0");
 					loginTime = 0;
+					if (isAdministrator) {
+						Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+						intent.putExtra("userId", mUserNameEdit.getText().toString());
+						startActivity(intent);
+						return;
+					}
 					Intent intent = new Intent(LoginActivity.this, IndexActivity.class);
 					intent.putExtra("userId", mUserNameEdit.getText().toString());
 					startActivity(intent);
@@ -396,7 +413,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 						goToSignUp();
 					} else if ("passwordNotMatch".equals(message)) {
 						Toast.makeText(LoginActivity.this, R.string.passwordError, Toast.LENGTH_LONG).show();
-						if(loginTime > LOGIN_TIME_LIMIT){
+						if (loginTime > LOGIN_TIME_LIMIT) {
 							code = mCodeUtil.createCode();
 							mVerificationImage.setImageBitmap(mCodeUtil.createBitmap(code));
 						}

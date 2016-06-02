@@ -133,7 +133,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 				//Toast.makeText(mContext, "onPullDownToRefresh", Toast.LENGTH_SHORT).show();
-				new DataFreshTask().execute();
+				new DataFreshTask(mContext).execute();
 			}
 
 			@Override
@@ -218,10 +218,14 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 	//
 	private class DataFreshTask extends AsyncTask<String, Float, List<GoodsDo>> {
 
+		private Context context;
+		public DataFreshTask(Context context){
+			this.context = context;
+		}
 		//子线程请求数据
 		@Override
 		protected List<GoodsDo> doInBackground(String... params) {
-			return PostMultipart.getGoods();
+			return PostMultipart.getGoods(context);
 		}
 
 		//主线程更新UI
