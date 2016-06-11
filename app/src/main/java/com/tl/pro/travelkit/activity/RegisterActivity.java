@@ -60,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 		mUserPassword2 = (EditText) findViewById(R.id.register_password_edit2);
 		mRegisterButton.setOnClickListener(this);
 		if(mIntent != null){
-			mUserNameEdit.setText(mIntent.getStringExtra("userName"));
+			mUserNameEdit.setText(mIntent.getStringExtra("userId"));
 		}
 	}
 
@@ -105,15 +105,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 			mUserPassword.setError(getString(R.string.error_invalid_password));
 			cancel = true;
 		}
-
-		if (cancel || !passwordText.equals(passwordText2)) {
+		if (!passwordText.equals(passwordText2)) {
 			//return;
+			Toast.makeText(RegisterActivity.this, "两次密码不一致", Toast.LENGTH_SHORT).show();
+			cancel = true;
+		}
+		if(cancel){
+			return;
 		}
 		//do sign in
 		JSONObject objectIn = new JSONObject();
 		try {
 
-			objectIn.put("userName", nameEditText);
+			objectIn.put("userId", nameEditText);
 			objectIn.put("userPassword", passwordText);
 			objectIn.put("permissionLevel", 1);
 			if(!ServerConfigure.beforeConnect(this)) {
@@ -142,17 +146,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 		}
 
 		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		@Override
 		protected ServerInfoObj doInBackground(JSONObject... params) {
 			ServerInfoObj<JSONObject> serverInfoObj = new ServerInfoObj<>();
 			try {
 				publishProgress(20f);
-				con = ServerConfigure.getConnection(RegisterActivity.this, UrlSource.SIGNUP, RequestMethod.POST);
+				con = ServerConfigure.getConnection(UrlSource.SIGNUP, RequestMethod.POST);
 				con.connect();
 				JSONObject object = params[0];
 				publishProgress(50f);
-				if (object.has("userName")) {
-					String tmpName = KitAESCoder.encrypt(object.getString("userName"));
-					object.put("userName", tmpName);
+				if (object.has("userId")) {
+					String tmpName = KitAESCoder.encrypt(object.getString("userId"));
+					object.put("userId", tmpName);
 				}
 				if (object.has("userPassword")) {
 					String tmpPass = KitAESCoder.encrypt(object.getString("userPassword"));
@@ -206,8 +215,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 				}
 				if (object.getBoolean("status")) {
 					registerFlag = true;
-					Intent intent = new Intent(RegisterActivity.this, IndexActivity.class);
-					startActivity(intent);
+					finish();
+//					Intent intent = new Intent(RegisterActivity.this, IndexActivity.class);
+//					startActivity(intent);
 
 				} else {
 					registerFlag = false;

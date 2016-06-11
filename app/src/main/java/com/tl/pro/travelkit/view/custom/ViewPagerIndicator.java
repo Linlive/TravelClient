@@ -90,11 +90,13 @@ public class ViewPagerIndicator extends LinearLayout {
 	 */
 	private static final int COLOR_TEXT_HIGHLIGHTCOLOR = 0xFFFFFFFF;
 
-	public ViewPagerIndicator(Context context) {
+	public ViewPagerIndicator(Context context)
+	{
 		this(context, null);
 	}
 
-	public ViewPagerIndicator(Context context, AttributeSet attrs) {
+	public ViewPagerIndicator(Context context, AttributeSet attrs)
+	{
 		super(context, attrs);
 
 		// 获得自定义属性，tab的数量
@@ -119,12 +121,13 @@ public class ViewPagerIndicator extends LinearLayout {
 	 * 绘制指示器
 	 */
 	@Override
-	protected void dispatchDraw(Canvas canvas) {
-		canvas.save();
-		// 画笔平移到正确的位置
-		canvas.translate(mInitTranslationX + mTranslationX, getHeight() + 1);
-		canvas.drawPath(mPath, mPaint);
-		canvas.restore();
+	protected void dispatchDraw(Canvas canvas)
+	{
+//		canvas.save();
+//		// 画笔平移到正确的位置
+//		canvas.translate(mInitTranslationX + mTranslationX, getHeight() + 1);
+//		canvas.drawPath(mPath, mPaint);
+//		canvas.restore();
 
 		super.dispatchDraw(canvas);
 	}
@@ -133,14 +136,15 @@ public class ViewPagerIndicator extends LinearLayout {
 	 * 初始化三角形的宽度
 	 */
 	@Override
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+	protected void onSizeChanged(int w, int h, int oldw, int oldh)
+	{
 		super.onSizeChanged(w, h, oldw, oldh);
 		mTriangleWidth = (int) (w / mTabVisibleCount * RADIO_TRIANGEL);// 1/6 of
 		// width
 		mTriangleWidth = Math.min(DIMENSION_TRIANGEL_WIDTH, mTriangleWidth);
 
 		// 初始化三角形
-		initTriangle();
+		//initTriangle();
 
 		// 初始时的偏移量
 		mInitTranslationX = getWidth() / mTabVisibleCount / 2 - mTriangleWidth
@@ -152,7 +156,8 @@ public class ViewPagerIndicator extends LinearLayout {
 	 *
 	 * @param count
 	 */
-	public void setVisibleTabCount(int count) {
+	public void setVisibleTabCount(int count)
+	{
 		this.mTabVisibleCount = count;
 	}
 
@@ -161,16 +166,19 @@ public class ViewPagerIndicator extends LinearLayout {
 	 *
 	 * @param datas
 	 */
-	public void setTabItemTitles(List<String> datas) {
+	public void setTabItemTitles(List<String> datas)
+	{
 		// 如果传入的list有值，则移除布局文件中设置的view
-		if (datas != null && datas.size() > 0) {
+		if (datas != null && datas.size() > 0)
+		{
 			this.removeAllViews();
 			this.mTabTitles = datas;
-			for (String title : mTabTitles) {
+
+			for (String title : mTabTitles)
+			{
 				// 添加view
 				addView(generateTextView(title));
 			}
-			mTabVisibleCount = datas.size();
 			// 设置item的click事件
 			setItemClickEvent();
 		}
@@ -181,8 +189,10 @@ public class ViewPagerIndicator extends LinearLayout {
 	 * 对外的ViewPager的回调接口
 	 *
 	 * @author zhy
+	 *
 	 */
-	public interface PageChangeListener {
+	public interface PageChangeListener
+	{
 		public void onPageScrolled(int position, float positionOffset,
 		                           int positionOffsetPixels);
 
@@ -195,35 +205,42 @@ public class ViewPagerIndicator extends LinearLayout {
 	private PageChangeListener onPageChangeListener;
 
 	// 对外的ViewPager的回调接口的设置
-	public void setOnPageChangeListener(PageChangeListener pageChangeListener) {
+	public void setOnPageChangeListener(PageChangeListener pageChangeListener)
+	{
 		this.onPageChangeListener = pageChangeListener;
 	}
 
 	// 设置关联的ViewPager
-	public void setViewPager(ViewPager mViewPager, int pos) {
+	public void setViewPager(ViewPager mViewPager, int pos)
+	{
 		this.mViewPager = mViewPager;
 
-		mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
+		mViewPager.addOnPageChangeListener(new OnPageChangeListener()
+		{
 			@Override
-			public void onPageSelected(int position) {
+			public void onPageSelected(int position)
+			{
 				// 设置字体颜色高亮
 				resetTextViewColor();
 				highLightTextView(position);
 
 				// 回调
-				if (onPageChangeListener != null) {
+				if (onPageChangeListener != null)
+				{
 					onPageChangeListener.onPageSelected(position);
 				}
 			}
 
 			@Override
 			public void onPageScrolled(int position, float positionOffset,
-			                           int positionOffsetPixels) {
+			                           int positionOffsetPixels)
+			{
 				// 滚动
 				scroll(position, positionOffset);
 
 				// 回调
-				if (onPageChangeListener != null) {
+				if (onPageChangeListener != null)
+				{
 					onPageChangeListener.onPageScrolled(position,
 							positionOffset, positionOffsetPixels);
 				}
@@ -231,9 +248,11 @@ public class ViewPagerIndicator extends LinearLayout {
 			}
 
 			@Override
-			public void onPageScrollStateChanged(int state) {
+			public void onPageScrollStateChanged(int state)
+			{
 				// 回调
-				if (onPageChangeListener != null) {
+				if (onPageChangeListener != null)
+				{
 					onPageChangeListener.onPageScrollStateChanged(state);
 				}
 
@@ -250,9 +269,11 @@ public class ViewPagerIndicator extends LinearLayout {
 	 *
 	 * @param position
 	 */
-	protected void highLightTextView(int position) {
+	protected void highLightTextView(int position)
+	{
 		View view = getChildAt(position);
-		if (view instanceof TextView) {
+		if (view instanceof TextView)
+		{
 			((TextView) view).setTextColor(COLOR_TEXT_HIGHLIGHTCOLOR);
 		}
 
@@ -261,10 +282,13 @@ public class ViewPagerIndicator extends LinearLayout {
 	/**
 	 * 重置文本颜色
 	 */
-	private void resetTextViewColor() {
-		for (int i = 0; i < getChildCount(); i++) {
+	private void resetTextViewColor()
+	{
+		for (int i = 0; i < getChildCount(); i++)
+		{
 			View view = getChildAt(i);
-			if (view instanceof TextView) {
+			if (view instanceof TextView)
+			{
 				((TextView) view).setTextColor(COLOR_TEXT_NORMAL);
 			}
 		}
@@ -273,14 +297,18 @@ public class ViewPagerIndicator extends LinearLayout {
 	/**
 	 * 设置点击事件
 	 */
-	public void setItemClickEvent() {
+	public void setItemClickEvent()
+	{
 		int cCount = getChildCount();
-		for (int i = 0; i < cCount; i++) {
+		for (int i = 0; i < cCount; i++)
+		{
 			final int j = i;
 			View view = getChildAt(i);
-			view.setOnClickListener(new OnClickListener() {
+			view.setOnClickListener(new OnClickListener()
+			{
 				@Override
-				public void onClick(View v) {
+				public void onClick(View v)
+				{
 					mViewPager.setCurrentItem(j);
 				}
 			});
@@ -293,9 +321,10 @@ public class ViewPagerIndicator extends LinearLayout {
 	 * @param text
 	 * @return
 	 */
-	private TextView generateTextView(String text) {
+	private TextView generateTextView(String text)
+	{
 		TextView tv = new TextView(getContext());
-		LayoutParams lp = new LayoutParams(
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		lp.width = getScreenWidth() / mTabVisibleCount;
 		tv.setGravity(Gravity.CENTER);
@@ -309,13 +338,14 @@ public class ViewPagerIndicator extends LinearLayout {
 	/**
 	 * 初始化三角形指示器
 	 */
-	private void initTriangle() {
+	private void initTriangle()
+	{
 		mPath = new Path();
 
 		mTriangleHeight = (int) (mTriangleWidth / 2 / Math.sqrt(2));
 		mPath.moveTo(0, 0);
 		mPath.lineTo(mTriangleWidth, 0);
-		mPath.lineTo(mTriangleWidth / 2, - (mTriangleHeight * 1.5f));
+		mPath.lineTo(mTriangleWidth / 2, -mTriangleHeight);
 		mPath.close();
 	}
 
@@ -325,7 +355,8 @@ public class ViewPagerIndicator extends LinearLayout {
 	 * @param position
 	 * @param offset
 	 */
-	public void scroll(int position, float offset) {
+	public void scroll(int position, float offset)
+	{
 		/**
 		 * <pre>
 		 *  0-1:position=0 ;1-0:postion=0;
@@ -338,8 +369,10 @@ public class ViewPagerIndicator extends LinearLayout {
 
 		// 容器滚动，当移动到倒数最后一个的时候，开始滚动
 		if (offset > 0 && position >= (mTabVisibleCount - 2)
-				&& getChildCount() > mTabVisibleCount) {
-			if (mTabVisibleCount != 1) {
+				&& getChildCount() > mTabVisibleCount)
+		{
+			if (mTabVisibleCount != 1)
+			{
 				this.scrollTo((position - (mTabVisibleCount - 2)) * tabWidth
 						+ (int) (tabWidth * offset), 0);
 			} else
@@ -357,7 +390,8 @@ public class ViewPagerIndicator extends LinearLayout {
 	 * 设置布局中view的一些必要属性；如果设置了setTabTitles，布局中view则无效
 	 */
 	@Override
-	protected void onFinishInflate() {
+	protected void onFinishInflate()
+	{
 		Log.e("TAG", "onFinishInflate");
 		super.onFinishInflate();
 
@@ -366,9 +400,10 @@ public class ViewPagerIndicator extends LinearLayout {
 		if (cCount == 0)
 			return;
 
-		for (int i = 0; i < cCount; i++) {
+		for (int i = 0; i < cCount; i++)
+		{
 			View view = getChildAt(i);
-			LayoutParams lp = (LayoutParams) view
+			LinearLayout.LayoutParams lp = (LayoutParams) view
 					.getLayoutParams();
 			lp.weight = 0;
 			lp.width = getScreenWidth() / mTabVisibleCount;
@@ -384,12 +419,12 @@ public class ViewPagerIndicator extends LinearLayout {
 	 *
 	 * @return
 	 */
-	public int getScreenWidth() {
+	public int getScreenWidth()
+	{
 		WindowManager wm = (WindowManager) getContext().getSystemService(
 				Context.WINDOW_SERVICE);
 		DisplayMetrics outMetrics = new DisplayMetrics();
 		wm.getDefaultDisplay().getMetrics(outMetrics);
 		return outMetrics.widthPixels;
 	}
-
 }

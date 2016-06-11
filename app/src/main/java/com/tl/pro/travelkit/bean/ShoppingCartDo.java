@@ -12,8 +12,6 @@ public class ShoppingCartDo implements Serializable {
 	private String shopKeeperId;
 
 	private String goodsId;
-	private String goodsName;
-
 
 	private int goodsChooseNumber;
 	private float goodsPrice;
@@ -21,11 +19,13 @@ public class ShoppingCartDo implements Serializable {
 	private int goodsColor;
 	private int goodsType;
 
+	private String goodsName;
 	private String goodsColorValue;
 	private String goodsSizeValue;
 	private String goodsTypeValue;
 
 	private String goodsExtra;
+	private String imgUrl;
 
 	public String getUserId () {
 
@@ -147,11 +147,23 @@ public class ShoppingCartDo implements Serializable {
 		this.goodsTypeValue = goodsTypeValue;
 	}
 
-	public String getGoodsName() {
+	public String getImgUrl () {
+
+		return imgUrl;
+	}
+
+	public void setImgUrl (String imgUrl) {
+
+		this.imgUrl = imgUrl;
+	}
+
+	public String getGoodsName () {
+
 		return goodsName;
 	}
 
-	public void setGoodsName(String goodsName) {
+	public void setGoodsName (String goodsName) {
+
 		this.goodsName = goodsName;
 	}
 }

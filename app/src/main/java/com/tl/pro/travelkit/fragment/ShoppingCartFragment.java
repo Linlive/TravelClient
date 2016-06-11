@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,12 +24,14 @@ import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.activity.AliPayActivity;
 import com.tl.pro.travelkit.activity.WaitForActivity;
 import com.tl.pro.travelkit.bean.IndentDo;
 import com.tl.pro.travelkit.bean.ShoppingCartDo;
 import com.tl.pro.travelkit.fragment.base.MyBaseFragment;
+import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.listener.IndexDataListener;
 import com.tl.pro.travelkit.listener.IndexTabSelectListener;
 import com.tl.pro.travelkit.util.PostMultipart;
@@ -73,7 +76,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 	HashMap<String, List<View>> shopperGodsViewsMap = new HashMap<>();
 	/**
 	 * 当前选择的商品 集合
- 	 */
+	 */
 	HashMap<String, List<ShoppingCartDo>> selectListGoodsDo = new LinkedHashMap<>();
 
 	private static Context mContext;
@@ -95,6 +98,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		shoppingCartTask.execute(userId);
 		return view;
 	}
+
 	private void initView(View view) {
 		listView = (PullToRefreshListView) view.findViewById(R.id.app_shopping_cart_pull_refresh_list);
 		mBuyText = (TextView) view.findViewById(R.id.app_shopping_cart_buy_text);
@@ -117,7 +121,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 
 			}
 		});
-		mBuyText.setOnClickListener(new BuyGoodsListenr());
+		mBuyText.setOnClickListener(new BuyGoodsListener());
 	}
 
 	/**
@@ -125,6 +129,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 	 */
 	private class MyAsyncTask extends AsyncTask<String, Void, List<ShoppingCartDo>> {
 		private Context context;
+
 		public MyAsyncTask(Context context) {
 			super();
 			this.context = context;
@@ -137,23 +142,41 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 
 		@Override
 		protected List<ShoppingCartDo> doInBackground(String... params) {
-			return PostMultipart.queryUserCart(context, params[0]);
+
+			return PostMultipart.queryUserCart(params[0]);
 		}
 
 		@Override
 		protected void onPostExecute(List<ShoppingCartDo> cartDos) {
+			if (!ServerConfigure.beforeConnect(context)) {
+				Toast.makeText(context, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			selectListGoodsDo.clear();
 			userShoppingCartGoodsList = cartDos;
 			if (cartDos == null || cartDos.size() == 0) {
 				L.e(TAG, "empty");
 				userShoppingCartGoodsList = new ArrayList<>();
 			}
-			shopperGodsViewsMap.clear();
-			//shopperCartDoMap.clear();
+			resetText();
 			mViewAdapter.setData(userShoppingCartGoodsList);
 			listView.onRefreshComplete();
 			super.onPostExecute(cartDos);
 			createViewByMapList();
 		}
+	}
+
+	/**
+	 * 重新设置文本
+	 */
+	private void resetText() {
+		totalPrice = 0f;
+		selectNumber = 0;
+		shopperGodsViewsMap.clear();
+		String number = selectNumber + "";
+		String price = "￥" + totalPrice;
+		mNumberValueText.setText(number);
+		mPriceValueText.setText(price);
 	}
 
 	/**
@@ -164,7 +187,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		for (String key : shopperCartDoMap.keySet()) {
 			List<ShoppingCartDo> tmpList = shopperCartDoMap.get(key);
 			List<View> viewList = new ArrayList<>();
-			if(shopperGodsViewsMap.containsKey(key)){
+			if (shopperGodsViewsMap.containsKey(key)) {
 				shopperGodsViewsMap.get(key).clear();
 			}
 			for (ShoppingCartDo cartDo : tmpList) {
@@ -194,6 +217,8 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		TextView goodsBradAndColorText = (TextView) view.findViewById(R.id.app_shopping_cart_goods_brand_and_color);
 		TextView goodsPrice = (TextView) view.findViewById(R.id.app_shopping_cart_goods_price_text);
 
+		ImageView mGoodsImg = (ImageView) view.findViewById(R.id.app_shopping_cart_goods_detail_picture_index);
+
 		String chooseNumber = "" + cartDo.getGoodsChooseNumber();
 		if (cartDo.getGoodsChooseNumber() < 10) {
 			chooseNumber = "X" + chooseNumber;
@@ -208,6 +233,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		//mCheckBox.setOnClickListener(new ChildCheckBoxClick(cartDo));
 		mCheckBox.setOnCheckedChangeListener(new ChildCheckBoxChanged(cartDo));
 		view.setOnLongClickListener(new OnLongClick(cartDo.getGoodsId()));
+		ImageLoader.getInstance().displayImage(ServerConfigure.SERVER_ADDRESS + cartDo.getImgUrl(), mGoodsImg);
 	}
 
 	/**
@@ -257,7 +283,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 					dos.add(d);
 					shopperCartDoMap.put(shopId, dos);
 				}
-				if(!shopkeeperIds.contains(shopId)){
+				if (!shopkeeperIds.contains(shopId)) {
 					shopkeeperIds.add(shopId);
 				}
 			}
@@ -302,6 +328,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 
 			return v;
 		}
+
 		//view holder
 		public class ViewHolder {
 			android.widget.CheckBox checkBox;
@@ -309,13 +336,17 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 			TextView shopkeeperTitle;
 			LinearLayout container;
 		}
-		private void addViewToContainer(LinearLayout parent, String shopId){
-			if(shopId == null){
+
+		private void addViewToContainer(LinearLayout parent, String shopId) {
+			if (shopId == null) {
 				return;
 			}
 			parent.removeViews(0, parent.getChildCount());
 
 			List<View> tmpList = shopperGodsViewsMap.get(shopId);
+			if (null == tmpList || tmpList.size() == 0) {
+				return;
+			}
 			for (View view : tmpList) {
 				parent.addView(view);
 			}
@@ -382,6 +413,8 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 
 	////////////////////////////////
 	////////////////////////////////
+	int selectNumber = 0;
+	float totalPrice = 0f;
 
 	/**
 	 * 字view点击事件
@@ -397,8 +430,10 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 			this.cartDo = cartDo;
 			shopId = cartDo.getShopKeeperId();
 		}
+
 		String number;
 		String price;
+
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 			if (isChecked) {
@@ -417,13 +452,13 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 //					return;
 				}
 			} else {
-				if(!selectListGoodsDo.containsKey(shopId)){
+				if (!selectListGoodsDo.containsKey(shopId)) {
 					return;
 				}
 				if (selectListGoodsDo.get(shopId).contains(cartDo)) {
 					selectListGoodsDo.get(shopId).remove(cartDo);
 				}
-				if(selectListGoodsDo.get(shopId).size() == 0){
+				if (selectListGoodsDo.get(shopId).size() == 0) {
 					selectListGoodsDo.remove(shopId);
 				}
 				mList.remove(cartDo);
@@ -453,8 +488,6 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		@Override
 		public void onClick(View v) {
 			singleSelect = !singleSelect;
-
-			L.e(TAG, singleSelect + "signle===");
 
 			if (singleSelect) {
 				mList.add(cartDo);
@@ -610,7 +643,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 	private class OnLongClick implements View.OnLongClickListener {
 		String goodsId;
 
-		public OnLongClick(String goodsId){
+		public OnLongClick(String goodsId) {
 			this.goodsId = goodsId;
 		}
 
@@ -622,10 +655,10 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		}
 	}
 
-	private class BuyGoodsListenr implements View.OnClickListener{
+	private class BuyGoodsListener implements View.OnClickListener {
 		@Override
 		public void onClick(View v) {
-			if(selectListGoodsDo == null || selectListGoodsDo.size() == 0){
+			if (selectListGoodsDo == null || selectListGoodsDo.size() == 0) {
 				Toast.makeText(mContext, "请选择商品", Toast.LENGTH_SHORT).show();
 				return;
 			}
@@ -636,14 +669,14 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 			ArrayList<String> goodsPriceArray = new ArrayList<>();
 
 			Bundle data = new Bundle();
-			for(String key : selectListGoodsDo.keySet()){
+			for (String key : selectListGoodsDo.keySet()) {
 				int i = 0;
-				for(ShoppingCartDo cartDo : selectListGoodsDo.get(key)){
+				for (ShoppingCartDo cartDo : selectListGoodsDo.get(key)) {
 					goodsNameArray.add(cartDo.getGoodsName());
 					goodsDescArray.add(cartDo.getGoodsExtra());
 					goodsPriceArray.add(cartDo.getGoodsPrice() + " 元");
 
-					if(i == 0){
+					if (i == 0) {
 						goingToBuyCartDo = cartDo;
 						i = 1;
 					}
@@ -659,25 +692,30 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 	}
 
 	final int payRequestCode = 402;
-	int selectNumber = 0;
-	float totalPrice = 0f;
+
 	ShoppingCartDo goingToBuyCartDo;
 
-	private class DeleteAsyncTask extends AsyncTask<String, Void, Boolean>{
+	private class DeleteAsyncTask extends AsyncTask<String, Void, Boolean> {
 
 		private ViewGroup viewGroup;
+
 		public DeleteAsyncTask(ViewGroup vg) {
 			super();
 			viewGroup = vg;
 		}
+
 		@Override
 		protected Boolean doInBackground(String... params) {
-			return PostMultipart.deleteFromShoppingCart(mContext, params[0]);
+			return PostMultipart.deleteFromShoppingCart(params[0]);
 		}
 
 		@Override
 		protected void onPostExecute(Boolean aBoolean) {
-			if(aBoolean){
+			if (!ServerConfigure.beforeConnect(mContext)) {
+				Toast.makeText(mContext, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			if (aBoolean) {
 				ViewGroup groupInjava = (ViewGroup) viewGroup.getParent();
 				ViewGroup groupInXmlBelowTitle = (ViewGroup) groupInjava.getParent();
 				ViewGroup groupInXmlOutTitle = (ViewGroup) groupInXmlBelowTitle.getParent();
@@ -697,7 +735,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		}
 	}
 
-	private class BuyGoodsTask extends AsyncTask<String[], Void, Boolean>{
+	private class BuyGoodsTask extends AsyncTask<String[], Void, Boolean> {
 
 		String buyerId;
 		ShoppingCartDo cartDo;
@@ -715,12 +753,16 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		@Override
 		protected Boolean doInBackground(String[]... params) {
 
-			return PostMultipart.buyGoods(context, buyerId, cartDo, state);
+			return PostMultipart.buyGoods(buyerId, cartDo, state);
 		}
 
 		@Override
 		protected void onPostExecute(Boolean aBoolean) {
-			if(aBoolean){
+			if (!ServerConfigure.beforeConnect(mContext)) {
+				Toast.makeText(mContext, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			if (aBoolean) {
 				Toast.makeText(mContext, "下单成功" + IndentDo.State.PAY_SUCCESS, Toast.LENGTH_SHORT).show();
 				mTablistener.setSelect(2);
 				//刷新我的界面，其中包括订单信息。
@@ -734,27 +776,26 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 
 	/**
 	 * 支付页面返回结果
+	 *
 	 * @param requestCode 请求码
-	 * @param resultCode 目标Activity返回值
+	 * @param resultCode  目标Activity返回值
 	 *                    该值仅表示成功或失败等信息，详细信息应放在data里面返回
-	 * @param data 返回的数据
+	 * @param data        返回的数据
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		switch (requestCode){
+		switch (requestCode) {
 			case payRequestCode:
-				if(resultCode == PayResult.PAY_SUCCESS){
+				if (resultCode == PayResult.PAY_SUCCESS) {
 					//支付成功
 					new BuyGoodsTask(mContext, userId, goingToBuyCartDo, PayResult.PAY_SUCCESS).execute();
 
 				}
-				System.out.println("");
 				break;
 			default:
 				break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
 }

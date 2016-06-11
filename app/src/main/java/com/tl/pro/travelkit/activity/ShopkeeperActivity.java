@@ -31,6 +31,8 @@ public class ShopkeeperActivity extends AppCompatActivity implements View.OnClic
 	private Intent mIntent;
 	//user info -- userId
 
+	private String shopkeeperId;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,6 +42,7 @@ public class ShopkeeperActivity extends AppCompatActivity implements View.OnClic
 		initBar();
 		initView();
 		uploadProgressListener = new UploadProgressListener();
+		shopkeeperId = mIntent.getStringExtra("shopkeeperId");
 	}
 
 	private void initBar() {
@@ -81,17 +84,27 @@ public class ShopkeeperActivity extends AppCompatActivity implements View.OnClic
 
 	@Override
 	public void onClick(View v) {
+		Intent intent;
 		switch (v.getId()) {
 			case R.id.app_shopkeeper_up_goods:
 				//do up load info
-				Intent intent = new Intent(ShopkeeperActivity.this, PublishActivity.class);
-				intent.putExtra(CommonText.userId, mIntent.getStringExtra(CommonText.userId));
+				intent = new Intent(ShopkeeperActivity.this, PublishActivity.class);
+				intent.putExtra(CommonText.shopkeeperId, shopkeeperId);
 				startActivity(intent);
 				L.e(TAG, "OK");
 				break;
 			case R.id.app_shopkeeper_manage_goods:
+				//商家管理界面
+				intent = new Intent(ShopkeeperActivity.this, ShopkeeperManageActivity.class);
+				intent.putExtra("shopkeeperId", shopkeeperId);
+				startActivity(intent);
+
 				break;
 			case R.id.app_shopkeeper_manage_indents:
+				intent = new Intent(ShopkeeperActivity.this, ShopkeeperIndentManageActivity.class);
+				intent.putExtra("shopkeeperId", shopkeeperId);
+				startActivity(intent);
+
 				break;
 			default:
 				break;

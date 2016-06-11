@@ -21,8 +21,8 @@
     <string name="myShopTitleText">我的店铺</string>
     <string name="myShopName">店铺名称</string>
     <string name="myShopPublishGoods">上货</string>
-    <string name="myShopGoodsManager">商品管理</string>
-    <string name="myShopIndentManager">订单管理</string>
+    <string name="myShopGoodsManager">商品查看</string>
+    <string name="myShopIndentManager">订单查看</string>
 
     <!--发布商品-->
     <string name="publishGoodsPublishTitle">商品发布</string>
@@ -42,14 +42,26 @@
     <string name="atLeastOnePic">请至少要上传一张图片</string>
 
     <string-array name="spinnerBrandArr">
-        <item>其他</item>
         <item>骆驼</item>
-        <item>上海</item>
-        <item>广州</item>
+        <item>凯乐石</item>
+        <item>康尔</item>
+        <item>探路者</item>
+        <item>极星</item>
+        <item>牧高笛</item>
+        <item>始祖鸟</item>
+        <item>哥伦比亚</item>
+        <item>迪卡侬</item>
+        <item>公狼</item>
+        <item>Makino(犸凯奴)</item>
+        <item>MILLET(觅乐)</item>
     </string-array>
     <string-array name="spinnerTypeArr">
         <item>衣服</item>
         <item>裤子</item>
+        <item>鞋子</item>
+        <item>帽子</item>
+        <item>围巾</item>
+        <item>帐篷</item>
     </string-array>
     <string-array name="spinnerSizeArr">
         <item>S</item>
@@ -63,17 +75,22 @@
         <item>丘陵</item>
         <item>雪山</item>
         <item>草原</item>
+        <item>平原</item>
         <item>沙滩</item>
     </string-array>
     <string-array name="spinnerColorArr">
         <item>红</item>
+        <item>淡红</item>
+        <item>深红</item>
         <item>橙</item>
         <item>黄</item>
         <item>绿</item>
+        <item>浅绿</item>
         <item>蓝</item>
+        <item>天蓝</item>
         <item>青</item>
         <item>紫</item>
     </string-array>
-    <string name="goodsDetailsExtraInfo">商品的其他描述</string>
+    <string name="goodsDetailsExtraInfo">商品描述</string>
 
 </resources>

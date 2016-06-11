@@ -1,29 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:zhy="http://schemas.android.com/apk/res-auto"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="#ffffffff"
               android:orientation="vertical">
-
-    <Button
+    <!--<com.tl.pro.travelkit.view.custom.ViewPagerIndicator-->
+        <!--android:id="@+id/view_pager_indicator"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/y35"-->
+        <!--android:background="#ade0ef"-->
+        <!--app:item_count="5"-->
+        <!--&gt;-->
+    <!--</com.tl.pro.travelkit.view.custom.ViewPagerIndicator>-->
+    <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="fasong"
-        android:id="@+id/button1"
-        />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edit"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="fasong"
-        android:id="@+id/button2"
-        />
-
-
-
+        android:layout_height="match_parent"
+        android:id="@+id/view_pager">
+        <android.support.v4.view.PagerTitleStrip
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y50"/>
+    </android.support.v4.view.ViewPager>
 </LinearLayout>

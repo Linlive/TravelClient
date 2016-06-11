@@ -101,7 +101,7 @@ public class PublishActivity extends AppCompatActivity implements PublishFragmen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_publish);
 		mIntent = getIntent();
-		userId = mIntent.getStringExtra(CommonText.userId);
+		userId = mIntent.getStringExtra(CommonText.shopkeeperId);
 		initBar();
 		initView();
 	}

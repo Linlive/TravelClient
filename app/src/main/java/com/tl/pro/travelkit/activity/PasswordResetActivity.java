@@ -74,13 +74,13 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(mIntent != null){
+		if (mIntent != null) {
 			String phone = mIntent.getStringExtra("userId");
-			if(NormalCheck.isPhoneNumber(phone)){
+			if (NormalCheck.isPhoneNumber(phone)) {
 				phoneNumber.setText(phone);
-				emailAddress.setEnabled(false);
+				//emailAddress.setEnabled(false);
 			}
-			if(NormalCheck.isEmail(email)){
+			if (NormalCheck.isEmail(email)) {
 				emailAddress.setText(email);
 			}
 		}
@@ -100,7 +100,7 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
 //				if (resetPassword(phoneNumberValue, null)) {
 //					Toast.makeText(this, R.string.resetPasswordSuccess, Toast.LENGTH_SHORT).show();
 //				}
-				new RequestSmsAsync().execute(phoneNumberValue);
+				new RequestSmsAsync().execute(phoneNumberValue, null);
 
 				break;
 			case R.id.app_password_reset_email_address_button:
@@ -109,6 +109,7 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
 					Toast.makeText(this, R.string.resetPasswordEmailEmpty, Toast.LENGTH_SHORT).show();
 					break;
 				}
+				new RequestSmsAsync().execute(null, emailAddressValue);
 				// send email
 //				if (resetPassword(null, emailAddressValue)) {
 //					Toast.makeText(this, R.string.resetPasswordSuccess, Toast.LENGTH_SHORT).show();
@@ -120,7 +121,7 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
 			case R.id.app_reset_password_confirm:
 				String code = verificationCode.getText().toString();
 				String newPasswordValue = newPassword.getText().toString();
-				if((code.length() == 0) || (newPasswordValue.length() == 0)){
+				if ((code.length() == 0) || (newPasswordValue.length() == 0)) {
 					Toast.makeText(this, R.string.resetPasswordPhoneEmpty, Toast.LENGTH_SHORT).show();
 					break;
 				}
@@ -141,7 +142,7 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
 
 		HttpURLConnection conn = null;
 		try {
-			conn = ServerConfigure.getConnection(this, UrlSource.RESET_PASSWORD, RequestMethod.POST);
+			conn = ServerConfigure.getConnection(UrlSource.RESET_PASSWORD, RequestMethod.POST);
 			JSONObject obj = new JSONObject();
 			if (null != phoneNumber) {
 				obj.put("phone", phoneNumber);
@@ -185,17 +186,19 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
 
 		@Override
 		protected Boolean doInBackground(String... params) {
-			return requestPassword(null, params[0]);
+			return requestPassword(null, params[0], params[1]);
 		}
 
 		@Override
 		protected void onPostExecute(Boolean aBoolean) {
-			if(aBoolean){
+			if (aBoolean) {
 				Toast.makeText(PasswordResetActivity.this, R.string.verificationCodeSendSuccess, Toast.LENGTH_SHORT).show();
 			}
 			super.onPostExecute(aBoolean);
 		}
 	}
+
+	public static final int RESET_RESULT_CODE = 504;
 
 	/**
 	 * 参数为验证码
@@ -212,9 +215,14 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
 
 		@Override
 		protected void onPostExecute(Boolean aBoolean) {
-			if(aBoolean){
+			if (aBoolean) {
 				Toast.makeText(PasswordResetActivity.this, R.string.passwordResetSuccess, Toast.LENGTH_SHORT).show();
+//				String password = newPassword.getText().toString();
+//				Intent intent = new Intent();
+				setResult(RESET_RESULT_CODE);
 				finish();
+			} else {
+				Toast.makeText(PasswordResetActivity.this, R.string.resetPasswordFailed, Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
@@ -224,31 +232,37 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
 	 *
 	 * @return
 	 */
-	private boolean requestPassword(String userId, String phone) {
+	private boolean requestPassword(String userId, String phone, String email) {
 		HttpURLConnection con = null;
 		try {
 			con = ServerConfigure.getSessionConnection(UrlSource.RESET_PASSWORD, null);
 
 			JSONObject obj = new JSONObject();
-			if(null != userId){
+			if (null != userId) {
 				obj.put("userId", userId);
 			}
-			obj.put("phone", phone);
+			if (null != email) {
+				obj.put("email", email);
+			}
+			if (null != phone) {
+				obj.put("phone", phone);
+			}
 			ServerTalk.writeToServer(con.getOutputStream(), obj);
 
 			String cookieval = con.getHeaderField("set-cookie");
 			String sessionid = "";
 			if (cookieval != null) {
 				sessionid = cookieval.substring(0, cookieval.indexOf(";"));
+				System.out.println("session 1=======" + sessionid.split("JSESSIONID=")[1]);
 			}
-			System.out.println("session 1=======" + sessionid.split("JSESSIONID=")[1]);
+
 			/////////////////////
 
 			if (con.getResponseCode() != ServerConfigure.SERVER_OK) {
 				return false;
 			}
 			String ser = ServerTalk.readFromServer(con.getInputStream());
-			if(null == ser || ser.length() == 0){
+			if (null == ser || ser.length() == 0) {
 				return false;
 			}
 			JsonParser jp = new JsonParser();
@@ -286,7 +300,7 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
 			sw.setSessionId(sessionId);
 
 			sw.setExtraInfo(newPassword);
-			if(null != userId){
+			if (null != userId) {
 				sw.setUserId(userId);
 			}
 			sw.setCode(code);

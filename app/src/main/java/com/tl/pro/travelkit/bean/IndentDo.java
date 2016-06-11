@@ -23,7 +23,8 @@ public class IndentDo {
 	private String indentStateValue;
 
 	public enum State {
-		CREATE_SUCCESS(1), CREATE_FAILED(2), WAITTING_PAY(3), PAY_SUCCESS(4),  PAY_FAILED(5), REMOVED(6), DELETED(7);
+		CREATE_SUCCESS(1), CREATE_FAILED(2), WAITTING_PAY(3), PAY_SUCCESS(4),  PAY_FAILED(5),
+		REMOVED(6), DELETED(7), WAIT_DELIVER(8), WAIT_ACCEPT(9), WAIT_COMMENT(10), COMMENTED(11);
 
 		int value;
 		State(){

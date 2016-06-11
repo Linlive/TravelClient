@@ -23,6 +23,7 @@ import com.tl.pro.travelkit.adapter.GoodsScanScrollAdapter;
 import com.tl.pro.travelkit.bean.GoodsDo;
 import com.tl.pro.travelkit.bean.IndentDo;
 import com.tl.pro.travelkit.bean.ShoppingCartDo;
+import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.listener.ScanGoodsPageChangeListener;
 import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.PostMultipart;
@@ -60,6 +61,9 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 	private TextView mShopkeeperName;
 	private TextView mGoodsCommentText;
 
+	private LinearLayout talkOnLine;
+	private LinearLayout lookShopLiear;
+
 	private ScanGoodsPageChangeListener mPagerChangeListener;
 
 
@@ -77,6 +81,7 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 
 	private GoodsDo goodsDo;
 	private String userId;
+	private String goodsId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +89,12 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 		setContentView(R.layout.activity_goods_scan);
 		mIntent = getIntent();
 		Bundle bundle = mIntent.getBundleExtra("indexUrl");
-		goodsDo = (GoodsDo) bundle.getSerializable("goodsDo");
+
+		if ("WaitForActivity".equals(mIntent.getStringExtra("flag"))) {
+			goodsId = mIntent.getStringExtra("goodsId");
+		} else {
+			goodsDo = (GoodsDo) bundle.getSerializable("goodsDo");
+		}
 		userId = mIntent.getStringExtra(CommonText.userId);
 
 		initViews();
@@ -96,7 +106,7 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 	protected void onResume() {
 		mPriceText.setText(goodsDo.getGoodsPrice() + "");
 		mReportoryText.setText(goodsDo.getGoodsRepertory() + "");
-		mGoodsDescText.setText("上品名称：" + goodsDo.getGoodsName() + "\n商品描述" + goodsDo.getGoodsExtras());
+		mGoodsDescText.setText("上品名称：" + goodsDo.getGoodsName() + "\n商品描述: " + goodsDo.getGoodsExtras());
 		mShopkeeperName.setText(goodsDo.getShopKeeperId());
 		mGoodsCommentText.setText(goodsDo.getGoodsComments());
 
@@ -115,6 +125,9 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 		mShopkeeperName = (TextView) findViewById(R.id.app_scan_goods_shop_name_text);
 		mGoodsCommentText = (TextView) findViewById(R.id.app_scan_goods_comment_value_text);
 
+		talkOnLine = (LinearLayout) findViewById(R.id.app_scan_goods_look_shopkeeper_home);
+		lookShopLiear = (LinearLayout) findViewById(R.id.app_scan_goods_talk_to_shopkeeper_linear);
+
 		mAddCartLiear = (LinearLayout) findViewById(R.id.app_scan_goods_add_to_cart);
 		mBuyItLiear = (LinearLayout) findViewById(R.id.app_scan_goods_but_it_now);
 
@@ -126,6 +139,8 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 		mScanScrollAdapter = new GoodsScanScrollAdapter(this, urls);
 		mPagerChangeListener = new ScanGoodsPageChangeListener(this, mDotViews);
 
+		talkOnLine.setOnClickListener(this);
+		lookShopLiear.setOnClickListener(this);
 		mAddCartLiear.setOnClickListener(this);
 		mBuyItLiear.setOnClickListener(this);
 
@@ -142,27 +157,44 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 		}
 	}
 
+	final int LOGIN_REQUEST_CODE = 503;
+	final int LOGIN_BUY_GOODS_CODE = 504;
+
 	@Override
 	public void onClick(View v) {
+		Intent intent;
 		switch (v.getId()) {
+			case R.id.app_scan_goods_talk_to_shopkeeper_linear:
+				break;
+			case R.id.app_scan_goods_look_shopkeeper_home:
+				intent = new Intent(GoodsScanActivity.this, ShopkeeperManageActivity.class);
+				String shopId = goodsDo.getShopKeeperId();
+				intent.putExtra("shopkeeperId", shopId);
+				startActivity(intent);
+				break;
 			case R.id.app_scan_goods_add_to_cart:
+				if (!ServerConfigure.beforeConnect(this)) {
+					Toast.makeText(this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+					break;
+				}
+				if(null == userId){
+					intent = new Intent(GoodsScanActivity.this, LoginActivity.class);
+					startActivityForResult(intent, LOGIN_REQUEST_CODE);
+					break;
+				}
 				new ShoppingCartAsyn(this).execute();
 				break;
 			case R.id.app_scan_goods_but_it_now:
-				Intent intent = new Intent(GoodsScanActivity.this, AliPayActivity.class);
-				ArrayList<String> goodsNameArray = new ArrayList<>();
-				ArrayList<String> goodsDescArray = new ArrayList<>();
-				ArrayList<String> goodsPriceArray = new ArrayList<>();
-
-				goodsNameArray.add(goodsDo.getGoodsName());
-				goodsDescArray.add(goodsDo.getGoodsExtras());
-				goodsPriceArray.add(goodsDo.getGoodsPrice() + "");
-
-				intent.putStringArrayListExtra("goodsName", goodsNameArray);
-				intent.putStringArrayListExtra("goodsDesc", goodsDescArray);
-				intent.putStringArrayListExtra("goodsPrice", goodsPriceArray);
-				startActivityForResult(intent, payRequestCode);
-
+				if (!ServerConfigure.beforeConnect(this)) {
+					Toast.makeText(this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(null == userId){
+					intent = new Intent(GoodsScanActivity.this, LoginActivity.class);
+					startActivityForResult(intent, LOGIN_BUY_GOODS_CODE);
+					return;
+				}
+				toByGoods();
 				break;
 			default:
 				break;
@@ -171,14 +203,28 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode){
+		switch (requestCode) {
+			case LOGIN_BUY_GOODS_CODE:
+				if(resultCode == LoginActivity.LOG_IN_RESULT) {
+					IndexActivity.setUserInfo(data);
+					setUserInfo(data);
+					toByGoods();
+				}
+				break;
 			case payRequestCode:
-				if(resultCode == PayResult.PAY_SUCCESS){
+				if (resultCode == PayResult.PAY_SUCCESS) {
 					//支付成功
 					new BuyGoodsTask(this, userId, changeToShoppingCartDo(goodsDo), PayResult.PAY_SUCCESS).execute();
 				}
 				L.e(TAG, "支付成功");
 				Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
+				break;
+			case LOGIN_REQUEST_CODE:
+				if(resultCode == LoginActivity.LOG_IN_RESULT) {
+					IndexActivity.setUserInfo(data);
+					setUserInfo(data);
+					new ShoppingCartAsyn(this).execute();
+				}
 				break;
 			default:
 				break;
@@ -186,7 +232,29 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private ShoppingCartDo changeToShoppingCartDo(GoodsDo goodsDo){
+	private void setUserInfo(Intent data){
+		if(null == data){
+			return;
+		}
+		userId = data.getStringExtra("userId");
+	}
+	private void toByGoods(){
+		Intent intent = new Intent(GoodsScanActivity.this, AliPayActivity.class);
+		ArrayList<String> goodsNameArray = new ArrayList<>();
+		ArrayList<String> goodsDescArray = new ArrayList<>();
+		ArrayList<String> goodsPriceArray = new ArrayList<>();
+
+		goodsNameArray.add(goodsDo.getGoodsName());
+		goodsDescArray.add(goodsDo.getGoodsExtras());
+		goodsPriceArray.add(goodsDo.getGoodsPrice() + "");
+
+		intent.putStringArrayListExtra("goodsName", goodsNameArray);
+		intent.putStringArrayListExtra("goodsDesc", goodsDescArray);
+		intent.putStringArrayListExtra("goodsPrice", goodsPriceArray);
+		startActivityForResult(intent, payRequestCode);
+	}
+
+	private ShoppingCartDo changeToShoppingCartDo(GoodsDo goodsDo) {
 		ShoppingCartDo cartDo = new ShoppingCartDo();
 		cartDo.setUserId(userId);
 		cartDo.setGoodsChooseNumber(1);
@@ -203,6 +271,7 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 
 	private class ShoppingCartAsyn extends AsyncTask<String, Void, Boolean> {
 		private Context context;
+
 		public ShoppingCartAsyn(Context context) {
 			super();
 			this.context = context;
@@ -213,6 +282,10 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 
 			if (aBoolean) {
 				Toast.makeText(GoodsScanActivity.this, R.string.addToShoppingCartSuccess, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			if (!ServerConfigure.beforeConnect(GoodsScanActivity.this)) {
+				Toast.makeText(GoodsScanActivity.this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
 			} else {
 				Toast.makeText(GoodsScanActivity.this, R.string.addToShoppingCartFailed, Toast.LENGTH_LONG).show();
 			}
@@ -220,7 +293,7 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 
 		@Override
 		protected Boolean doInBackground(String... params) {
-			return PostMultipart.addToShoppingCart(context, userId, goodsDo, new MyUiProgressListener());
+			return PostMultipart.addToShoppingCart(userId, goodsDo, new MyUiProgressListener());
 		}
 
 		@Override
@@ -229,7 +302,7 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 		}
 	}
 
-	private class BuyGoodsTask extends AsyncTask<String, Void, Boolean>{
+	private class BuyGoodsTask extends AsyncTask<String, Void, Boolean> {
 		String buyerId;
 		ShoppingCartDo cartDo;
 		int state;
@@ -246,19 +319,22 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 		@Override
 		protected Boolean doInBackground(String... params) {
 
-			return PostMultipart.buyGoods(context, buyerId, cartDo, state);
+			return PostMultipart.buyGoods(buyerId, cartDo, state);
 		}
-
 
 		@Override
 		protected void onPostExecute(Boolean aBoolean) {
-			if(aBoolean){
+			if (aBoolean) {
 				Toast.makeText(context, "下单成功" + IndentDo.State.PAY_SUCCESS, Toast.LENGTH_SHORT).show();
 
 				//刷新我的界面，其中包括订单信息。
 				Intent intent = new Intent(context, WaitForActivity.class);
+				intent.putExtra(CommonText.userId, userId);
+				intent.putExtra("index", 0);
 				startActivity(intent);
-
+			}
+			if (!ServerConfigure.beforeConnect(GoodsScanActivity.this)) {
+				Toast.makeText(GoodsScanActivity.this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
 			}
 			super.onPostExecute(aBoolean);
 		}

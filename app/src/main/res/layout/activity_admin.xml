@@ -6,8 +6,15 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.tl.pro.travelkit.activity.AdminActivity"
-    android:background="@drawable/out_side">
-
+    android:background="@drawable/bench">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textSize="26sp"
+        android:text="管理员"
+        android:textColor="@color/buy_goods"
+        android:textScaleX="1.1"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

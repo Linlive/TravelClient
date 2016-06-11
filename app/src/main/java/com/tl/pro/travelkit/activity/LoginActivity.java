@@ -44,7 +44,7 @@ import java.net.HttpURLConnection;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-	private static final int LOGIN_TIME_LIMIT = 5;
+	private static final int LOGIN_TIME_LIMIT = 1;
 
 	private static final int STOPSPLASH = 0;
 	private static final long SPLASHTIME = 2500;
@@ -84,6 +84,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 	CodeUtil mCodeUtil = CodeUtil.getInstance();
 	String code;
 
+	Intent mIntent;
+
 	private Handler splashHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -103,6 +105,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_login);
+		mIntent = getIntent();
 		initView();
 
 		animatinoIn = AnimationUtils.loadAnimation(this, R.anim.app_launcgh_img_in); //动画效果
@@ -114,9 +117,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 		mGoneLinearLayout.startAnimation(animatinoIn);
 		mLaunchFrm = (FrameLayout) findViewById(R.id.app_launch_frm);
 
-		Message msg = new Message();
-		msg.what = STOPSPLASH;
-		splashHandler.sendMessageDelayed(msg, SPLASHTIME);
+//		Message msg = new Message();
+//		msg.what = STOPSPLASH;
+//		splashHandler.sendMessageDelayed(msg, SPLASHTIME);
 	}
 
 	private void initView() {
@@ -175,6 +178,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 		if (mAsyncTask != null && !backGroundSuccess) {
 			return;
 		}
+		if(!ServerConfigure.beforeConnect(LoginActivity.this)){
+			Toast.makeText(LoginActivity.this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+			return;
+		}
 		String name = mUserNameEdit.getText().toString();
 		String password = mUserPasswordEdit.getText().toString();
 		boolean cancel = false;
@@ -183,6 +190,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			mUserPasswordEdit.requestFocus();
 			mUserPasswordEdit.setError(getString(R.string.error_field_required));
 			cancel = true;
+		}
+		if(!NormalCheck.isPhoneNumber(name)){
+			if(!isAdministrator) {
+				mUserNameEdit.requestFocus();
+				mUserNameEdit.setError("不符合电话号码格式");
+				cancel = true;
+			}
 		}
 //		if(!NormalCheck.passwordStrong(password)){
 //			mUserPasswordEdit.requestFocus();
@@ -232,7 +246,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 		JSONObject objectIn = new JSONObject();
 		try {
 
-			objectIn.put("userName", name);
+			objectIn.put("userId", name);
 			objectIn.put("userPassword", password);
 
 			mAsyncTask = new LoginAsyncTask();
@@ -257,7 +271,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			public void onClick(DialogInterface dialog, int which) {
 				register = true;
 				Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-				intent.putExtra("userName", mUserNameEdit.getText().toString());
+				intent.putExtra("userId", mUserNameEdit.getText().toString());
 				startActivity(intent);
 				dialog.dismiss();
 			}
@@ -320,13 +334,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			ServerInfoObj<JSONObject> serverInfoObj = null;// = new ServerInfoObj<>();
 			try {
 				publishProgress(20f);
-				con = ServerConfigure.getConnection(LoginActivity.this, UrlSource.SIGNIN, RequestMethod.POST);
+				con = ServerConfigure.getConnection(UrlSource.SIGNIN, RequestMethod.POST);
 				con.connect();
 				JSONObject object = params[0];
 				publishProgress(50f);
-				if (object.has("userName")) {
-					String tmpName = KitAESCoder.encrypt(object.getString("userName"));
-					object.put("userName", tmpName);
+				if (object.has("userId")) {
+					String tmpName = KitAESCoder.encrypt(object.getString("userId"));
+					object.put("userId", tmpName);
 				}
 				if (object.has("userPassword")) {
 					String tmpPass = KitAESCoder.encrypt(object.getString("userPassword"));
@@ -344,7 +358,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				con.disconnect();
+				if(con != null){
+					con.disconnect();
+				}
 			}
 			return serverInfoObj;
 		}
@@ -367,10 +383,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 				//测试登录后的过程
 				login = true;
+				return;
 //				Intent intent = new Intent(LoginActivity.this, IndexActivity.class);
 //				startActivity(intent);
-
-				return;
 			}
 			if (!serverObject.isSuccess()) {
 				L.e("服务器返回操作失败");
@@ -398,9 +413,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 						startActivity(intent);
 						return;
 					}
-					Intent intent = new Intent(LoginActivity.this, IndexActivity.class);
+//					Intent intent = new Intent(LoginActivity.this, IndexActivity.class);
+//					intent.putExtra("userId", mUserNameEdit.getText().toString());
+//					startActivity(intent);
+					Intent intent = new Intent();
 					intent.putExtra("userId", mUserNameEdit.getText().toString());
-					startActivity(intent);
+					setResult(LOG_IN_RESULT, intent);
+					finish();
 
 				} else {
 					login = false;
@@ -439,6 +458,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 		}
 	}
 
+	public static final int LOG_IN_RESULT = 502;
+
 	private void saveInfo(String key, String value) {
 		SharedPreferences settings = getSharedPreferences(SHAREPREFRENCE, MODE_PRIVATE);
 		//2、让setting处于编辑状态
@@ -461,6 +482,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onStop() {
 		saveInfo("name", mUserNameEdit.getText().toString());
+		saveInfo("password", mUserPasswordEdit.getText().toString());
 		super.onStop();
 	}
 
@@ -468,11 +490,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 	protected void onResume() {
 		super.onResume();
 		mUserNameEdit.setText(readInfo("name"));
-
+		mUserPasswordEdit.setText(readInfo("password"));
 		if (0 == readInfo(LOGIN_TIME).length()) {
 			loginTime = 0;
 		} else {
 			loginTime = Integer.valueOf(readInfo(LOGIN_TIME));
+		}
+		if(null != mIntent && mIntent.getBooleanExtra("system", false)){
+			mUserNameEdit.setText(mIntent.getStringExtra("name"));
+			mAdmistratorCheckBox.setChecked(true);
 		}
 		super.onResume();
 	}

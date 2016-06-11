@@ -11,7 +11,7 @@ public class NormalCheck {
 
 	private static final String EMAIL_REGEX = "^([a-z0-9A-Z]+[-_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-_[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
 	private static final String PHONE_REGEX = "^[1][3458][0-9]{9}$";
-	private static final String PASSWORD_REGEX = "^.(6, 12)(?=(\\d)+)(?=(\\w+)+)$";
+	private static final String PASSWORD_REGEX = "(?=^.{4,12}$)(?=(?:.*?\\d)+)(?=.*[a-z])(?=(?:.*?[A-Z]){2})(?=(?:.*?[!@#$%*()_+^&}{:;?,.])*)(?!.*\\s)[0-9a-zA-Z!@#$%*()_+^&,.]*$";
 
 	private static boolean innerCheck(String textCheck, Pattern pattern) {
 		boolean ret = false;

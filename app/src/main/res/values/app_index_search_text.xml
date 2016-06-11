@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="haveNoMoreData">没有更多的数据了</string>
+    <string name="pleaseInputFilter">请输入搜索条件</string>
+    <string name="filterInputHint">输入商品名称或品牌</string>
+    <string name="searchTitle">搜 索</string>
+
+</resources>

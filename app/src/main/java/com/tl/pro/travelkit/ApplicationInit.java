@@ -20,6 +20,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 
+import com.avos.avoscloud.AVOSCloud;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -29,8 +30,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
 public class ApplicationInit extends Application {
-
-
 
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@SuppressWarnings("unused")
@@ -44,6 +43,7 @@ public class ApplicationInit extends Application {
 		super.onCreate();
 
 		initImageLoader(getApplicationContext());
+		//initMsg(this);
 	}
 
 	public static void initImageLoader(Context context) {
@@ -63,5 +63,16 @@ public class ApplicationInit extends Application {
 
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config.build());
+	}
+	public static void initMsg(Context context){
+		// 初始化参数依次为 this, AppId, AppKey
+		AVOSCloud.initialize(context,"{{e4tGn0UE8UqWXKFnmLOTtnJm-gzGzoHsz}}","{{Ij6O5nFtdHMYBk4geihkKRXF}}");
+		AVOSCloud.useAVCloudCN();
+		AVOSCloud.initialize(context, "683jigxkqb10jrirelvd9vcn9ywbq2o436lfz1kngsvigm27",
+				"ualzl8f8pxmryous77m3gf2z0dyhrhk6xdb7zkiu6flc0jxy");
+//		ChatManager.setDebugEnabled(true);// tag leanchatlib
+		AVOSCloud.setDebugLogEnabled(true);  // set false when release
+//		ChatManager.getInstance().init(this);
+//		ThirdPartUserUtils.setThirdPartUserProvider(new CustomUserProvider());
 	}
 }

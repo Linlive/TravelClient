@@ -6,7 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".activity.PasswordResetActivity"
     android:background="@drawable/app_password_reset_background">
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:layout_marginTop="10dp"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -91,6 +99,7 @@
             android:id="@+id/app_reset_password_confirm"
             android:visibility="visible"
             android:textColor="@color/black"
+            android:textSize="18sp"
             android:background="@drawable/app_password_reset_confirm_button_back"/>
     </LinearLayout>
 </RelativeLayout>

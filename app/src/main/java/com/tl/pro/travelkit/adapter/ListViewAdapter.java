@@ -39,7 +39,18 @@ public class ListViewAdapter extends BaseAdapter {
 	private ImageFirstDisplayListener mAnimal = new ImageFirstDisplayListener(this);
 
 	public void setData(List<GoodsDo> data) {
+//		mDataList.clear();
+//		mDataList = null;
 		mDataList = data;
+		notifyDataSetChanged();
+	}
+
+	public void addEndData(List<GoodsDo> data) {
+		mDataList.addAll(mDataList.size(), data);
+	}
+
+	public void addStartData(List<GoodsDo> data) {
+		mDataList.addAll(0, data);
 	}
 
 	public List<GoodsDo> getDataList() {
@@ -54,7 +65,7 @@ public class ListViewAdapter extends BaseAdapter {
 		options = new DisplayImageOptions.Builder()
 				.showImageOnLoading(R.drawable.ic_stub)
 				.showImageForEmptyUri(R.drawable.ic_empty)
-				.showImageOnFail(R.drawable.ic_empty)
+				.showImageOnFail(R.drawable.ic_error)
 				.cacheInMemory(true)
 				.cacheOnDisk(true)
 				.considerExifParams(true)
@@ -92,25 +103,40 @@ public class ListViewAdapter extends BaseAdapter {
 			view = mLayoutInflater.inflate(R.layout.app_index_list_items, parent, false);
 
 			vh.imageView = (ImageView) view.findViewById(R.id.app_index_goods_image_main);
+			vh.textViewGoodsName = (TextView) view.findViewById(R.id.app_index_goods_name_text2);
+			vh.textViewGoodsPrice = (TextView) view.findViewById(R.id.app_index_goods_price_text2);
+			vh.textViewGoodsReportory = (TextView) view.findViewById(R.id.app_index_goods_repertory_text2);
+
 			vh.textViewDesc = (TextView) view.findViewById(R.id.app_index_goods_describe_text);
 			view.setTag(vh);
 		} else {
 			vh = (ViewHolder) convertView.getTag();
 		}
-		if(mDataList.size() == 0 || (mDataList.get(position).getImgUrlList().size() == 0)) {
+		if (mDataList.size() == 0) {// || (mDataList.get(position).getImgUrlList().size() == 0)) {
 			return view;
 		}
+		vh.textViewGoodsName.setText(mDataList.get(position).getGoodsName());
+		vh.textViewGoodsPrice.setText(mDataList.get(position).getGoodsPrice() + " 元");
+		vh.textViewGoodsReportory.setText(mDataList.get(position).getGoodsRepertory() + "/件");
+
 		vh.textViewDesc.setText(mDataList.get(position).getGoodsExtras());
 
-		String url = ServerConfigure.SERVER_ADDRESS + mDataList.get(position).getImgUrlList().get(0);
+		String url;
+		if (mDataList.get(position).getImgUrlList().size() == 0) {
+			url = "empty://url";
+		} else {
+			url = ServerConfigure.SERVER_ADDRESS + mDataList.get(position).getImgUrlList().get(0);
+		}
 //		String url = mDataList.get(position).getImgUrlList().get(0);
-		ImageLoader.getInstance().displayImage(url, vh.imageView, options, mAnimal);
+		ImageLoader.getInstance().displayImage(url, vh.imageView, options);//, mAnimal);
 		return view;
 	}
 
 	private class ViewHolder {
 		ImageView imageView;
-		TextView textViewTitle;
+		TextView textViewGoodsName;
+		TextView textViewGoodsPrice;
+		TextView textViewGoodsReportory;
 		TextView textViewDesc;
 	}
 }

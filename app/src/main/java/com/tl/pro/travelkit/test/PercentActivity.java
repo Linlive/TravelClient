@@ -1,152 +1,153 @@
 package com.tl.pro.travelkit.test;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.SaveCallback;
 import com.tl.pro.travelkit.R;
-import com.tl.pro.travelkit.internet.ServerConfigure;
-import com.tl.pro.travelkit.internet.ServerTalk;
-import com.tl.pro.travelkit.internet.SessionWrapper;
-import com.tl.pro.travelkit.internet.UrlSource;
+import com.tl.pro.travelkit.util.log.L;
 import com.tl.pro.travelkit.view.custom.ViewPagerIndicator;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class PercentActivity extends AppCompatActivity {
 	private List<Fragment> mTabContents = new ArrayList<Fragment>();
-	private FragmentPagerAdapter mAdapter;
+	private MyViewPagerAdapter mAdapter;
 	private ViewPager mViewPager;
 	private List<String> mDatas = Arrays.asList("短信1", "短信2", "短信3", "短信4",
 			"短信5", "短信6", "短信7", "短信8", "短信9");
 //	private List<String> mDatas = Arrays.asList("短信", "收藏", "推荐");
 
 	private ViewPagerIndicator mIndicator;
+//	PullToRefreshListView listView1;
+//	PullToRefreshListView listView2;
+ 	View listView1;
+	View listView2;
 
-	private Button mButton1;
-	private Button mButton2;
-	private EditText mEditText;
+	MyListViewAdapter adapter1;
+	MyListViewAdapter adapter2;
+
+	LayoutInflater inflater;
+
+	ArrayList<View> viewList = new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.vp_indicator);
-		mButton1 = (Button) findViewById(R.id.button1);
-		mButton2 = (Button) findViewById(R.id.button2);
-		mEditText = (EditText) findViewById(R.id.edit);
+//		mViewPager = (ViewPager) findViewById(R.id.view_pager);
+//		//mIndicator = (ViewPagerIndicator) findViewById(R.id.view_pager_indicator);
+//
+//		inflater = LayoutInflater.from(this);
+//		listView1 = inflater.inflate(R.layout.ac_complex, null);
+//		listView2 = inflater.inflate(R.layout.ac_complex, null);
+//		viewList.add(listView1);
+//		viewList.add(listView2);
+//		viewList.add(inflater.inflate(R.layout.ac_complex, null));
+//		viewList.add(inflater.inflate(R.layout.ac_complex, null));
+//		viewList.add(inflater.inflate(R.layout.ac_complex, null));
+//
+//
+//		mAdapter = new MyViewPagerAdapter();
+//
+//
+//		mIndicator.setTabItemTitles(mDatas);
+//		mIndicator.setViewPager(mViewPager, 3);
+//		mViewPager.setAdapter(mAdapter);
 
-		mButton1.setOnClickListener(new View.OnClickListener() {
-			HttpURLConnection con = null;
+		// 测试 SDK 是否正常工作的代码
+		AVObject testObject = new AVObject("TestObject");
+		testObject.put("words","Hello World!");
+		testObject.saveInBackground(new SaveCallback() {
 			@Override
-			public void onClick(View v) {
-				new Th1().start();
+			public void done(AVException e) {
+
+				if(e == null){
+					Log.d("saved","success!");
+					return;
+				}
+				L.e("TAG", e.toString());
+			}
+
+			@Override
+			public void internalDone(AVException parseException) {
+				L.e("TAG", parseException.toString());
+				super.internalDone(parseException);
 			}
 		});
-		mButton2.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				new Th2().start();
-			}
-		});
-
 	}
-	HttpURLConnection con = null;
 
-	private class Th1 extends Thread{
+	private class MyViewPagerAdapter extends PagerAdapter{
+		public MyViewPagerAdapter() {
+			super();
+		}
+
 		@Override
-		public void run() {
-			try {
-				con = ServerConfigure.getSessionConnection(UrlSource.RESET_PASSWORD, null);
+		public boolean isViewFromObject(View view, Object object) {
+			return view == object;
+		}
 
-				JSONObject obj = new JSONObject();
-				obj.put("userId", "aa");
-				obj.put("phone", "18380165651");
-				ServerTalk.writeToServer(con.getOutputStream(), obj);
+		@Override
+		public int getCount() {
+			return viewList.size();
+		}
 
-				String cookieval = con.getHeaderField("set-cookie");
-				String sessionid = "";
-				if(cookieval != null) {
-					sessionid = cookieval.substring(0, cookieval.indexOf(";"));
-				}
-				System.out.println("session 1=======" + sessionid.split("JSESSIONID=")[1]);
-				/////////////////////
-
-
-				if(con.getResponseCode() == ServerConfigure.SERVER_OK){
-					//return;
-				}
-				String ser = ServerTalk.readFromServer(con.getInputStream());
-				JsonParser jp = new JsonParser();
-				JsonElement je = jp.parse(ser);
-				if(!je.isJsonObject()){
-					return;
-				}
-				Gson g = new Gson();
-				SessionWrapper sessionWrapperOut = g.fromJson(je, SessionWrapper.class);
-				if(sessionWrapperOut.isSuccess()){
-					//return true;
-				}
-				sessionId = sessionid.split("JSESSIONID=")[1];
-
-			} catch (JSONException | IOException e) {
-				e.printStackTrace();
-			}
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			View v = viewList.get(position);
+			TextView tv = (TextView) v;
+			tv.setText("dddddddd--------------" + position);
+			container.addView(v);
+			return v;
 		}
 	}
-	private class Th2 extends Thread{
+
+
+	private class MyListViewAdapter extends BaseAdapter{
+		LayoutInflater inflater;
+		public MyListViewAdapter(Context context) {
+			super();
+			inflater = LayoutInflater.from(context);
+		}
+
 		@Override
-		public void run() {
-			try {
-				con = ServerConfigure.getSessionConnection(UrlSource.RESET_PASSWORD_CHECK, sessionId);
+		public int getCount() {
+			return 10;
+		}
 
-				SessionWrapper sw = new SessionWrapper();
-				sw.setSessionId(sessionId);
-				sw.setExtraInfo("new password");
-				sw.setUserId("aa");
-				sw.setCode(mEditText.getText().toString());
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
 
-				ServerTalk.writeToServer(con.getOutputStream(), sw);
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
 
-				String str = ServerTalk.readFromServer(con.getInputStream());
-				if(null == str){
-					return;
-				}
-				JsonParser jp = new JsonParser();
-				JsonElement je = jp.parse(str);
-				if(!je.isJsonObject()){
-					return;
-				}
-				Gson g = new Gson();
-				SessionWrapper wrapper = g.fromJson(je, SessionWrapper.class);
-				if(!wrapper.isSuccess()){
-					return;
-				}
-				sessionId = wrapper.getSessionId();
-				String extra = wrapper.getExtraInfo();
-				/////////////
-				System.out.println("session 2=======" + sessionId);
-
-			} catch (IOException e) {
-				e.printStackTrace();
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View v = convertView;
+			if(v == null){
+				v = inflater.inflate(R.layout.app_index_list_items, parent, false);
 			}
+			return v;
 		}
 	}
-	static String sessionId = "";
 }

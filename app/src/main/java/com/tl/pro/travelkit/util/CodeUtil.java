@@ -43,16 +43,18 @@ public class CodeUtil {
 		return mCodeUtils;
 	}
 
-	//生成验证码图片
+	/**
+	 * 生成验证码图片
+	 *
+	 * @param code 验证码
+	 * @return
+	 */
 	public Bitmap createBitmap(String code) {
 		mPaddingLeft = 0; //每次生成验证码图片时初始化
 		mPaddingTop = 0;
 
 		Bitmap bitmap = Bitmap.createBitmap(DEFAULT_WIDTH, DEFAULT_HEIGHT, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
-
-		//生成的验证码
-//		String code = createCode();
 
 		canvas.drawColor(Color.rgb(DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR));
 		Paint paint = new Paint();

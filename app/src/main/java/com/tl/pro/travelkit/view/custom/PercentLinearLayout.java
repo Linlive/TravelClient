@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 /**
+ * 百分比线性布局
  * Created by Administrator on 2016/4/12.
  */
 public class PercentLinearLayout extends LinearLayout {

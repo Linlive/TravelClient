@@ -8,12 +8,11 @@
     android:orientation="vertical"
     tools:context=".activity.WaitForActivity">
 
-
     <com.tl.pro.travelkit.view.custom.ViewPagerIndicator
         android:id="@+id/app_about_me_goods_state_view_pager_indicator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y35"
-        android:background="@color/colorLoginButtonDefault"
+        android:background="#aa2faaef"
         app:item_count="5"
         >
     </com.tl.pro.travelkit.view.custom.ViewPagerIndicator>

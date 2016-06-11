@@ -3,9 +3,6 @@ package com.tl.pro.travelkit.internet;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Toast;
-
-import com.tl.pro.travelkit.R;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -20,7 +17,7 @@ public class ServerConfigure {
 
 
 	// a li yun server
-	//public static final String SERVER_ADDRESS = "http://42.96.138.253";
+//	public static final String SERVER_ADDRESS = "http://42.96.138.253:8080/KitServer";
 	// room server
 	public static final String SERVER_ADDRESS = "http://192.168.1.222:8080/KitServer";
 	// hp server
@@ -75,8 +72,8 @@ public class ServerConfigure {
 	 * @return a connection created by the specified urlString.
 	 * @throws MalformedURLException if url is invalid
 	 */
-	public static HttpURLConnection getConnection(Context context, String urlString) throws MalformedURLException {
-		return getConnection(context, urlString, RequestMethod.GET, false, true);
+	public static HttpURLConnection getConnection(String urlString) throws MalformedURLException {
+		return getConnection(urlString, RequestMethod.GET, false, true);
 	}
 
 	/**
@@ -87,9 +84,9 @@ public class ServerConfigure {
 	 * @return a connection created by the specified urlString.
 	 * @throws MalformedURLException if url is invalid
 	 */
-	public static HttpURLConnection getConnection(Context context, String urlString, RequestMethod method) throws
+	public static HttpURLConnection getConnection(String urlString, RequestMethod method) throws
 			MalformedURLException {
-		return getConnection(context, urlString, method, true, true);
+		return getConnection(urlString, method, true, true);
 	}
 
 	/**
@@ -102,12 +99,12 @@ public class ServerConfigure {
 	 * @return a connection created by the specified urlString.
 	 * @throws MalformedURLException if url is invalid
 	 */
-	public static HttpURLConnection getConnection(Context context, String urlString, RequestMethod method, boolean input,
+	public static HttpURLConnection getConnection(String urlString, RequestMethod method, boolean input,
 	                                              boolean output) throws MalformedURLException {
-		if (!beforeConnect(context)) {
-			Toast.makeText(context, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
-			return null;
-		}
+//		if (!beforeConnect(context)) {
+//			//Toast.makeText(context, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+//			return null;
+//		}
 		HttpURLConnection httpURLConnection = null;
 		URL url = new URL(SERVER_ADDRESS + urlString);
 

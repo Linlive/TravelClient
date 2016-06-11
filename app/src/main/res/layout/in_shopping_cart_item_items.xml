@@ -33,7 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/y80"
                 android:layout_weight="22"
-                android:src="@drawable/shoe_photo"
+                android:src="@drawable/ic_empty"
                 />
 
             <LinearLayout

@@ -7,19 +7,27 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:name=".ApplicationInit"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launch"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- <service android:name="com.avos.avoscloud.PushService"/> -->
+        <!-- <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED"/> -->
+        <!-- <action android:name="android.intent.action.USER_PRESENT"/> -->
+        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
         <activity android:name=".activity.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".activity.RegisterActivity">
             <intent-filter>
@@ -36,11 +44,6 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".test.PullActivity">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
         <activity android:name=".activity.PublishActivity">
         </activity>
         <activity android:name=".activity.GoodsDetailPublishActivity">
@@ -53,9 +56,28 @@
         </activity>
         <activity android:name=".activity.GoodsCommentActivity">
         </activity>
-        <activity android:name=".activity.ShoppingCartActivity">
+        <activity android:name=".activity.AliPayActivity">
         </activity>
-
+        <activity android:name=".activity.WaitForActivity">
+        </activity>
+        <activity android:name=".activity.AdminActivity">
+        </activity>
+        <activity android:name=".activity.PasswordResetActivity">
+        </activity>
+        <activity android:name=".activity.ShopkeeperManageActivity">
+        </activity>
+        <activity android:name=".activity.ShopkeeperIndentManageActivity">
+        </activity>
+        <activity android:name=".activity.AppLaunchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.ApplicationDisplayActivity">
+        </activity>
+        <activity android:name=".activity.AllUserDisplayActivity">
+        </activity>
         <!-- test -->
         <activity android:name=".test.PercentActivity">
 
@@ -65,13 +87,8 @@
         <!-- android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection" -->
         <!-- android:theme="@android:style/Theme.NoTitleBar" -->
         <!-- android:windowSoftInputMode="stateHidden|adjustResize" /> -->
-        <activity android:name=".activity.AliPayActivity">
-        </activity>
-        <activity android:name=".activity.WaitForActivity">
-        </activity>
-        <activity android:name=".activity.AdminActivity">
-        </activity>
-        <activity android:name=".activity.PasswordResetActivity">
+
+        <activity android:name=".activity.SearchActivity">
         </activity>
     </application>
 

@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:background="?attr/colorPrimary"
         android:gravity="center"
         android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         >
 
         <TextView
@@ -26,45 +26,54 @@
             />
     </android.support.v7.widget.Toolbar>
 
-    <ListView
-        android:id="@+id/app_publish_detail_select_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/common_white"
-        android:divider="@color/listview_gray"
-        android:dividerHeight="@dimen/y2"
-        />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y2"
-        android:background="@color/listview_gray"/>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y50"
-        android:background="@drawable/edit_border">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/app_publish_select_ok_img"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/handle_ok_enabled"
-            android:scaleType="fitCenter"
-            android:background="@color/transparent"
-            />
-        <EditText
-            android:id="@+id/app_publish_detail_select_list_edit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:singleLine="true"
-            android:lines="1"
-            android:layout_toLeftOf="@id/app_publish_select_ok_img"
-            android:hint="其他..."
-            android:paddingLeft="16dp"
-            android:textColor="@color/black"
-            android:textCursorDrawable="@drawable/cursor_black"
-            android:textSize="18sp"
-            android:background="@drawable/edit_border"
-            />
+        android:layout_height="match_parent">
 
-    </RelativeLayout>
+        <ListView
+            android:id="@+id/app_publish_detail_select_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y39"
+            android:background="@color/common_white"
+            android:divider="@color/listview_gray"
+            android:dividerHeight="@dimen/y2"
+            />
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/y2"-->
+        <!--android:background="@color/listview_gray"/>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y40"
+            android:layout_gravity="center|bottom"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/app_publish_detail_select_list_edit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:background="@drawable/edit_border"
+                android:hint="其他..."
+                android:lines="1"
+                android:paddingLeft="16dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@drawable/cursor_black"
+                android:textSize="18sp"
+                />
+
+            <ImageView
+                android:id="@+id/app_publish_select_ok_img"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/handle_ok_enabled"
+                />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

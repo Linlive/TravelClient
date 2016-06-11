@@ -7,7 +7,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                   android:orientation="horizontal"
-                  android:weightSum="10"
+                  android:weightSum="100"
 
         >
         <ImageView
@@ -15,7 +15,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/y100"
             android:scaleType="centerCrop"
-            android:layout_weight="7"
+            android:layout_weight="76"
             />
         <!--app:layout_widthPercent="60%"-->
         <!--app:layout_heightPercent="40%"-->
@@ -30,9 +30,9 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingTop="4dp"
-            android:layout_weight="3"
+            android:layout_weight="24"
             android:layout_marginLeft="1dp"
-            android:paddingLeft="2dp"
+            android:paddingLeft="4dp"
             >
             <LinearLayout
                 android:id="@+id/app_index_name_liner"
@@ -45,7 +45,7 @@
                     style="@style/goodsTextTitleStyle"
                     android:text="@string/appIndexGoodsName"
                     android:textSize="16sp"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/app_index_goods_name_text2"
@@ -68,7 +68,7 @@
                     android:id="@+id/app_index_goods_price_text"
                     style="@style/goodsTextTitleStyle"
                     android:text="@string/appIndexGoodsSoldPrice"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/app_index_goods_price_text2"
@@ -88,7 +88,7 @@
                     android:id="@+id/app_index_goods_repertory_text"
                     style="@style/goodsTextTitleStyle"
                     android:text="@string/appIndexGoodsRepertoryLeft"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
                 <TextView
                     android:id="@+id/app_index_goods_repertory_text2"
                     style="@style/goodsTextStyle"
@@ -101,7 +101,8 @@
                 style="@style/appIndexGoodsNameInterval"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/app_index_goods_delivery_text"
@@ -118,11 +119,12 @@
             </LinearLayout>
             <TextView
                 android:id="@+id/app_index_goods_describe_text"
-                style="@style/goodsTextStyle"
-                android:maxLines="2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lines="2"
                 android:ellipsize="end"
-                android:layout_marginTop="2dp"
-                android:text="JJHHdajksf"
+                android:layout_marginTop="@dimen/y4"
+                android:text="JJHHdajkdddddddddsf"
                 />
         </LinearLayout>
 

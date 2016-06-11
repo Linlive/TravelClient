@@ -2,6 +2,7 @@ package com.tl.pro.travelkit.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,10 +16,17 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.bean.IndentViewDo;
 import com.tl.pro.travelkit.internet.ServerConfigure;
@@ -29,14 +37,22 @@ import com.tl.pro.travelkit.view.custom.ViewPagerIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class WaitForActivity extends AppCompatActivity {
 
 	public static final String TAG = "WaitForActivity";
+	private static final int INDENT_ALL_INDEX = 0;
+	private static final int INDENT_WAIT_PAY_INDEX = 1;
+	private static final int INDENT_WAIT_DELIVER_INDEX = 2;
+	private static final int INDENT_WAIT_ACCEPT_INDEX = 3;
+	private static final int INDENT_WAIT_COMMENT_INDEX = 4;
 
 	List<String> mTitles = Arrays.asList("全部", "待付款", "待配送", "待收货", "待评价");
+
 	HashMap<Integer, ArrayList<IndentViewDo>> mapList = new HashMap<>();
 	ArrayList<IndentViewDo> dataAll = new ArrayList<>();
 	ArrayList<IndentViewDo> dataWaitMoney = new ArrayList<>();
@@ -48,10 +64,30 @@ public class WaitForActivity extends AppCompatActivity {
 	private ViewPagerAdapter mViewPagerAdapter;
 	private ViewPagerIndicator mPagerIndicator;
 
-	DataListViewAdapter mDataListViewAdapter;
-	ArrayList<View> viewList = new ArrayList<>();
+	private ArrayList<DataListViewAdapter> dataAdapters = new ArrayList<>();
+	DataListViewAdapter mAllIndentDataAdapter;
+	DataListViewAdapter mWaitPayIndentDataAdapter;
+	DataListViewAdapter mWaitDeliverIndentDataAdapter;
+	DataListViewAdapter mWaitAcceptIndentDataAdapter;
+	DataListViewAdapter mWaitCommentIndentDataAdapter;
+
+
+	private ArrayList<PullToRefreshListView> viewList = new ArrayList<>();
+	PullToRefreshListView allIndentView;
+	PullToRefreshListView waitPayIndentView;
+	PullToRefreshListView waitDeliverIndentView;
+	PullToRefreshListView waitAcceptIndentView;
+	PullToRefreshListView waitCommentIndentView;
+
+	private ArrayList<ImageFirstDisplayListener> loadListeners = new ArrayList<>();
+	ImageFirstDisplayListener displayListener1;
+	ImageFirstDisplayListener displayListener2;
+	ImageFirstDisplayListener displayListener3;
+	ImageFirstDisplayListener displayListener4;
+	ImageFirstDisplayListener displayListener5;
+
 	int selectIndex;
-	private ViewPagerChangeListener changeListener;
+	private ViewPagerIndicator.PageChangeListener changeListener;
 	private Intent mIntent;
 	private String userId;
 
@@ -63,16 +99,36 @@ public class WaitForActivity extends AppCompatActivity {
 		userId = mIntent.getStringExtra(CommonText.userId);
 		selectIndex = mIntent.getIntExtra("index", 0);
 
+		selectIndex = 0;
 		initView();
 		initData();
 		initAdapter();
-		if (selectIndex == 0) {
-			if (!ServerConfigure.beforeConnect(this)) {
-				Toast.makeText(this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
-			} else {
-				new IndentsHandleAsyncTask(this).execute(userId);
-			}
+
+		////////////
+		IndentViewDo viewDo = new IndentViewDo();
+		viewDo.setBuyerId(userId);
+
+		switch (selectIndex) {
+			case INDENT_ALL_INDEX:
+				viewDo.setIndentState("全部");
+				break;
+			case INDENT_WAIT_PAY_INDEX:
+				viewDo.setIndentState("待付款");
+				break;
+			case INDENT_WAIT_DELIVER_INDEX:
+				viewDo.setIndentState("待配送");
+				break;
+			case INDENT_WAIT_ACCEPT_INDEX:
+				viewDo.setIndentState("待收货");
+				break;
+			case INDENT_WAIT_COMMENT_INDEX:
+				viewDo.setIndentState("待评价");
+				break;
+			default:
+				break;
 		}
+		new GoodsSingleAsyncTask().execute(viewDo);
+
 	}
 
 	private void initView() {
@@ -82,18 +138,67 @@ public class WaitForActivity extends AppCompatActivity {
 
 	private void initData() {
 		LayoutInflater inflater = LayoutInflater.from(WaitForActivity.this);
-		viewList.add(inflater.inflate(R.layout.app_about_view_all_indent, null));
-		viewList.add(inflater.inflate(R.layout.app_pager_wait_pay, null));
-		viewList.add(inflater.inflate(R.layout.app_pager_wait_deliver, null));
-		viewList.add(inflater.inflate(R.layout.app_pager_wait_accept, null));
-		viewList.add(inflater.inflate(R.layout.app_pager_wait_comment, null));
+		allIndentView = (PullToRefreshListView) inflater.inflate(R.layout.app_about_view_all_indent, null);
+
+		allIndentView.setOnItemClickListener(new MyListItemOnClickListener());
+//		waitPayIndentView = (PullToRefreshListView) inflater.inflate(R.layout.app_pager_wait_pay, null);
+//		waitDeliverIndentView = (PullToRefreshListView) inflater.inflate(R.layout.app_pager_wait_deliver, null);
+//		waitAcceptIndentView = (PullToRefreshListView) inflater.inflate(R.layout.app_pager_wait_accept, null);
+//		waitCommentIndentView = (PullToRefreshListView) inflater.inflate(R.layout.app_pager_wait_pay, null);
+		waitPayIndentView = (PullToRefreshListView) inflater.inflate(R.layout.app_about_view_all_indent, null);
+		waitDeliverIndentView = (PullToRefreshListView) inflater.inflate(R.layout.app_about_view_all_indent, null);
+		waitAcceptIndentView = (PullToRefreshListView) inflater.inflate(R.layout.app_about_view_all_indent, null);
+		waitCommentIndentView = (PullToRefreshListView) inflater.inflate(R.layout.app_about_view_all_indent, null);
+
+		mAllIndentDataAdapter = new DataListViewAdapter(this, dataAll);
+		mWaitPayIndentDataAdapter = new DataListViewAdapter(this, dataWaitMoney);
+		mWaitDeliverIndentDataAdapter = new DataListViewAdapter(this, dataWaitDeliver);
+		mWaitAcceptIndentDataAdapter = new DataListViewAdapter(this, dataWaitAccept);
+		mWaitCommentIndentDataAdapter = new DataListViewAdapter(this, dataWaitComment);
+
+		//view
+		viewList.add(allIndentView);
+		viewList.add(waitPayIndentView);
+		viewList.add(waitDeliverIndentView);
+		viewList.add(waitAcceptIndentView);
+		viewList.add(waitCommentIndentView);
+
+		//adapter
+		dataAdapters.add(mAllIndentDataAdapter);
+		dataAdapters.add(mWaitPayIndentDataAdapter);
+		dataAdapters.add(mWaitDeliverIndentDataAdapter);
+		dataAdapters.add(mWaitAcceptIndentDataAdapter);
+		dataAdapters.add(mWaitCommentIndentDataAdapter);
 
 		mapList.put(0, dataAll);
 		mapList.put(1, dataWaitMoney);
 		mapList.put(2, dataWaitDeliver);
 		mapList.put(3, dataWaitAccept);
 		mapList.put(4, dataWaitComment);
+
+		for (int i = 0; i < viewList.size(); i++) {
+			viewList.get(i).setAdapter(dataAdapters.get(i));
+		}
+		//列表适配器
+		displayListener1 = new ImageFirstDisplayListener(mAllIndentDataAdapter);
+		displayListener2 = new ImageFirstDisplayListener(mWaitPayIndentDataAdapter);
+		displayListener3 = new ImageFirstDisplayListener(mWaitDeliverIndentDataAdapter);
+		displayListener4 = new ImageFirstDisplayListener(mWaitAcceptIndentDataAdapter);
+		displayListener5 = new ImageFirstDisplayListener(mWaitCommentIndentDataAdapter);
+		loadListeners.add(displayListener1);
+		loadListeners.add(displayListener2);
+		loadListeners.add(displayListener3);
+		loadListeners.add(displayListener4);
+		loadListeners.add(displayListener5);
+
+		PullToRefreshBase.OnRefreshListener2<ListView> refreshListener2;
+		//滑动刷新
+		for (int i = 0; i < viewList.size(); i++) {
+			refreshListener2 = new FreshListener();
+			viewList.get(i).setOnRefreshListener(refreshListener2);
+		}
 	}
+
 
 	private void initAdapter() {
 
@@ -102,41 +207,29 @@ public class WaitForActivity extends AppCompatActivity {
 
 		mPagerIndicator.setTabItemTitles(mTitles);
 		mPagerIndicator.setOnPageChangeListener(changeListener);
-		mPagerIndicator.setViewPager(mViewPager, selectIndex);
+
+		mViewPager.setCurrentItem(0);
+		mPagerIndicator.setViewPager(mViewPager, 0);
+//		mViewPager.addOnPageChangeListener(changeListener);
 		mViewPager.setAdapter(mViewPagerAdapter);
 	}
 
-	private void initViewListener(View view, ArrayList<IndentViewDo> dataList) {
-
-		mDataListViewAdapter = new DataListViewAdapter(this, dataList);
-//		PullToRefreshListView mRefreshView = (PullToRefreshListView) view.findViewById(R.id.app_pager_show_all_indent_pull_list);
-		PullToRefreshListView mRefreshView = (PullToRefreshListView) view.findViewById(R.id.app_index_pull_refresh_list);
-		TextView noDataText = (TextView) view.findViewById(R.id.app_about_for_status_empty_data_to_see);
-
-		mDataListViewAdapter.setTextView(noDataText);
-		mRefreshView.setOnItemClickListener(new MyListItemOnClickListener());
-		mRefreshView.setAdapter(mDataListViewAdapter);
-		if (!dataAdapters.contains(mDataListViewAdapter)) {
-			dataAdapters.add(mDataListViewAdapter);
-		}
-	}
-
-	ArrayList<DataListViewAdapter> dataAdapters = new ArrayList<>();
 
 	private class ViewPagerAdapter extends PagerAdapter {
 
-		private ArrayList<View> viewList;
+		private ArrayList<PullToRefreshListView> viewList;
 
-		public ViewPagerAdapter(ArrayList<View> dataView) {
+		public ViewPagerAdapter(ArrayList<PullToRefreshListView> dataView) {
 			super();
 			this.viewList = dataView;
 		}
+
 
 		public View getCurrentView(int index) {
 			return viewList.get(index);
 		}
 
-		public List<View> getViewList() {
+		public List<PullToRefreshListView> getViewList() {
 			return viewList;
 		}
 
@@ -158,7 +251,6 @@ public class WaitForActivity extends AppCompatActivity {
 		public Object instantiateItem(ViewGroup container, int position) {
 			((ViewGroup) container).addView((View) viewList.get(position));
 			View v = viewList.get(position);
-			initViewListener(v, mapList.get(position));
 			return v;
 		}
 
@@ -189,10 +281,14 @@ public class WaitForActivity extends AppCompatActivity {
 	}
 
 	private class DataListViewAdapter extends BaseAdapter {
+
 		private ArrayList<IndentViewDo> dataList = new ArrayList<>();
 		private Context mContext;
 		private LayoutInflater inflater;
 		private TextView mTextView;
+		private DisplayImageOptions options;
+
+
 		MultipleButtonOnclick buttonOnclick;
 
 		public DataListViewAdapter(Context context, ArrayList<IndentViewDo> dataList) {
@@ -200,6 +296,19 @@ public class WaitForActivity extends AppCompatActivity {
 			this.dataList = dataList;
 			inflater = LayoutInflater.from(mContext);
 			buttonOnclick = new MultipleButtonOnclick();
+			initOptions();
+		}
+
+		private void initOptions() {
+			options = new DisplayImageOptions.Builder()
+					.showImageOnLoading(R.drawable.ic_stub)
+					.showImageForEmptyUri(R.drawable.ic_empty)
+					.showImageOnFail(R.drawable.ic_error)
+					.cacheInMemory(true)
+					.cacheOnDisk(true)
+					.considerExifParams(true)
+					.displayer(new SimpleBitmapDisplayer())
+					.build();
 		}
 
 		//
@@ -207,6 +316,10 @@ public class WaitForActivity extends AppCompatActivity {
 			this.dataList.clear();
 			this.dataList = data;
 			notifyDataSetChanged();
+		}
+
+		public ArrayList<IndentViewDo> getData() {
+			return this.dataList;
 		}
 
 		public void setTextView(TextView textView) {
@@ -248,9 +361,23 @@ public class WaitForActivity extends AppCompatActivity {
 			} else {
 				vh = (ViewHolder) v.getTag();
 			}
-			enableText();
-			setTextViewValue(vh.multipleButton);
+			//enableText();
 
+			if (dataList == null || dataList.size() == 0) {
+				return v;
+			}
+			setTextViewValue(vh.multipleButton);
+			vh.goodsDescText.setText(dataList.get(position).getGoodsDesc());
+			vh.privilegeText.setText("评价有惊喜哦");
+			String url;
+			if (null == dataList || dataList.size() == 0) {
+				url = "url://empty";
+			} else if (null == dataList.get(position).getPictureUrls() || dataList.get(position).getPictureUrls().size() == 0) {
+				url = "url://empty";
+			} else {
+				url = ServerConfigure.SERVER_ADDRESS + dataList.get(position).getPictureUrls().get(0);
+			}
+			ImageLoader.getInstance().displayImage(url, vh.goodsImg, options, loadListeners.get(selectIndex));
 			return v;
 		}
 
@@ -271,39 +398,93 @@ public class WaitForActivity extends AppCompatActivity {
 
 		private void setTextViewValue(Button button) {
 			switch (selectIndex) {
-				case 0:
-					mTextView.setText(R.string.noAllIndentToSee);
+				case INDENT_ALL_INDEX:
+					//mTextView.setText(R.string.noAllIndentToSee);
 					button.setText("");
+					button.setVisibility(View.GONE);
 					break;
-				case 1:
-					mTextView.setText(R.string.noWaitMoneyIndentToSee);
+				case INDENT_WAIT_PAY_INDEX:
+					//mTextView.setText(R.string.noWaitMoneyIndentToSee);
 					button.setText("去付款");
 					break;
-				case 2:
-					mTextView.setText(R.string.noWaitDeliverIndentToSee);
+				case INDENT_WAIT_DELIVER_INDEX:
+					//mTextView.setText(R.string.noWaitDeliverIndentToSee);
 					button.setText("催单");
 					break;
-				case 3:
-					mTextView.setText(R.string.noWaitAcceptIndentToSee);
+				case INDENT_WAIT_ACCEPT_INDEX:
+					//mTextView.setText(R.string.noWaitAcceptIndentToSee);
 					button.setText("确认收货");
 					break;
-				case 4:
-					mTextView.setText(R.string.noWaitCommentIndentToSee);
+				case INDENT_WAIT_COMMENT_INDEX:
+					//mTextView.setText(R.string.noWaitCommentIndentToSee);
 					button.setText("添加评价");
 					break;
 			}
 		}
 	}
 
-	///////////////////////////////////////////////////
+	private class ImageFirstDisplayListener extends SimpleImageLoadingListener {
 
-	private Button mMunltipleButton;
-	private ImageView goodsImg;
-	private TextView goodsDescText;
-	private TextView privilegeText;
+		public final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
 
-	private void initWaitMoneyView(View v) {
-		mMunltipleButton = (Button) v.findViewById(R.id.app_about_for_status_button_last_first_right);
+		private ImageView mImg;
+		private BaseAdapter adapter;
+
+		ImageFirstDisplayListener(BaseAdapter adapter) {
+			this.adapter = adapter;
+		}
+
+		@Override
+		public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+			adapter.notifyDataSetChanged();
+			if (loadedImage != null) {
+				ImageView imageView = (ImageView) view;
+				boolean firstDisplay = !displayedImages.contains(imageUri);
+				if (firstDisplay) {
+					FadeInBitmapDisplayer.animate(imageView, 500);
+					displayedImages.add(imageUri);
+				}
+				adapter.notifyDataSetChanged();
+				imageView.setImageBitmap(loadedImage);
+			}
+		}
+	}
+
+
+	private class FreshListener implements PullToRefreshListView.OnRefreshListener2<ListView> {
+		@Override
+		public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+			//仅向下滑动有事件
+			IndentViewDo viewDo = new IndentViewDo();
+			viewDo.setBuyerId(userId);
+
+			switch (selectIndex) {
+				case INDENT_ALL_INDEX:
+					viewDo.setIndentState("全部");
+					break;
+				case INDENT_WAIT_PAY_INDEX:
+					viewDo.setIndentState("待付款");
+					break;
+				case INDENT_WAIT_DELIVER_INDEX:
+					viewDo.setIndentState("待配送");
+					break;
+				case INDENT_WAIT_ACCEPT_INDEX:
+					viewDo.setIndentState("待收货");
+					break;
+				case INDENT_WAIT_COMMENT_INDEX:
+					viewDo.setIndentState("待评价");
+					break;
+				default:
+					break;
+			}
+			new GoodsSingleAsyncTask().execute(viewDo);
+		}
+
+		@Override
+		public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+
+		}
 	}
 
 	/**
@@ -350,15 +531,18 @@ public class WaitForActivity extends AppCompatActivity {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			L.e(TAG, position + "position");
 			//查看物品
-			Intent intent = new Intent(WaitForActivity.this, GoodsScanActivity.class);
-			intent.putExtra("goodsId", "");
-			startActivity(intent);
+//			String goodsId = dataAdapters.get(selectIndex).dataList.get(position).getGoodsId();
+//			Intent intent = new Intent(WaitForActivity.this, GoodsScanActivity.class);
+//			intent.putExtra("goodsId", goodsId);
+//			intent.putExtra("from", "WaitForActivity");
+//			startActivity(intent);
 		}
 	}
 
 	//查看所有订单后台任务
 	private class IndentsHandleAsyncTask extends AsyncTask<String, Void, ArrayList<IndentViewDo>> {
 		private Context context;
+
 		public IndentsHandleAsyncTask(Context context) {
 			super();
 			this.context = context;
@@ -366,33 +550,59 @@ public class WaitForActivity extends AppCompatActivity {
 
 		@Override
 		protected ArrayList<IndentViewDo> doInBackground(String... params) {
-			return PostMultipart.queryIndentAll(context, params[0]);
+			return PostMultipart.queryIndentAll(params[0]);
 		}
 
 		@Override
 		protected void onPostExecute(ArrayList<IndentViewDo> indentViewDos) {
+			if (null == indentViewDos || indentViewDos.size() == 0) {
+				return;
+			}
 			L.e(TAG, "本次更新数据量为：" + indentViewDos.size());
 			dataAdapters.get(selectIndex).setData(indentViewDos);
-			//mViewPagerAdapter.getView(mViewPager.getCurrentItem());//(indentViewDos);
 			super.onPostExecute(indentViewDos);
 		}
 	}
 
 	//查看指定选项的订单任务
-	private class GoodsSingleAsyncTask extends AsyncTask<IndentViewDo, Void, List<IndentViewDo>> {
+	private class GoodsSingleAsyncTask extends AsyncTask<IndentViewDo, Void, ArrayList<IndentViewDo>> {
 		public GoodsSingleAsyncTask() {
 			super();
 		}
 
 		@Override
-		protected List<IndentViewDo> doInBackground(IndentViewDo... params) {
-			PostMultipart.getGoods(WaitForActivity.this);
-			return null;
+		protected ArrayList<IndentViewDo> doInBackground(IndentViewDo... params) {
+			return PostMultipart.queryIndentByState(params[0]);
 		}
 
 		@Override
-		protected void onPostExecute(List<IndentViewDo> goodsDoList) {
-			super.onPostExecute(goodsDoList);
+		protected void onPostExecute(ArrayList<IndentViewDo> indentViewDoList) {
+			viewList.get(selectIndex).onRefreshComplete();
+			if (!ServerConfigure.beforeConnect(WaitForActivity.this)) {
+				Toast.makeText(WaitForActivity.this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
+			}
+			if (null == indentViewDoList || indentViewDoList.size() == 0) {
+				viewList.get(selectIndex).onRefreshComplete();
+				return;
+			}
+			dataAdapters.get(selectIndex).setData(indentViewDoList);
+			viewList.get(selectIndex).onRefreshComplete();
+//			switch (selectIndex){
+//				case INDENT_ALL_INDEX:
+//					dataAdapters.get(selectIndex).setData(indentViewDoList);
+//					break;
+//				case INDENT_WAIT_PAY_INDEX:
+//					break;
+//				case INDENT_WAIT_DELIVER_INDEX:
+//					break;
+//				case INDENT_WAIT_ACCEPT_INDEX:
+//					break;
+//				case INDENT_WAIT_COMMENT_INDEX:
+//					break;
+//				default:
+//					break;
+//			}
+			super.onPostExecute(indentViewDoList);
 		}
 	}
 

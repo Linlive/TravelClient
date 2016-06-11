@@ -32,9 +32,8 @@
             android:layout_height="0dp"
             android:layout_weight="9"
             android:scaleType="centerCrop"
-            android:src="@drawable/web_site"
             />
-
+    <!--android:src="@drawable/web_site"-->
     </LinearLayout>
 
     <FrameLayout
@@ -42,7 +41,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-
         <include
             android:id="@+id/login_frame_tmp"
             layout="@layout/activity_temporary"/>
@@ -51,17 +49,17 @@
             android:id="@+id/login_frame_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/login_back"
+            android:background="@drawable/launch_tmp"
             >
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="@string/app_name"
-                android:textColor="@color/appTitle"
+                android:textColor="@color/black"
                 android:textSize="25sp"
                 android:id="@+id/app_app_title"
+                android:layout_marginTop="10dp"
                 />
 
             <com.tl.pro.travelkit.view.custom.PercentLinearLayout
@@ -82,6 +80,7 @@
                     android:gravity="right"
                     android:hint="用户名/邮箱/手机号"
                     android:singleLine="true"
+                    android:inputType="numberDecimal"
                     />
 
                 <EditText
@@ -99,12 +98,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/y25"
                     android:orientation="horizontal"
                     android:weightSum="5"
                     android:id="@+id/app_login_verification_linear"
                     android:visibility="gone"
-                    android:background="@drawable/verification_back_ground">
+                    android:background="@color/transparent"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    >
+                    <!--android:background="@drawable/verification_back_ground"-->
                     <ImageView
                         android:id="@+id/app_login_verification_img"
                         android:layout_width="0dp"
@@ -123,7 +126,7 @@
                         android:layout_weight="2"
                         android:singleLine="true"
                         android:lines="1"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:layout_marginLeft="10dp"
                         android:textCursorDrawable="@drawable/cursor_black"
                         />

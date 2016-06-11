@@ -86,7 +86,7 @@ public class GoodsScanScrollAdapter extends PagerAdapter {
 		View xml = mInflater.inflate(R.layout.scan_goods_img_scroll, container, false);
 		ImageView img = (ImageView) xml.findViewById(R.id.scan_goods_img_scroll_item);
 
-		ImageLoader.getInstance().displayImage(ServerConfigure.SERVER_ADDRESS + urls.get(position), img, options, new ImgLoadListener());
+		ImageLoader.getInstance().displayImage(ServerConfigure.SERVER_ADDRESS + urls.get(position), img, options);//, new ImgLoadListener());
 		((ViewPager) container).addView(xml, 0);
 		return xml;
 	}

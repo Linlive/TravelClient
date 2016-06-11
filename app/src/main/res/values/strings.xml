@@ -16,7 +16,7 @@
     <string name="action_sign_in">登录/注册</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">邮箱地址非法</string>
-    <string name="error_invalid_password">密码(应包含大小写和数字)</string>
+    <string name="error_invalid_password">密码(应包含大小写(2),数字,特殊字符)</string>
     <string name="error_incorrect_password">账户和密码不匹配</string>
     <string name="error_field_required">此项不能为空</string>
     <string name="permission_rationale">"需要联系人权限"</string>

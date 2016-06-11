@@ -1,7 +1,6 @@
 package com.tl.pro.travelkit.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,23 +9,22 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.tl.pro.travelkit.R;
-import com.tl.pro.travelkit.activity.GoodsScanActivity;
 import com.tl.pro.travelkit.activity.IndexActivity;
 import com.tl.pro.travelkit.adapter.ListViewAdapter;
 import com.tl.pro.travelkit.bean.GoodsDo;
+import com.tl.pro.travelkit.bean.MyPage;
 import com.tl.pro.travelkit.fragment.base.MyBaseFragment;
 import com.tl.pro.travelkit.listener.IndexDataListener;
-import com.tl.pro.travelkit.util.CommonText;
+import com.tl.pro.travelkit.listener.MyPullViewOnItemClickListener;
 import com.tl.pro.travelkit.util.PostMultipart;
-import com.tl.pro.travelkit.util.log.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +45,11 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 	private IndexActivity.MyOnTouchListener onTouchListener;
 
 	IndexDataListener dataListener;
+	MyPullViewOnItemClickListener itemClickListener;
 
 	private View mLinerLayout;
 	private Button button;
 	private TextView appTitle;
-
 
 
 	/**
@@ -81,10 +79,22 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 		this.point = point;
 	}
 
-	public void initData(List<GoodsDo> goodsData){
+	public void initData(List<GoodsDo> goodsData) {
 		mAdapter.setData(goodsData);
 		mAdapter.notifyDataSetChanged();
+
+		testPage.setPageSize(goodsData.size());
 	}
+
+	public void addEndData(List<GoodsDo> goodsDos) {
+		mAdapter.addEndData(goodsDos);
+		mAdapter.notifyDataSetChanged();
+	}
+
+	public void addStartData(List<GoodsDo> goodsDos) {
+		mAdapter.addStartData(goodsDos);
+	}
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -97,6 +107,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
+		testPage = new MyPage();
 		mContext = getActivity();
 		dataListener = (IndexDataListener) mContext;
 		View view = inflater.inflate(R.layout.frag_index_layout, container, false);
@@ -113,8 +124,10 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 		//listView = mPullToRefreshListView;
 //		setData();
 		mAdapter = new ListViewAdapter(mContext, mData);
+		itemClickListener = new MyPullViewOnItemClickListener(mContext, mAdapter);
+		itemClickListener.setUserId(dataListener.getUserId());
 		listView.setAdapter(mAdapter);
-
+		listView.setOnItemClickListener(itemClickListener);
 		listView.onRefreshComplete();
 	}
 
@@ -142,7 +155,7 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 				new DataLoadTask().execute();
 			}
 		});
-		listView.setOnItemClickListener(new MyPullViewOnItemClickListener());
+		listView.setOnItemClickListener(itemClickListener);
 	}
 
 	@Override
@@ -214,50 +227,68 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 		return false;
 	}
 
-	//模拟网络加载数据的   异步请求类
-	//
+	public static MyPage testPage;
+
+	// 模拟网络加载数据的   异步请求类
+	// 刷新
 	private class DataFreshTask extends AsyncTask<String, Float, List<GoodsDo>> {
 
 		private Context context;
-		public DataFreshTask(Context context){
+
+		public DataFreshTask(Context context) {
 			this.context = context;
 		}
+
 		//子线程请求数据
 		@Override
 		protected List<GoodsDo> doInBackground(String... params) {
-			return PostMultipart.getGoods(context);
+			return PostMultipart.getGoods();
 		}
 
 		//主线程更新UI
 		@Override
 		protected void onPostExecute(List<GoodsDo> result) {
-
-			initData(result);
-			mAdapter.notifyDataSetChanged();
 			//通知RefreshListView 我们已经更新完成
 			listView.onRefreshComplete();
+			if(null == result || result.size() == 0){
+				Toast.makeText(mContext, R.string.haveNoMoreData, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			testPage = PostMultipart.getPageInfo();
+			initData(result);
+			mAdapter.notifyDataSetChanged();
 			super.onPostExecute(result);
 		}
 	}
 
+	//加载更多
 	private class DataLoadTask extends AsyncTask<String, Float, List<GoodsDo>> {
+		//TestPage page = new TestPage();
+
 		//子线程请求数据
 		@Override
 		protected List<GoodsDo> doInBackground(String... params) {
-			return null;
+			return PostMultipart.getGoodsLoadMore(testPage);
 		}
 
 		//主线程更新UI
 		@Override
 		protected void onPostExecute(List<GoodsDo> result) {
 
+			listView.onLoadMoreComplete();
+			if (null == result || result.size() == 0) {
+				Toast.makeText(mContext, R.string.haveNoMoreData, Toast.LENGTH_SHORT).show();
+				return;
+			}
+			testPage = PostMultipart.getPageInfo();
+			addEndData(result);
 			mAdapter.notifyDataSetChanged();
 			//通知RefreshListView 我们已经更新完成
-			listView.onLoadMoreComplete();
 			super.onPostExecute(result);
 		}
 	}
 
+	/**
 	private class MyPullViewOnItemClickListener implements AdapterView.OnItemClickListener {
 
 		@Override
@@ -274,4 +305,5 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 			//ImageLoader.getInstance().displayImage(mAdapter.getDataList().get(position).get("imageUrl"),  new ImageViewAware(vh.imageView), options, mAnimal);
 		}
 	}
+	*/
 }

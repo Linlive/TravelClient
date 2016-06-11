@@ -2,20 +2,25 @@ package com.tl.pro.travelkit.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.activity.ShopkeeperActivity;
 import com.tl.pro.travelkit.activity.WaitForActivity;
 import com.tl.pro.travelkit.listener.IndexDataListener;
 import com.tl.pro.travelkit.util.CommonText;
+import com.tl.pro.travelkit.util.PostMultipart;
 import com.tl.pro.travelkit.util.log.L;
 
 
@@ -86,15 +91,76 @@ public class AppIndexAbMeFrag extends Fragment implements View.OnClickListener {
 		mViewAllIndentImg.setOnClickListener(this);
 	}
 
+	private class UserInfoAsync extends AsyncTask<String, Void, String> {
+		boolean isApplication;
+
+		public UserInfoAsync() {
+			super();
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			isApplication = "true".equals(params[1]);
+			return PostMultipart.userIsShopkeeper(params[0], params[1]);
+		}
+
+		@Override
+		protected void onPostExecute(String aString) {
+			if(null == aString){
+				return;
+			}
+			switch (aString) {
+				case "申请成功":
+				case "待审核":
+					Toast.makeText(mContext, aString, Toast.LENGTH_SHORT).show();
+					break;
+				case "拒绝":
+					Toast.makeText(mContext, "你已被管理员禁用", Toast.LENGTH_SHORT).show();
+					break;
+				case "通过审核":
+					Intent intent = new Intent(mContext, ShopkeeperActivity.class);
+					intent.putExtra("shopkeeperId", userId);
+					startActivity(intent);
+					break;
+				case "不存在此用户":
+					goToSignUpShopper();
+					break;
+				default:
+					break;
+			}
+			super.onPostExecute(aString);
+		}
+	}
+
+	private void goToSignUpShopper() {
+		AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+		dialog.setMessage("你还商家用户，申请即可加入~");
+		dialog.setIcon(R.mipmap.ic_launcher);
+		dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				new UserInfoAsync().execute(userId, true + "");
+				dialog.dismiss();
+			}
+		});
+		dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		dialog.create();
+		dialog.show();
+	}
+
 	@Override
 	public void onClick(View v) {
 		Intent intent = null;
 		switch (v.getId()) {
 			case R.id.app_about_me_im_shopkeeper:
+				new UserInfoAsync().execute(userId, "false");
 				L.i(TAG, "click Im app_about_me_im_shopkeeper");
 				//do something
-				intent = new Intent(mContext, ShopkeeperActivity.class);
-				intent.putExtra(CommonText.userId, dataListener.getUserId());
 
 				break;
 			case R.id.app_about_me_wait_for_money:
