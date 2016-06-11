@@ -15,7 +15,6 @@ import java.net.URL;
  */
 public class ServerConfigure {
 
-
 	// a li yun server
 //	public static final String SERVER_ADDRESS = "http://42.96.138.253:8080/KitServer";
 	// room server

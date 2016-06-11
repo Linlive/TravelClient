@@ -34,6 +34,7 @@ public class ApplicationDisplayActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_application_display);
 		initView();
+		new QueryAsyncTask().execute();
 	}
 
 	private void initView() {
@@ -178,6 +179,10 @@ public class ApplicationDisplayActivity extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(ArrayList<UserApplication> dataList) {
 			listView.onRefreshComplete();
+			if(null == dataList || dataList.size() == 0){
+				Toast.makeText(ApplicationDisplayActivity.this, "没有用户申请成为商家", Toast.LENGTH_SHORT).show();
+				return;
+			}
 			mAdapter.setDatas(dataList);
 			mAdapter.notifyDataSetChanged();
 			super.onPostExecute(dataList);

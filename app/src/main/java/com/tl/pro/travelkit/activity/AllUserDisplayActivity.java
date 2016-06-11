@@ -34,7 +34,7 @@ public class AllUserDisplayActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_all_user_display);
 		initView();
-
+		new QueryUserAsyncTask().execute();
 	}
 
 	private void initView() {
@@ -160,6 +160,7 @@ public class AllUserDisplayActivity extends AppCompatActivity {
 		protected void onPostExecute(ArrayList<UserDo> dataList) {
 			listView.onRefreshComplete();
 			if (null == dataList || dataList.size() == 0) {
+				Toast.makeText(AllUserDisplayActivity.this, "系统中没有其他用户", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			mAdapter.setDatas(dataList);

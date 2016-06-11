@@ -79,7 +79,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 	private void gotoSignIn() {
 
 		if (mSignInTask != null) {
-			return;
+			mSignInTask.cancel(false);
+			mSignInTask = null;
+			//return;
 		}
 		boolean cancel = false;
 		String nameEditText = mUserNameEdit.getText().toString();

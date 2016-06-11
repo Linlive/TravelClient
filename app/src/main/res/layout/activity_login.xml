@@ -80,7 +80,6 @@
                     android:gravity="right"
                     android:hint="用户名/邮箱/手机号"
                     android:singleLine="true"
-                    android:inputType="numberDecimal"
                     />
 
                 <EditText

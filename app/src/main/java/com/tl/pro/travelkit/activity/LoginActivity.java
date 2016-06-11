@@ -44,7 +44,7 @@ import java.net.HttpURLConnection;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-	private static final int LOGIN_TIME_LIMIT = 1;
+	private static final int LOGIN_TIME_LIMIT = 5;
 
 	private static final int STOPSPLASH = 0;
 	private static final long SPLASHTIME = 2500;
