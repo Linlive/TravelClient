@@ -38,6 +38,9 @@ public class UrlSource {
 	public static final String DELETE_FROM_SHOPPING_CART = "/deleteFromShoppingCart";
 	public static final String QUERY_SHOPPING_CART = "/queryShoppingCart";
 
+	public static final String ADD_OR_SUB_CART = "/addOrSubCart";
+
+
 	public static final String CREATE_INDENT = "/createIndent";
 	public static final String QUERY_INDENT_ALL = "/queryUserIndentAll";
 	public static final String QUERY_INDENT_CUSTOM = "/userQueryIndentCustom";

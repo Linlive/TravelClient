@@ -22,6 +22,8 @@ public class ServerConfigure {
 	// hp server
 //	public static final String SERVER_ADDRESS = "http://192.168.23.1:8080";
 //	public static final String SERVER_ADDRESS = "http://192.168.56.2:8080/KitServer";
+	// note 1
+//	public static final String SERVER_ADDRESS = "http://192.168.43.60:8080/KitServer";
 
 	public static final String DATA_IN_SERVER_FLAG = "map";
 	public static final int SERVER_OK = 200;

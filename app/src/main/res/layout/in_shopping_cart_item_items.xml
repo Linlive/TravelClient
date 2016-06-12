@@ -112,4 +112,8 @@
 
         </LinearLayout>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y1"
+        android:background="@color/white"/>
 </LinearLayout>

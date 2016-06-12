@@ -34,6 +34,8 @@ import com.tl.pro.travelkit.fragment.base.MyBaseFragment;
 import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.listener.IndexDataListener;
 import com.tl.pro.travelkit.listener.IndexTabSelectListener;
+import com.tl.pro.travelkit.task.BuyGoodsTask;
+import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.PostMultipart;
 import com.tl.pro.travelkit.util.log.L;
 import com.tl.pro.travelkit.util.pay.PayResult;
@@ -94,9 +96,14 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		userId = mDataListener.getUserId();
 		View view = inflater.inflate(R.layout.activity_shopping_cart, container, false);
 		initView(view);
+		return view;
+	}
+
+	@Override
+	public void onResume() {
 		shoppingCartTask = new MyAsyncTask(mContext);
 		shoppingCartTask.execute(userId);
-		return view;
+		super.onResume();
 	}
 
 	private void initView(View view) {
@@ -229,7 +236,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 
 		chooseNumberText.setText(chooseNumber);
 		minusImageButton.setOnClickListener(new MinusOnClick((ViewGroup) view, chooseNumberText, cartDo.getGoodsId()));
-		plusImageButton.setOnClickListener(new PlusOnClick(chooseNumberText));
+		plusImageButton.setOnClickListener(new PlusOnClick(chooseNumberText, cartDo.getGoodsId()));
 		//mCheckBox.setOnClickListener(new ChildCheckBoxClick(cartDo));
 		mCheckBox.setOnCheckedChangeListener(new ChildCheckBoxChanged(cartDo));
 		view.setOnLongClickListener(new OnLongClick(cartDo.getGoodsId()));
@@ -266,7 +273,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		 * 便于操作商家下面的所有商品
 		 */
 		public void initMap() {
-			List<ShoppingCartDo> dos = null;
+			List<ShoppingCartDo> dos;
 			/**
 			 * 以下部分换成这种写法，我不知道为什么报错
 			 * 报错位置，getView中的parent.addView();
@@ -377,40 +384,6 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		}
 	}
 
-	private class CheckBoxOnClickListener implements View.OnClickListener {
-
-		boolean shopperSelectAll = false;
-		String shopId;
-
-		public CheckBoxOnClickListener(String shopperId) {
-			shopId = shopperId;
-		}
-
-		@Override
-		public void onClick(View v) {
-			shopperSelectAll = !shopperSelectAll;
-			System.out.println("check box in par");
-			if (null == shopId) return;
-			//界面选中
-			List<View> thisList = shopperGodsViewsMap.get(shopId);
-			CheckBox mCheckBox;
-
-			for (View tmpV : thisList) {
-				mCheckBox = (CheckBox) tmpV.findViewById(R.id.app_shopping_cart_check_box);
-				L.e("TAG", "------------" + mCheckBox);
-				mCheckBox.setChecked(shopperSelectAll);
-			}
-			//逻辑添加或删除
-			if (shopperSelectAll) {
-				selectListGoodsDo.put(shopId, shopperCartDoMap.get(shopId));
-				L.e(TAG, "selece.size =" + selectListGoodsDo.size());
-				return;
-			}
-			selectListGoodsDo.remove(shopId);
-			L.e(TAG, "selece.size =" + selectListGoodsDo.size());
-		}
-	}
-
 	////////////////////////////////
 	////////////////////////////////
 	int selectNumber = 0;
@@ -430,9 +403,6 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 			this.cartDo = cartDo;
 			shopId = cartDo.getShopKeeperId();
 		}
-
-		String number;
-		String price;
 
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -473,51 +443,6 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		}
 	}
 
-	private class ChildCheckBoxClick implements View.OnClickListener {
-
-		boolean singleSelect = false;
-		private String shopId;
-		private ShoppingCartDo cartDo;
-		private List<ShoppingCartDo> mList = new LinkedList<>();
-
-		public ChildCheckBoxClick(ShoppingCartDo cartDo) {
-			this.shopId = cartDo.getShopKeeperId();
-			this.cartDo = cartDo;
-		}
-
-		@Override
-		public void onClick(View v) {
-			singleSelect = !singleSelect;
-
-			if (singleSelect) {
-				mList.add(cartDo);
-//				mList.clear();
-//				mList.add(cartDo);
-//				if (0 == selectListGoodsDo.size()){
-//					selectListGoodsDo.put(shopId, mList);
-//				} else {
-//					selectListGoodsDo.get(shopId).add(cartDo);
-//				}
-				if (selectListGoodsDo.containsKey(shopId)) {
-					selectListGoodsDo.get(shopId).add(cartDo);
-					return;
-				}
-				selectListGoodsDo.put(shopId, mList);
-				L.e(TAG, "selece.size =" + selectListGoodsDo.size());
-				return;
-			}
-			mList.remove(cartDo);
-			//覆盖
-			if (selectListGoodsDo.containsKey(shopId)) {
-				selectListGoodsDo.get(shopId).remove(cartDo);
-				return;
-			}
-			selectListGoodsDo.put(shopId, mList);
-//			selectListGoodsDo.get(shopId).remove(cartDo);
-			L.e(TAG, "selece.size =" + selectListGoodsDo.size());
-		}
-	}
-
 	/**
 	 * 减号点击事件
 	 */
@@ -550,6 +475,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 				str = "X" + str;
 			}
 			textView.setText(str);
+			new AddOrSubCartAsync(false).execute(userId, goodsId);
 		}
 	}
 
@@ -559,9 +485,11 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 	private class PlusOnClick implements View.OnClickListener {
 		int value;
 		TextView textView;
+		String goodsId;
 
-		public PlusOnClick(TextView par) {
+		public PlusOnClick(TextView par, String goodsId) {
 			this.textView = par;
+			this.goodsId = goodsId;
 			//this.value = Integer.parseInt(par.getText().toString());
 		}
 
@@ -585,11 +513,37 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 				str = "X" + str;
 			}
 			textView.setText(str);
+			new AddOrSubCartAsync(true).execute(userId, goodsId);
 		}
 	}
 
 	boolean delete = false;
 
+	private void addValue(TextView textView, boolean ok) {
+		String str = textView.getText().toString();
+		int value;
+		if (str.contains("X")) {
+			str = str.substring(1, str.length());
+		}
+		value = Integer.valueOf(str);
+		if (ok) {
+			//value++;
+		} else {
+			value--;
+		}
+		if (value < 0) {
+			value = 0;
+		}
+		//当数量大于库存是，需要处理
+//			if(value > 10){
+//				value = 0;
+//			}
+		str = String.valueOf(value);
+		if (value < 10) {
+			str = "X" + str;
+		}
+		textView.setText(str);
+	}
 
 	/**
 	 * 弹出对话框，是否确认删除
@@ -606,7 +560,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				delete(pg, goodsId);
+				delete(pg, goodsId, userId);
 			}
 		});
 		dialog.setNegativeButton("返回", new DialogInterface.OnClickListener() {
@@ -618,8 +572,8 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		dialog.show();
 	}
 
-	private void delete(ViewGroup vg, String goodsId) {
-		new DeleteAsyncTask(vg).execute(goodsId);
+	private void delete(ViewGroup vg, String goodsId, String userId) {
+		new DeleteAsyncTask(vg).execute(goodsId, userId);
 	}
 
 	private final int DELETE_CHILD_VIEW = 401;
@@ -706,7 +660,7 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 
 		@Override
 		protected Boolean doInBackground(String... params) {
-			return PostMultipart.deleteFromShoppingCart(params[0]);
+			return PostMultipart.deleteFromShoppingCart(params[0], params[1]);
 		}
 
 		@Override
@@ -735,40 +689,25 @@ public class ShoppingCartFragment extends MyBaseFragment implements Handler.Call
 		}
 	}
 
-	private class BuyGoodsTask extends AsyncTask<String[], Void, Boolean> {
+	private class AddOrSubCartAsync extends AsyncTask<String, Void, Boolean> {
+		private boolean addF = false;
 
-		String buyerId;
-		ShoppingCartDo cartDo;
-		int state;
-		private Context context;
-
-		public BuyGoodsTask(Context context, String buyerId, ShoppingCartDo cartDo, int state) {
+		public AddOrSubCartAsync(boolean add) {
 			super();
-			this.buyerId = buyerId;
-			this.cartDo = cartDo;
-			this.state = state;
-			this.context = context;
+			addF = add;
 		}
 
 		@Override
-		protected Boolean doInBackground(String[]... params) {
-
-			return PostMultipart.buyGoods(buyerId, cartDo, state);
+		protected Boolean doInBackground(String... params) {
+			return PostMultipart.addOrSubCart(params[0], params[1], addF);
 		}
 
 		@Override
 		protected void onPostExecute(Boolean aBoolean) {
-			if (!ServerConfigure.beforeConnect(mContext)) {
-				Toast.makeText(mContext, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
-				return;
-			}
 			if (aBoolean) {
-				Toast.makeText(mContext, "下单成功" + IndentDo.State.PAY_SUCCESS, Toast.LENGTH_SHORT).show();
-				mTablistener.setSelect(2);
-				//刷新我的界面，其中包括订单信息。
-				Intent intent = new Intent(mContext, WaitForActivity.class);
-				startActivity(intent);
-
+				L.i(TAG, "add number success in cart frag");
+			} else {
+				Toast.makeText(mContext, "操作失败", Toast.LENGTH_SHORT).show();
 			}
 			super.onPostExecute(aBoolean);
 		}

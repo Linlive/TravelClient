@@ -92,7 +92,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 			switch (msg.what) {
 				case DISABLE_VIEW:
 					mGoneLinearLayout.setVisibility(View.GONE);
-					new GoodsAll(IndexActivity.this).execute("");
+					//new GoodsAll(IndexActivity.this).execute("");
 					break;
 			}
 			super.handleMessage(msg);
@@ -371,6 +371,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
 		@Override
 		protected void onPostExecute(List<GoodsDo> goodsDoList) {
+			homeFragment.notifyDataSetChanged();
 			if (null == goodsDoList || goodsDoList.size() == 0) {
 				Toast.makeText(context, "没有更多的数据", Toast.LENGTH_SHORT).show();
 				return;

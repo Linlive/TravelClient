@@ -21,10 +21,10 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.tl.pro.travelkit.R;
 import com.tl.pro.travelkit.adapter.GoodsScanScrollAdapter;
 import com.tl.pro.travelkit.bean.GoodsDo;
-import com.tl.pro.travelkit.bean.IndentDo;
 import com.tl.pro.travelkit.bean.ShoppingCartDo;
 import com.tl.pro.travelkit.internet.ServerConfigure;
 import com.tl.pro.travelkit.listener.ScanGoodsPageChangeListener;
+import com.tl.pro.travelkit.task.BuyGoodsTask;
 import com.tl.pro.travelkit.util.CommonText;
 import com.tl.pro.travelkit.util.PostMultipart;
 import com.tl.pro.travelkit.util.log.L;
@@ -299,44 +299,6 @@ public class GoodsScanActivity extends AppCompatActivity implements View.OnClick
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-		}
-	}
-
-	private class BuyGoodsTask extends AsyncTask<String, Void, Boolean> {
-		String buyerId;
-		ShoppingCartDo cartDo;
-		int state;
-		private Context context;
-
-		public BuyGoodsTask(Context context, String buyerId, ShoppingCartDo cartDo, int state) {
-			super();
-			this.buyerId = buyerId;
-			this.cartDo = cartDo;
-			this.state = state;
-			this.context = context;
-		}
-
-		@Override
-		protected Boolean doInBackground(String... params) {
-
-			return PostMultipart.buyGoods(buyerId, cartDo, state);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean aBoolean) {
-			if (aBoolean) {
-				Toast.makeText(context, "下单成功" + IndentDo.State.PAY_SUCCESS, Toast.LENGTH_SHORT).show();
-
-				//刷新我的界面，其中包括订单信息。
-				Intent intent = new Intent(context, WaitForActivity.class);
-				intent.putExtra(CommonText.userId, userId);
-				intent.putExtra("index", 0);
-				startActivity(intent);
-			}
-			if (!ServerConfigure.beforeConnect(GoodsScanActivity.this)) {
-				Toast.makeText(GoodsScanActivity.this, R.string.haveNotNetwork, Toast.LENGTH_SHORT).show();
-			}
-			super.onPostExecute(aBoolean);
 		}
 	}
 

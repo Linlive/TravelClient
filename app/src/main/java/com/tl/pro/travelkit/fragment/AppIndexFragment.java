@@ -79,10 +79,15 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 		this.point = point;
 	}
 
+	public void notifyDataSetChanged(){
+		mAdapter.notifyDataSetChanged();
+		listView.onRefreshComplete();
+	}
+
 	public void initData(List<GoodsDo> goodsData) {
 		mAdapter.setData(goodsData);
 		mAdapter.notifyDataSetChanged();
-
+		listView.onRefreshComplete();
 		testPage.setPageSize(goodsData.size());
 	}
 
@@ -129,6 +134,12 @@ public class AppIndexFragment extends MyBaseFragment implements View.OnTouchList
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(itemClickListener);
 		listView.onRefreshComplete();
+	}
+
+	@Override
+	public void onResume() {
+		itemClickListener.setUserId(dataListener.getUserId());
+		super.onResume();
 	}
 
 	private void setListener() {

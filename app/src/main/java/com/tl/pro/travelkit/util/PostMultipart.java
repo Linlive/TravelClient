@@ -343,6 +343,42 @@ public class PostMultipart {
 		return list;
 	}
 
+	/**
+	 * 改变购物车中的数量
+	 * @param userId 用户id
+	 * @param goodsId 商品id
+	 * @return true 服务器处理成功
+	 */
+	public static Boolean addOrSubCart(String userId, String goodsId, boolean add){
+		HttpURLConnection con;
+
+		try {
+			con = ServerConfigure.getConnection(UrlSource.ADD_OR_SUB_CART, RequestMethod.POST);
+			JSONObject object = new JSONObject();
+			object.put("userId", userId);
+			object.put("goodsId", goodsId);
+			object.put("add", add);
+			ServerTalk.writeToServer(con.getOutputStream(), object);
+			if(ServerConfigure.SERVER_OK != con.getResponseCode()){
+				return false;
+			}
+			String serStr = ServerTalk.readFromServer(con.getInputStream());
+			if(null == serStr || serStr.length() == 0){
+				return false;
+			}
+			JSONObject serObj = new JSONObject(serStr);
+			if(!serObj.has("status")){
+				return false;
+			}
+			return serObj.getBoolean("status");
+
+		} catch (JSONException | IOException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
 	public static List<IndentDo> getGoodsShopIndent(String keeperId) {
 
 		return null;
@@ -395,13 +431,14 @@ public class PostMultipart {
 		return false;
 	}
 
-	public static boolean deleteFromShoppingCart(String goodsId) {
+	public static boolean deleteFromShoppingCart(String goodsId, String userId) {
 		HttpURLConnection con = null;
 
 		try {
 			con = ServerConfigure.getConnection(UrlSource.DELETE_FROM_SHOPPING_CART, RequestMethod.POST);
 			JSONObject object = new JSONObject();
 			object.put("goodsId", goodsId);
+			object.put("userId", userId);
 			ServerTalk.writeToServer(con.getOutputStream(), object);
 
 			String serverStr = ServerTalk.readFromServer(con.getInputStream());

@@ -53,8 +53,8 @@
             </LinearLayout>
         </LinearLayout>
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/x90"
+            android:layout_height="@dimen/y30"
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="@dimen/y22"
             android:id="@+id/app_visit_immediately"

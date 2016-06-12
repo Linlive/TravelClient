@@ -209,7 +209,8 @@ public class WaitForActivity extends AppCompatActivity {
 		mPagerIndicator.setOnPageChangeListener(changeListener);
 
 		mViewPager.setCurrentItem(0);
-		mPagerIndicator.setViewPager(mViewPager, 0);
+//		mPagerIndicator.setViewPager(mViewPager, 0);
+		mPagerIndicator.setViewPager(mViewPager, selectIndex);
 //		mViewPager.addOnPageChangeListener(changeListener);
 		mViewPager.setAdapter(mViewPagerAdapter);
 	}
@@ -269,7 +270,7 @@ public class WaitForActivity extends AppCompatActivity {
 
 		@Override
 		public void onPageSelected(int position) {
-			L.e(TAG, "进来了？？");
+			L.e(TAG, "select？？");
 			selectIndex = position;
 		}
 
